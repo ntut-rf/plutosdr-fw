@@ -1,4 +1,5 @@
 export VIVADO_VERSION ?= 2018.2
+PATH := $(PATH):/opt/Xilinx/SDK/$(VIVADO_VERSION)/gnu/aarch32/lin/gcc-arm-linux-gnueabi/bin
 VIVADO_SETTINGS ?= /opt/Xilinx/Vivado/$(VIVADO_VERSION)/settings64.sh
 HAVE_VIVADO ?= 1
 
@@ -213,3 +214,10 @@ git-update-all:
 
 git-pull:
 	git pull --recurse-submodules
+
+.PHONY: fw
+fw: build/$(TARGET).frm build/$(TARGET).dfu
+
+.PHONY: upload
+upload:
+	cp build/$(TARGET).frm /run/media/*/PlutoSDR/
