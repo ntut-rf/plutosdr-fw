@@ -107,12 +107,17 @@ buildroot/output/images/rootfs.cpio.gz: rootfs
 build/rootfs.cpio.gz: buildroot/output/images/rootfs.cpio.gz | build
 	cp $< $@
 
-build/$(TARGET).itb: buildroot/output/build/uboot-pluto/tools/mkimage build/zImage build/rootfs.cpio.gz $(TARGET_DTS_FILES) build/system_top.bit
-	buildroot/output/build/uboot-pluto/tools/mkimage -f scripts/$(TARGET).its $@
+## Pass targets to buildroot
+%:
+	$(MAKE) BR2_EXTERNAL=$(CURDIR)/configs BR2_DEFCONFIG=$(CURDIR)/configs/config -C buildroot $*
 
+.PHONY: hdl
+hdl: build/system_top.hdf
+
+.PHONY: build/system_top.hdf
 build/system_top.hdf:  | build
 ifeq (1, ${HAVE_VIVADO})
-	cd hdl && patch --forward -p1 < ../patches/pluto.patch
+	cd hdl && patch --forward -p1 < ../patches/pluto.patch || true
 	bash -c "source $(VIVADO_SETTINGS) && make -C hdl/projects/$(TARGET) && cp hdl/projects/$(TARGET)/$(TARGET).sdk/system_top.hdf $@"
 else
 ifneq ($(HDF_URL),)
@@ -120,9 +125,8 @@ ifneq ($(HDF_URL),)
 endif
 endif
 
-## Pass targets to buildroot
-%:
-	$(MAKE) BR2_EXTERNAL=$(CURDIR)/configs BR2_DEFCONFIG=$(CURDIR)/configs/config -C buildroot $*
+build/$(TARGET).itb: buildroot/output/build/uboot-pluto/tools/mkimage build/zImage build/rootfs.cpio.gz $(TARGET_DTS_FILES) build/system_top.bit
+	buildroot/output/build/uboot-pluto/tools/mkimage -f scripts/$(TARGET).its $@
 
 ### TODO: Build system_top.hdf from src if dl fails - need 2016.2 for that ...
 
