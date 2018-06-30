@@ -167,6 +167,9 @@ package_table_items () {
 			if [ $(echo "$tmp" | head -1 | grep "301" | wc -l) -gt 0 ] ; then
 				url=$(echo "$tmp" | grep -i "Location:" | awk '{print $2}' | sed -e 's/^[ \t]*//;s/[ \t]*$//')
 				url=${url%$'\r'}
+			elif [ $(echo "$tmp" | head -1 | grep "302" | wc -l) -gt 0 ] ; then
+				url=$(echo "$tmp" | grep -i "Location:" | awk '{print $2}' | sed -e 's/^[ \t]*//;s/[ \t]*$//')
+				url=${url%$'\r'}
 			elif [ $(echo "$tmp" | head -1 | grep "404" | wc -l) -gt 0 ] ; then
 				url=$(echo $url | sed 's#/[^/]*$##' )
 			elif [ $(echo "$tmp" | head -1 | grep "200" | wc -l) -gt 0 ] ; then
@@ -332,13 +335,13 @@ html_hr
 html_h1_id "Package: linux" "$((var++))"
 package_list_items $(get_version linux) "GPLv2" "https://github.com/analogdevicesinc/linux"
 html_h2 "License:"
-html_pre_file linux/COPYING
+html_pre_file buildroot/build/linux-master/COPYING
 html_hr
 ### U-Boot
 html_h1_id "Package: u-boot" "$((var++))"
 package_list_items $(get_version u-boot-xlnx) "GPLv2" "https://github.com/analogdevicesinc/u-boot-xlnx"
 html_h2 "License:"
-html_pre_file u-boot-xlnx/Licenses/gpl-2.0.txt
+html_pre_file buildroot/build/uboot-pluto/Licenses/gpl-2.0.txt
 html_hr
 
 #### All other  Buildroot Packages

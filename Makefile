@@ -1,14 +1,13 @@
-#PATH=$PATH:/opt/Xilinx/SDK/2015.4/gnu/arm/lin/bin
+export VIVADO_VERSION ?= 2018.2
+VIVADO_SETTINGS ?= /opt/Xilinx/Vivado/$(VIVADO_VERSION)/settings64.sh
+HAVE_VIVADO ?= 1
 
-CROSS_COMPILE ?= arm-xilinx-linux-gnueabi-
+CROSS_COMPILE ?= arm-linux-gnueabihf-
 
 NCORES = $(shell grep -c ^processor /proc/cpuinfo)
-VIVADO_SETTINGS ?= /opt/Xilinx/Vivado/2016.4/settings64.sh
-VSUBDIRS = hdl buildroot linux u-boot-xlnx
 
 VERSION=$(shell git describe --abbrev=4 --dirty --always --tags)
 LATEST_TAG=$(shell git describe --abbrev=0 --tags)
-UBOOT_VERSION=$(shell echo -n "PlutoSDR " && cd u-boot-xlnx && git describe --abbrev=0 --dirty --always --tags)
 HAVE_VIVADO= $(shell bash -c "source $(VIVADO_SETTINGS) > /dev/null 2>&1 && vivado -version > /dev/null 2>&1 && echo 1 || echo 0")
 
 TARGET ?= pluto
@@ -32,10 +31,10 @@ endif
 
 ifeq ($(findstring $(TARGET),$(SUPPORTED_TARGETS)),)
 all:
-	@echo "Invalid `TARGET variable ; valid values are: pluto, sidekiqz2" &&
+	@echo "Invalid TARGET variable ; valid values are: pluto, sidekiqz2" &&
 	exit 1
 else
-all: clean-build $(TARGETS) zip-all legal-info
+all: $(TARGETS) zip-all
 endif
 
 .NOTPARALLEL: all
@@ -45,73 +44,84 @@ TARGET_DTS_FILES:=$(foreach dts,$(TARGET_DTS_FILES),build/$(dts))
 build:
 	mkdir -p $@
 
-%: build/%
-	cp $< $@
+buildroot/.config:
+	$(MAKE) defconfig
 
 ### u-boot ###
 
-u-boot-xlnx/u-boot u-boot-xlnx/tools/mkimage:
-	make -C u-boot-xlnx ARCH=arm zynq_$(TARGET)_defconfig
-	make -C u-boot-xlnx ARCH=arm CROSS_COMPILE=$(CROSS_COMPILE) UBOOTVERSION="$(UBOOT_VERSION)"
+export UIMAGE_LOADADDR=0x8000
 
-.PHONY: u-boot-xlnx/u-boot
+uboot: | buildroot/.config
 
-build/u-boot.elf: u-boot-xlnx/u-boot | build
+.PHONY: buildroot/output/images/u-boot buildroot/output/build/uboot-pluto/tools/mkimage
+buildroot/output/images/u-boot buildroot/output/build/uboot-pluto/tools/mkimage: uboot
+
+build/u-boot.elf: buildroot/output/images/u-boot | build
 	cp $< $@
 
-build/uboot-env.txt: u-boot-xlnx/u-boot | build
+build/uboot-env.txt: uboot | build
 	CROSS_COMPILE=$(CROSS_COMPILE) scripts/get_default_envs.sh > $@
 
 build/uboot-env.bin: build/uboot-env.txt
-	u-boot-xlnx/tools/mkenvimage -s 0x20000 -o $@ $<
+	buildroot/output/build/uboot-pluto/tools/mkenvimage -s 0x20000 -o $@ $<
 
 ### Linux ###
 
-linux/arch/arm/boot/zImage:
-	make -C linux ARCH=arm zynq_$(TARGET)_defconfig
-	make -C linux -j $(NCORES) ARCH=arm CROSS_COMPILE=$(CROSS_COMPILE) zImage UIMAGE_LOADADDR=0x8000
+linux: | buildroot/.config
 
-.PHONY: linux/arch/arm/boot/zImage
+.PHONY: buildroot/output/images/zImage
+buildroot/output/images/zImage: linux
 
-
-build/zImage: linux/arch/arm/boot/zImage  | build
+build/zImage: buildroot/output/images/zImage  | build
 	cp $< $@
 
 ### Device Tree ###
 
-linux/arch/arm/boot/dts/%.dtb: linux/arch/arm/boot/dts/%.dts  linux/arch/arm/boot/dts/zynq-pluto-sdr.dtsi
-	make -C linux -j $(NCORES) ARCH=arm CROSS_COMPILE=$(CROSS_COMPILE) $(notdir $@)
+buildroot/output/images/%.dtb: linux
 
-build/%.dtb: linux/arch/arm/boot/dts/%.dtb | build
+build/%.dtb: buildroot/output/images/%.dtb | build
 	cp $< $@
 
 ### Buildroot ###
 
-buildroot/output/images/rootfs.cpio.gz:
-	@echo device-fw $(VERSION)> $(CURDIR)/buildroot/board/$(TARGET)/VERSIONS
-	@$(foreach dir,$(VSUBDIRS),echo $(dir) $(shell cd $(dir) && git describe --abbrev=4 --dirty --always --tags) >> $(CURDIR)/buildroot/board/$(TARGET)/VERSIONS;)
-	make -C buildroot ARCH=arm zynq_$(TARGET)_defconfig
-	make -C buildroot legal-info
+buildroot/board/$(TARGET)/VERSIONS:
+	@echo device-fw $(VERSION) > $(CURDIR)/buildroot/board/$(TARGET)/VERSIONS
+	@echo hdl $(shell cd hdl && git describe --abbrev=4 --dirty --always --tags) >> $(CURDIR)/buildroot/board/$(TARGET)/VERSIONS
+	@echo linux master >> $(CURDIR)/buildroot/board/$(TARGET)/VERSIONS
+	@echo u-boot-xlnx pluto >> $(CURDIR)/buildroot/board/$(TARGET)/VERSIONS
+
+.PRECIOUS: build/LICENSE.html
+build/LICENSE.html: buildroot/board/$(TARGET)/VERSIONS
+	$(MAKE) -C buildroot legal-info
 	scripts/legal_info_html.sh "$(COMPLETE_NAME)" "$(CURDIR)/buildroot/board/$(TARGET)/VERSIONS"
+
+.PHONY: rootfs
+rootfs: | build/LICENSE.html buildroot/.config
 	cp build/LICENSE.html buildroot/board/$(TARGET)/msd/LICENSE.html
-	make -C buildroot TOOLCHAIN_EXTERNAL_INSTALL_DIR= ARCH=arm CROSS_COMPILE=$(CROSS_COMPILE) BUSYBOX_CONFIG_FILE=$(CURDIR)/buildroot/board/$(TARGET)/busybox-1.25.0.config all
+	$(MAKE) -C buildroot
 
 .PHONY: buildroot/output/images/rootfs.cpio.gz
+buildroot/output/images/rootfs.cpio.gz: rootfs
 
 build/rootfs.cpio.gz: buildroot/output/images/rootfs.cpio.gz | build
 	cp $< $@
 
-build/$(TARGET).itb: u-boot-xlnx/tools/mkimage build/zImage build/rootfs.cpio.gz $(TARGET_DTS_FILES) build/system_top.bit
-	u-boot-xlnx/tools/mkimage -f scripts/$(TARGET).its $@
+build/$(TARGET).itb: buildroot/output/build/uboot-pluto/tools/mkimage build/zImage build/rootfs.cpio.gz $(TARGET_DTS_FILES) build/system_top.bit
+	buildroot/output/build/uboot-pluto/tools/mkimage -f scripts/$(TARGET).its $@
 
 build/system_top.hdf:  | build
 ifeq (1, ${HAVE_VIVADO})
+	cd hdl && patch --forward -p1 < ../patches/pluto.patch
 	bash -c "source $(VIVADO_SETTINGS) && make -C hdl/projects/$(TARGET) && cp hdl/projects/$(TARGET)/$(TARGET).sdk/system_top.hdf $@"
 else
 ifneq ($(HDF_URL),)
 	wget -T 3 -t 1 -N --directory-prefix build $(HDF_URL)
 endif
 endif
+
+## Pass targets to buildroot
+%:
+	$(MAKE) BR2_EXTERNAL=$(CURDIR)/configs BR2_DEFCONFIG=$(CURDIR)/configs/config -C buildroot $*
 
 ### TODO: Build system_top.hdf from src if dl fails - need 2016.2 for that ...
 
@@ -157,8 +167,6 @@ clean-build:
 	rm -rf build/*
 
 clean:
-	make -C u-boot-xlnx clean
-	make -C linux clean
 	make -C buildroot clean
 	make -C hdl clean
 	rm -f $(notdir $(wildcard build/*))
