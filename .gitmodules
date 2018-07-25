@@ -6,3 +6,7 @@
 	path = hdl
 	url = https://github.com/analogdevicesinc/hdl
 	branch = master
+[submodule "ettus-hdl"]
+	path = ettus-hdl
+	url = https://github.com/EttusResearch/fpga
+	branch = rfnoc-devel
