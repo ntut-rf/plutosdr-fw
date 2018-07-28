@@ -4,5 +4,5 @@
 	branch = pluto
 [submodule "hdl"]
 	path = hdl
-	url = https://github.com/analogdevicesinc/hdl
+	url = https://github.com/seanstone/hdl
 	branch = master
