@@ -13,7 +13,7 @@ HAVE_VIVADO= $(shell bash -c "source $(VIVADO_SETTINGS) > /dev/null 2>&1 && viva
 
 TARGET ?= pluto
 SUPPORTED_TARGETS:=pluto sidekiqz2
-HDL_PROJECT ?= $(TARGET)
+export HDL_PROJECT ?= $(TARGET)
 
 # Include target specific constants
 include scripts/$(TARGET).mk
