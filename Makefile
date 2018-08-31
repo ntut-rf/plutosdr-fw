@@ -13,6 +13,7 @@ HAVE_VIVADO= $(shell bash -c "source $(VIVADO_SETTINGS) > /dev/null 2>&1 && viva
 
 TARGET ?= pluto
 SUPPORTED_TARGETS:=pluto sidekiqz2
+HDL_PROJECT ?= $(TARGET)
 
 # Include target specific constants
 include scripts/$(TARGET).mk
@@ -118,7 +119,7 @@ hdl: build/system_top.hdf
 build/system_top.hdf:  | build
 ifeq (1, ${HAVE_VIVADO})
 	cd hdl && patch --forward -p1 < ../patches/pluto.patch || true
-	bash -c "source $(VIVADO_SETTINGS) && make -C hdl/projects/$(TARGET) && cp hdl/projects/$(TARGET)/$(TARGET).sdk/system_top.hdf $@"
+	bash -c "source $(VIVADO_SETTINGS) && make -C hdl/projects/$(HDL_PROJECT) && cp hdl/projects/$(HDL_PROJECT)/$(HDL_PROJECT).sdk/system_top.hdf $@"
 else
 ifneq ($(HDF_URL),)
 	wget -T 3 -t 1 -N --directory-prefix build $(HDF_URL)
