@@ -226,6 +226,8 @@ fw: build/$(TARGET).frm build/$(TARGET).dfu
 .PHONY: upload
 upload:
 	cp build/$(TARGET).frm /run/media/*/PlutoSDR/
+	cp build/boot.frm /run/media/*/PlutoSDR/
+	sudo eject /run/media/$$USER/PlutoSDR
 
 build/sdk/hw_0/ps7_init.tcl:
 	cp hdl/projects/$(HDL_PROJECT)/$(HDL_PROJECT).srcs/sources_1/bd/system/ip/system_sys_ps7_0/ps7_init.tcl $@
