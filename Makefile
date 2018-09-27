@@ -231,3 +231,7 @@ upload:
 
 build/sdk/hw_0/ps7_init.tcl:
 	cp hdl/projects/$(HDL_PROJECT)/$(HDL_PROJECT).srcs/sources_1/bd/system/ip/system_sys_ps7_0/ps7_init.tcl $@
+
+clean-target:
+	rm -rf buildroot/output/target
+	find buildroot/output/ -name ".stamp_target_installed" |xargs rm -rf 
