@@ -102,10 +102,10 @@ rootfs: | build/LICENSE.html buildroot/.config
 	cp build/LICENSE.html buildroot/board/$(TARGET)/msd/LICENSE.html
 	$(MAKE) -C buildroot
 
-.PHONY: buildroot/output/images/rootfs.cpio.gz
-buildroot/output/images/rootfs.cpio.gz: rootfs
+.PHONY: buildroot/output/images/rootfs.cpio.xz
+buildroot/output/images/rootfs.cpio.xz: rootfs
 
-build/rootfs.cpio.gz: buildroot/output/images/rootfs.cpio.gz | build
+build/rootfs.cpio.xz: buildroot/output/images/rootfs.cpio.xz | build
 	cp $< $@
 
 ## Pass targets to buildroot
@@ -126,7 +126,7 @@ ifneq ($(HDF_URL),)
 endif
 endif
 
-build/$(TARGET).itb: buildroot/output/build/uboot-pluto/tools/mkimage build/zImage build/rootfs.cpio.gz $(TARGET_DTS_FILES) build/system_top.bit
+build/$(TARGET).itb: buildroot/output/build/uboot-pluto/tools/mkimage build/zImage build/rootfs.cpio.xz $(TARGET_DTS_FILES) build/system_top.bit
 	buildroot/output/build/uboot-pluto/tools/mkimage -f scripts/$(TARGET).its $@
 
 ### TODO: Build system_top.hdf from src if dl fails - need 2016.2 for that ...
@@ -208,11 +208,11 @@ jtag-bootstrap: build/u-boot.elf build/sdk/hw_0/ps7_init.tcl build/sdk/hw_0/syst
 	$(CROSS_COMPILE)strip build/u-boot.elf
 	zip -j build/$(ZIP_ARCHIVE_PREFIX)-$@-$(VERSION).zip $^
 
-sysroot: buildroot/output/images/rootfs.cpio.gz
-	tar czfh build/sysroot-$(VERSION).tar.gz --hard-dereference --exclude=usr/share/man -C buildroot/output staging
+sysroot: buildroot/output/images/rootfs.cpio.xz
+	tar czfh build/sysroot-$(VERSION).tar.xz --hard-dereference --exclude=usr/share/man -C buildroot/output staging
 
-legal-info: buildroot/output/images/rootfs.cpio.gz
-	tar czvf build/legal-info-$(VERSION).tar.gz -C buildroot/output legal-info
+legal-info: buildroot/output/images/rootfs.cpio.xz
+	tar czvf build/legal-info-$(VERSION).tar.xz -C buildroot/output legal-info
 
 git-update-all:
 	git submodule update --recursive --remote

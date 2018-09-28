@@ -66,11 +66,11 @@
 		};
 		ramdisk@1 {
 			description = "Ramdisk";
-			data = /incbin/("../build/rootfs.cpio.gz");
+			data = /incbin/("../build/rootfs.cpio.xz");
 			type = "ramdisk";
 			arch = "arm";
 			os = "linux";
-			compression = "gzip";
+			compression = "xz";
 			hash@1 {
 				algo = "md5";
 			};
