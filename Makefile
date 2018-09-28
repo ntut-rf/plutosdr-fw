@@ -47,6 +47,8 @@ endif
 %:
 	$(MAKE) BR2_EXTERNAL=$(CURDIR)/configs BR2_DEFCONFIG=$(CURDIR)/configs/config -C buildroot $*
 
+include configs/config
+
 ################################### Metadata ###################################
 
 .PHONY: license
@@ -60,10 +62,10 @@ build/LICENSE.html: versions legal-info
 versions: configs/$(TARGET)/VERSIONS
 
 configs/$(TARGET)/VERSIONS:
-	@echo device-fw $(VERSION) > configs/$(TARGET)/VERSIONS
-	@echo hdl $(shell cd hdl && git describe --abbrev=4 --dirty --always --tags) >> configs/$(TARGET)/VERSIONS
-	@echo linux master >> configs/$(TARGET)/VERSIONS
-	@echo u-boot-xlnx pluto >> configs/$(TARGET)/VERSIONS
+	echo device-fw $(VERSION) > configs/$(TARGET)/VERSIONS
+	echo hdl $(shell cd hdl && git describe --abbrev=4 --dirty --always --tags) >> configs/$(TARGET)/VERSIONS
+	echo linux $(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION) >> configs/$(TARGET)/VERSIONS
+	echo u-boot-xlnx $(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION) >> configs/$(TARGET)/VERSIONS
 
 ################################### U-Boot #####################################
 
@@ -74,7 +76,7 @@ build/u-boot.elf: uboot
 	cp buildroot/output/images/u-boot $@
 
 build/uboot-env.bin: build/uboot-env.txt
-	buildroot/output/build/uboot-pluto/tools/mkenvimage -s 0x20000 -o $@ $<
+	buildroot/output/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION)/tools/mkenvimage -s 0x20000 -o $@ $<
 
 build/uboot-env.txt: uboot
 	mkdir -p $(@D)
@@ -137,7 +139,7 @@ endif
 itb: build/$(TARGET).itb
 
 build/$(TARGET).itb: uboot build/zImage build/rootfs.cpio.xz $(addprefix build/,$(TARGET_DTS_FILES)) build/system_top.bit
-	buildroot/output/build/uboot-pluto/tools/mkimage -f scripts/$(TARGET).its $@
+	buildroot/output/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION)/tools/mkimage -f scripts/$(TARGET).its $@
 
 build/boot.bin: build/sdk/fsbl/Release/fsbl.elf build/u-boot.elf
 	@echo img:{[bootloader] $^ } > build/boot.bif
