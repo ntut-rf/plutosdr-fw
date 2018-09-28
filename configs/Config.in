@@ -1,1 +1,1 @@
-
+source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/gr-iio/Config.in"
