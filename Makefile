@@ -43,48 +43,23 @@ endif
 
 TARGET_DTS_FILES:=$(foreach dts,$(TARGET_DTS_FILES),build/$(dts))
 
-build:
-	mkdir -p $@
+################################## Buildroot ###################################
 
-buildroot/.config:
-	$(MAKE) defconfig
+## Pass targets to buildroot
+%:
+	$(MAKE) BR2_EXTERNAL=$(CURDIR)/configs BR2_DEFCONFIG=$(CURDIR)/configs/config -C buildroot $*
 
-### u-boot ###
+################################### Metadata ###################################
 
-export UIMAGE_LOADADDR=0x8000
+.PHONY: license
+license: build/LICENSE.html
 
-uboot: | buildroot/.config
+.PRECIOUS: build/LICENSE.html
+build/LICENSE.html: versions legal-info
+	scripts/legal_info_html.sh "$(COMPLETE_NAME)" "$(CURDIR)/buildroot/board/$(TARGET)/VERSIONS"
 
-.PHONY: buildroot/output/images/u-boot buildroot/output/build/uboot-pluto/tools/mkimage
-buildroot/output/images/u-boot buildroot/output/build/uboot-pluto/tools/mkimage: uboot
-
-build/u-boot.elf: buildroot/output/images/u-boot | build
-	cp $< $@
-
-build/uboot-env.txt: uboot | build
-	CROSS_COMPILE=$(CROSS_COMPILE) scripts/get_default_envs.sh > $@
-
-build/uboot-env.bin: build/uboot-env.txt
-	buildroot/output/build/uboot-pluto/tools/mkenvimage -s 0x20000 -o $@ $<
-
-### Linux ###
-
-linux: | buildroot/.config
-
-.PHONY: buildroot/output/images/zImage
-buildroot/output/images/zImage: linux
-
-build/zImage: buildroot/output/images/zImage  | build
-	cp $< $@
-
-### Device Tree ###
-
-buildroot/output/images/%.dtb: linux
-
-build/%.dtb: buildroot/output/images/%.dtb | build
-	cp $< $@
-
-### Buildroot ###
+.PHONY: versions
+versions: buildroot/board/$(TARGET)/VERSIONS
 
 buildroot/board/$(TARGET)/VERSIONS:
 	@echo device-fw $(VERSION) > $(CURDIR)/buildroot/board/$(TARGET)/VERSIONS
@@ -92,46 +67,51 @@ buildroot/board/$(TARGET)/VERSIONS:
 	@echo linux master >> $(CURDIR)/buildroot/board/$(TARGET)/VERSIONS
 	@echo u-boot-xlnx pluto >> $(CURDIR)/buildroot/board/$(TARGET)/VERSIONS
 
-.PRECIOUS: build/LICENSE.html
-build/LICENSE.html: buildroot/board/$(TARGET)/VERSIONS
-	$(MAKE) -C buildroot legal-info
-	scripts/legal_info_html.sh "$(COMPLETE_NAME)" "$(CURDIR)/buildroot/board/$(TARGET)/VERSIONS"
+################################### U-Boot #####################################
+
+export UIMAGE_LOADADDR=0x8000
+
+build/u-boot.elf: uboot
+	mkdir -p $(@D)
+	cp buildroot/output/images/u-boot $@
+
+build/uboot-env.bin: build/uboot-env.txt
+	buildroot/output/build/uboot-pluto/tools/mkenvimage -s 0x20000 -o $@ $<
+
+build/uboot-env.txt: uboot
+	mkdir -p $(@D)
+	CROSS_COMPILE=$(CROSS_COMPILE) scripts/get_default_envs.sh > $@
+
+#################################### Linux ####################################
+
+build/zImage: linux
+	mkdir -p $(@D)
+	cp buildroot/output/images/zImage $@
+
+build/%.dtb: linux
+	mkdir -p $(@D)
+	cp buildroot/output/images/*.dtb $(@D)
+
+#################################### Rootfs ####################################
 
 .PHONY: rootfs
-rootfs: | build/LICENSE.html buildroot/.config
+rootfs: build/rootfs.cpio.xz
+
+build/rootfs.cpio.xz: license
+	mkdir -p $(@D)
 	cp build/LICENSE.html buildroot/board/$(TARGET)/msd/LICENSE.html
 	$(MAKE) -C buildroot
+	cp buildroot/output/images/rootfs.cpio.xz $@
 
-.PHONY: buildroot/output/images/rootfs.cpio.xz
-buildroot/output/images/rootfs.cpio.xz: rootfs
-
-build/rootfs.cpio.xz: buildroot/output/images/rootfs.cpio.xz | build
-	cp $< $@
-
-## Pass targets to buildroot
-%:
-	$(MAKE) BR2_EXTERNAL=$(CURDIR)/configs BR2_DEFCONFIG=$(CURDIR)/configs/config -C buildroot $*
+###################################### HDL #####################################
 
 .PHONY: hdl
-hdl: build/system_top.hdf
+hdl: build/system_top.bit
 
-.PHONY: build/system_top.hdf
-build/system_top.hdf:  | build
-ifeq (1, ${HAVE_VIVADO})
-	cd hdl && patch --forward -p1 < ../patches/pluto.patch || true
-	bash -c "source $(VIVADO_SETTINGS) && make -C hdl/projects/$(HDL_PROJECT) && cp hdl/projects/$(HDL_PROJECT)/$(HDL_PROJECT).sdk/system_top.hdf $@"
-else
-ifneq ($(HDF_URL),)
-	wget -T 3 -t 1 -N --directory-prefix build $(HDF_URL)
-endif
-endif
+build/system_top.bit: build/sdk/hw_0/system_top.bit
+	cp $< $@
 
-build/$(TARGET).itb: buildroot/output/build/uboot-pluto/tools/mkimage build/zImage build/rootfs.cpio.xz $(TARGET_DTS_FILES) build/system_top.bit
-	buildroot/output/build/uboot-pluto/tools/mkimage -f scripts/$(TARGET).its $@
-
-### TODO: Build system_top.hdf from src if dl fails - need 2016.2 for that ...
-
-build/sdk/fsbl/Release/fsbl.elf build/sdk/hw_0/system_top.bit : build/system_top.hdf
+build/sdk/fsbl/Release/fsbl.elf build/sdk/hw_0/system_top.bit: build/system_top.hdf
 	rm -Rf build/sdk
 ifeq (1, ${HAVE_VIVADO})
 	bash -c "source $(VIVADO_SETTINGS) && xsdk -batch -source scripts/create_fsbl_project.tcl"
@@ -140,12 +120,39 @@ else
 	unzip -o build/system_top.hdf system_top.bit -d build/sdk/hw_0
 endif
 
-build/system_top.bit: build/sdk/hw_0/system_top.bit
-	cp $< $@
+build/sdk/hw_0/ps7_init.tcl:
+	cp hdl/projects/$(HDL_PROJECT)/$(HDL_PROJECT).srcs/sources_1/bd/system/ip/system_sys_ps7_0/ps7_init.tcl $@
+
+build/system_top.hdf:
+	mkdir -p $(@D)
+ifeq (1, ${HAVE_VIVADO})
+	bash -c "source $(VIVADO_SETTINGS) && make -C hdl/projects/$(HDL_PROJECT) && cp hdl/projects/$(HDL_PROJECT)/$(HDL_PROJECT).sdk/system_top.hdf $@"
+else
+ifneq ($(HDF_URL),)
+	wget -T 3 -t 1 -N --directory-prefix build $(HDF_URL)
+endif
+endif
+
+#################################### Images ####################################
+
+.PHONY: itb
+itb: build/$(TARGET).itb
+
+build/$(TARGET).itb: uboot build/zImage build/rootfs.cpio.xz $(TARGET_DTS_FILES) build/system_top.bit
+	buildroot/output/build/uboot-pluto/tools/mkimage -f scripts/$(TARGET).its $@
 
 build/boot.bin: build/sdk/fsbl/Release/fsbl.elf build/u-boot.elf
 	@echo img:{[bootloader] $^ } > build/boot.bif
 	bash -c "source $(VIVADO_SETTINGS) && bootgen -image build/boot.bif -w -o $@"
+
+################################### Products ###################################
+
+.PHONY: fw frm dfu
+fw: frm dfu
+
+frm: build/$(TARGET).frm
+
+dfu: build/$(TARGET).dfu
 
 ### MSD update firmware file ###
 
@@ -168,21 +175,28 @@ build/$(TARGET).dfu: build/$(TARGET).itb
 	dfu-suffix -a $<.tmp -v $(DEVICE_VID) -p $(DEVICE_PID)
 	mv $<.tmp $@
 
-clean-build:
-	rm -f $(notdir $(wildcard build/*))
-	rm -rf build/*
-
-clean-buildroot:
-	make -C buildroot clean
-
-clean:
-	make -C buildroot clean
-	make -C hdl clean
-	rm -f $(notdir $(wildcard build/*))
-	rm -rf build/*
-
 zip-all: $(TARGETS)
 	zip -j build/$(ZIP_ARCHIVE_PREFIX)-fw-$(VERSION).zip $^
+
+#################################### Clean #####################################
+
+.PHONY: clean-all clean-build clean-hdl clean-target
+
+clean-all: clean-build clean-hdl clean
+
+clean-build:
+	rm -rf build
+
+clean-hdl:
+	make -C hdl clean
+
+clean-target:
+	rm -rf buildroot/output/target
+	find buildroot/output/ -name ".stamp_target_installed" |xargs rm -rf
+
+##################################### DFU ######################################
+
+.PHONY: dfu-$(TARGET) dfu-sf-uboot dfu-all dfu-ram
 
 dfu-$(TARGET): build/$(TARGET).dfu
 	dfu-util -D build/$(TARGET).dfu -a firmware.dfu
@@ -207,34 +221,14 @@ dfu-ram: build/$(TARGET).dfu
 	dfu-util -D build/$(TARGET).dfu -a firmware.dfu
 	dfu-util -e
 
+######################################### ######################################
+
 jtag-bootstrap: build/u-boot.elf build/sdk/hw_0/ps7_init.tcl build/sdk/hw_0/system_top.bit scripts/run.tcl
 	$(CROSS_COMPILE)strip build/u-boot.elf
 	zip -j build/$(ZIP_ARCHIVE_PREFIX)-$@-$(VERSION).zip $^
-
-sysroot: buildroot/output/images/rootfs.cpio.xz
-	tar czfh build/sysroot-$(VERSION).tar.xz --hard-dereference --exclude=usr/share/man -C buildroot/output staging
-
-legal-info: buildroot/output/images/rootfs.cpio.xz
-	tar czvf build/legal-info-$(VERSION).tar.xz -C buildroot/output legal-info
-
-git-update-all:
-	git submodule update --recursive --remote
-
-git-pull:
-	git pull --recurse-submodules
-
-.PHONY: fw
-fw: build/$(TARGET).frm build/$(TARGET).dfu
 
 .PHONY: upload
 upload:
 	cp build/$(TARGET).frm /run/media/*/PlutoSDR/
 	cp build/boot.frm /run/media/*/PlutoSDR/
 	sudo eject /run/media/$$USER/PlutoSDR
-
-build/sdk/hw_0/ps7_init.tcl:
-	cp hdl/projects/$(HDL_PROJECT)/$(HDL_PROJECT).srcs/sources_1/bd/system/ip/system_sys_ps7_0/ps7_init.tcl $@
-
-clean-target:
-	rm -rf buildroot/output/target
-	find buildroot/output/ -name ".stamp_target_installed" |xargs rm -rf 
