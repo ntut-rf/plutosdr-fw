@@ -54,16 +54,16 @@ license: build/LICENSE.html
 
 .PRECIOUS: build/LICENSE.html
 build/LICENSE.html: versions legal-info
-	scripts/legal_info_html.sh "$(COMPLETE_NAME)" "$(CURDIR)/buildroot/board/$(TARGET)/VERSIONS"
+	scripts/legal_info_html.sh "$(COMPLETE_NAME)" "configs/$(TARGET)/VERSIONS"
 
 .PHONY: versions
-versions: buildroot/board/$(TARGET)/VERSIONS
+versions: configs/$(TARGET)/VERSIONS
 
-buildroot/board/$(TARGET)/VERSIONS:
-	@echo device-fw $(VERSION) > $(CURDIR)/buildroot/board/$(TARGET)/VERSIONS
-	@echo hdl $(shell cd hdl && git describe --abbrev=4 --dirty --always --tags) >> $(CURDIR)/buildroot/board/$(TARGET)/VERSIONS
-	@echo linux master >> $(CURDIR)/buildroot/board/$(TARGET)/VERSIONS
-	@echo u-boot-xlnx pluto >> $(CURDIR)/buildroot/board/$(TARGET)/VERSIONS
+configs/$(TARGET)/VERSIONS:
+	@echo device-fw $(VERSION) > configs/$(TARGET)/VERSIONS
+	@echo hdl $(shell cd hdl && git describe --abbrev=4 --dirty --always --tags) >> configs/$(TARGET)/VERSIONS
+	@echo linux master >> configs/$(TARGET)/VERSIONS
+	@echo u-boot-xlnx pluto >> configs/$(TARGET)/VERSIONS
 
 ################################### U-Boot #####################################
 
