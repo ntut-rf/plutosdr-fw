@@ -7,27 +7,24 @@ CROSS_COMPILE ?= arm-linux-gnueabihf-
 
 NCORES = $(shell grep -c ^processor /proc/cpuinfo)
 
-VERSION=$(shell git describe --abbrev=4 --dirty --always --tags)
-LATEST_TAG=$(shell git describe --abbrev=0 --tags)
-HAVE_VIVADO= $(shell bash -c "source $(VIVADO_SETTINGS) > /dev/null 2>&1 && vivado -version > /dev/null 2>&1 && echo 1 || echo 0")
+VERSION = $(shell git describe --abbrev=4 --dirty --always --tags)
+LATEST_TAG = $(shell git describe --abbrev=0 --tags)
+HAVE_VIVADO = $(shell bash -c "source $(VIVADO_SETTINGS) > /dev/null 2>&1 && vivado -version > /dev/null 2>&1 && echo 1 || echo 0")
 
 TARGET ?= pluto
-SUPPORTED_TARGETS:=pluto sidekiqz2
-export HDL_PROJECT ?= $(TARGET)
+SUPPORTED_TARGETS := pluto sidekiqz2
 
-# Include target specific constants
-include scripts/$(TARGET).mk
+TARGETS += build/$(TARGET).frm
+ifeq ($(HAVE_VIVADO), 1)
+TARGETS += build/boot.frm jtag-bootstrap
+endif
 
 ifeq (, $(shell which dfu-suffix))
 $(warning "No dfu-utils in PATH consider doing: sudo apt-get install dfu-util")
-TARGETS = build/$(TARGET).frm
-ifeq (1, ${HAVE_VIVADO})
-TARGETS += build/boot.frm jtag-bootstrap
-endif
 else
-TARGETS = build/$(TARGET).dfu build/uboot-env.dfu build/$(TARGET).frm
-ifeq (1, ${HAVE_VIVADO})
-TARGETS += build/boot.dfu build/boot.frm jtag-bootstrap
+TARGETS += build/$(TARGET).dfu build/uboot-env.dfu
+ifeq ($(HAVE_VIVADO), 1)
+TARGETS += build/boot.dfu
 endif
 endif
 
@@ -36,12 +33,13 @@ all:
 	@echo "Invalid TARGET variable ; valid values are: pluto, sidekiqz2" &&
 	exit 1
 else
-all: $(TARGETS) zip-all
+# Include target specific constants
+include scripts/$(TARGET).mk
+export HDL_PROJECT ?= $(TARGET)
+all: zip-all
 endif
 
 .NOTPARALLEL: all
-
-TARGET_DTS_FILES:=$(foreach dts,$(TARGET_DTS_FILES),build/$(dts))
 
 ################################## Buildroot ###################################
 
@@ -138,7 +136,7 @@ endif
 .PHONY: itb
 itb: build/$(TARGET).itb
 
-build/$(TARGET).itb: uboot build/zImage build/rootfs.cpio.xz $(TARGET_DTS_FILES) build/system_top.bit
+build/$(TARGET).itb: uboot build/zImage build/rootfs.cpio.xz $(addprefix build/,$(TARGET_DTS_FILES)) build/system_top.bit
 	buildroot/output/build/uboot-pluto/tools/mkimage -f scripts/$(TARGET).its $@
 
 build/boot.bin: build/sdk/fsbl/Release/fsbl.elf build/u-boot.elf
@@ -175,8 +173,14 @@ build/$(TARGET).dfu: build/$(TARGET).itb
 	dfu-suffix -a $<.tmp -v $(DEVICE_VID) -p $(DEVICE_PID)
 	mv $<.tmp $@
 
+###
+
 zip-all: $(TARGETS)
 	zip -j build/$(ZIP_ARCHIVE_PREFIX)-fw-$(VERSION).zip $^
+
+jtag-bootstrap: build/u-boot.elf build/sdk/hw_0/ps7_init.tcl build/sdk/hw_0/system_top.bit scripts/run.tcl
+	$(CROSS_COMPILE)strip build/u-boot.elf
+	zip -j build/$(ZIP_ARCHIVE_PREFIX)-$@-$(VERSION).zip $^
 
 #################################### Clean #####################################
 
@@ -221,11 +225,7 @@ dfu-ram: build/$(TARGET).dfu
 	dfu-util -D build/$(TARGET).dfu -a firmware.dfu
 	dfu-util -e
 
-######################################### ######################################
-
-jtag-bootstrap: build/u-boot.elf build/sdk/hw_0/ps7_init.tcl build/sdk/hw_0/system_top.bit scripts/run.tcl
-	$(CROSS_COMPILE)strip build/u-boot.elf
-	zip -j build/$(ZIP_ARCHIVE_PREFIX)-$@-$(VERSION).zip $^
+################################################################################
 
 .PHONY: upload
 upload:
