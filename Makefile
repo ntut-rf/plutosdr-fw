@@ -172,6 +172,9 @@ clean-build:
 	rm -f $(notdir $(wildcard build/*))
 	rm -rf build/*
 
+clean-buildroot:
+	make -C buildroot clean
+
 clean:
 	make -C buildroot clean
 	make -C hdl clean
