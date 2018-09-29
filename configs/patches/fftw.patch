@@ -1,0 +1,297 @@
+diff --git a/package/fftw/Config.in b/package/fftw/Config.in
+index d51f8f3c51..119c72ad0b 100644
+--- a/package/fftw/Config.in
++++ b/package/fftw/Config.in
+@@ -21,46 +21,54 @@ config BR2_PACKAGE_FFTW_USE_SSE2
+ config BR2_PACKAGE_FFTW_USE_NEON
+ 	bool
+ 
+-choice
+-	prompt "fftw precision"
+-	default BR2_PACKAGE_FFTW_PRECISION_DOUBLE
+-	help
+-	  Selects fftw precision
+-
+-config BR2_PACKAGE_FFTW_PRECISION_SINGLE
+-	bool "single"
+-	select BR2_PACKAGE_FFTW_USE_SSE if BR2_X86_CPU_HAS_SSE
+-	select BR2_PACKAGE_FFTW_USE_SSE2 if BR2_X86_CPU_HAS_SSE2
+-	select BR2_PACKAGE_FFTW_USE_NEON if BR2_ARM_CPU_HAS_NEON && !BR2_ARM_SOFT_FLOAT
+-	help
+-	  Compile fftw in single precision, i.e. use 'float' for
+-	  floating point type.
++config BR2_PACKAGE_FFTWF
++	bool
+ 
+-config BR2_PACKAGE_FFTW_PRECISION_DOUBLE
+-	bool "double"
+-	select BR2_PACKAGE_FFTW_USE_SSE2 if BR2_X86_CPU_HAS_SSE2
+-	help
+-	  Compile fftw in double precision (the default), i.e. use
+-	  'double' for floating point type.
+-
+-config BR2_PACKAGE_FFTW_PRECISION_LONG_DOUBLE
+-	bool "long double"
+-	# long-double precision require long-double trigonometric routines
+-	depends on !(BR2_TOOLCHAIN_BUILDROOT_UCLIBC && \
+-		(BR2_arm || BR2_mips || BR2_mipsel))
+-	help
+-	  Compile fftw in long double precision, i.e. use 'long double'
+-	  for floating point type.
++config BR2_PACKAGE_FFTWL
++	bool
+ 
+-config BR2_PACKAGE_FFTW_PRECISION_QUAD
+-	bool "quad"
+-	# quad-precision needs to have a gcc with libquadmath
+-	depends on (BR2_i386 || BR2_x86_64) && BR2_USE_WCHAR
+-	help
+-	  Compile fftw in quadruple precision, i.e. use '__float128' for
+-	  floating point type.
++config BR2_PACKAGE_FFTWQ
++	bool
+ 
+-endchoice
++menu "precision"
++
++	config BR2_PACKAGE_FFTW_PRECISION_SINGLE
++		bool "single"
++		select BR2_PACKAGE_FFTWF
++		select BR2_PACKAGE_FFTW_USE_SSE if BR2_X86_CPU_HAS_SSE
++		select BR2_PACKAGE_FFTW_USE_SSE2 if BR2_X86_CPU_HAS_SSE2
++		select BR2_PACKAGE_FFTW_USE_NEON if BR2_ARM_CPU_HAS_NEON && !BR2_ARM_SOFT_FLOAT
++		help
++		  Compile fftw in single precision, i.e. use 'float' for
++		  floating point type.
++
++	config BR2_PACKAGE_FFTW_PRECISION_DOUBLE
++		bool "double"
++		select BR2_PACKAGE_FFTW_USE_SSE2 if BR2_X86_CPU_HAS_SSE2
++		help
++		  Compile fftw in double precision (the default), i.e. use
++		  'double' for floating point type.
++
++	config BR2_PACKAGE_FFTW_PRECISION_LONG_DOUBLE
++		bool "long double"
++		# long-double precision require long-double trigonometric routines
++		depends on !(BR2_TOOLCHAIN_BUILDROOT_UCLIBC && \
++			(BR2_arm || BR2_mips || BR2_mipsel))
++		select BR2_PACKAGE_FFTWL
++		help
++		  Compile fftw in long double precision, i.e. use 'long double'
++		  for floating point type.
++
++	config BR2_PACKAGE_FFTW_PRECISION_QUAD
++		bool "quad"
++		# quad-precision needs to have a gcc with libquadmath
++		depends on (BR2_i386 || BR2_x86_64) && BR2_USE_WCHAR
++		select BR2_PACKAGE_FFTWQ
++		help
++		  Compile fftw in quadruple precision, i.e. use '__float128' for
++		  floating point type.
++
++endmenu
+ 
+ config BR2_PACKAGE_FFTW_FAST
+ 	bool "optimise for speed over accuracy"
+diff --git a/package/fftw/fftw.mk b/package/fftw/fftw.mk
+index b167a2f6f7..b2e48537a2 100644
+--- a/package/fftw/fftw.mk
++++ b/package/fftw/fftw.mk
+@@ -18,10 +18,6 @@ else
+ FFTW_CONF_OPTS += --disable-fortran
+ endif
+ 
+-FFTW_CONF_OPTS += $(if $(BR2_PACKAGE_FFTW_PRECISION_SINGLE),--enable,--disable)-single
+-FFTW_CONF_OPTS += $(if $(BR2_PACKAGE_FFTW_PRECISION_LONG_DOUBLE),--enable,--disable)-long-double
+-FFTW_CONF_OPTS += $(if $(BR2_PACKAGE_FFTW_PRECISION_QUAD),--enable,--disable)-quad-precision
+-
+ FFTW_CFLAGS = $(TARGET_CFLAGS)
+ ifeq ($(BR2_PACKAGE_FFTW_FAST),y)
+ FFTW_CFLAGS += -O3 -ffast-math
+@@ -31,10 +27,6 @@ endif
+ FFTW_CONF_OPTS += $(if $(BR2_PACKAGE_FFTW_USE_SSE),--enable,--disable)-sse
+ FFTW_CONF_OPTS += $(if $(BR2_PACKAGE_FFTW_USE_SSE2),--enable,--disable)-sse2
+ 
+-# ARM optimisations
+-FFTW_CONF_OPTS += $(if $(BR2_PACKAGE_FFTW_USE_NEON),--enable,--disable)-neon
+-FFTW_CFLAGS += $(if $(BR2_PACKAGE_FFTW_USE_NEON),-mfpu=neon)
+-
+ # Generic optimisations
+ ifeq ($(BR2_TOOLCHAIN_HAS_THREADS),y)
+ FFTW_CONF_OPTS += --enable-threads
+diff --git a/package/fftwf/fftwf.hash b/package/fftwf/fftwf.hash
+new file mode 120000
+index 0000000000..038319a1e7
+--- /dev/null
++++ b/package/fftwf/fftwf.hash
+@@ -0,0 +1 @@
++../fftw/fftw.hash
+\ No newline at end of file
+diff --git a/package/fftwf/fftwf.mk b/package/fftwf/fftwf.mk
+new file mode 100644
+index 0000000000..f69da80b68
+--- /dev/null
++++ b/package/fftwf/fftwf.mk
+@@ -0,0 +1,47 @@
++################################################################################
++#
++# fftwf
++#
++################################################################################
++
++FFTWF_VERSION = 3.3.8
++FFTWF_SITE = http://www.fftw.org
++FFTWF_INSTALL_STAGING = YES
++FFTWF_LICENSE = GPL-2.0+
++FFTWF_LICENSE_FILES = COPYING
++
++# fortran support only enables generation and installation of fortran sources
++ifeq ($(BR2_TOOLCHAIN_HAS_FORTRAN),y)
++FFTWF_CONF_OPTS += --enable-fortran
++FFTWF_CONF_ENV += FLIBS="-lgfortran -lm"
++else
++FFTWF_CONF_OPTS += --disable-fortran
++endif
++
++FFTWF_CFLAGS = $(TARGET_CFLAGS)
++ifeq ($(BR2_PACKAGE_FFTW_FAST),y)
++FFTWF_CFLAGS += -O3 -ffast-math
++endif
++
++# x86 optimisations
++FFTWF_CONF_OPTS += $(if $(BR2_PACKAGE_FFTW_USE_SSE),--enable,--disable)-sse
++FFTWF_CONF_OPTS += $(if $(BR2_PACKAGE_FFTW_USE_SSE2),--enable,--disable)-sse2
++
++# Generic optimisations
++ifeq ($(BR2_TOOLCHAIN_HAS_THREADS),y)
++FFTWF_CONF_OPTS += --enable-threads
++FFTWF_CONF_OPTS += $(if $(BR2_GCC_ENABLE_OPENMP),--without,--with)-combined-threads
++else
++FFTWF_CONF_OPTS += --disable-threads
++endif
++FFTWF_CONF_OPTS += $(if $(BR2_GCC_ENABLE_OPENMP),--enable,--disable)-openmp
++
++FFTWF_CONF_OPTS += CFLAGS="$(FFTW_CFLAGS)"
++
++FFTWF_CONF_OPTS += --enable-float
++
++# ARM optimisations
++FFTWF_CONF_OPTS += $(if $(BR2_PACKAGE_FFTW_USE_NEON),--enable,--disable)-neon
++FFTWF_CFLAGS += $(if $(BR2_PACKAGE_FFTW_USE_NEON),-mfpu=neon)
++
++$(eval $(autotools-package))
+diff --git a/package/fftwl/fftwl.hash b/package/fftwl/fftwl.hash
+new file mode 120000
+index 0000000000..038319a1e7
+--- /dev/null
++++ b/package/fftwl/fftwl.hash
+@@ -0,0 +1 @@
++../fftw/fftw.hash
+\ No newline at end of file
+diff --git a/package/fftwl/fftwl.mk b/package/fftwl/fftwl.mk
+new file mode 100644
+index 0000000000..aca06e3612
+--- /dev/null
++++ b/package/fftwl/fftwl.mk
+@@ -0,0 +1,43 @@
++################################################################################
++#
++# fftwl
++#
++################################################################################
++
++FFTWL_VERSION = 3.3.8
++FFTWL_SITE = http://www.fftw.org
++FFTWL_INSTALL_STAGING = YES
++FFTWL_LICENSE = GPL-2.0+
++FFTWL_LICENSE_FILES = COPYING
++
++# fortran support only enables generation and installation of fortran sources
++ifeq ($(BR2_TOOLCHAIN_HAS_FORTRAN),y)
++FFTWL_CONF_OPTS += --enable-fortran
++FFTWL_CONF_ENV += FLIBS="-lgfortran -lm"
++else
++FFTWL_CONF_OPTS += --disable-fortran
++endif
++
++FFTWL_CFLAGS = $(TARGET_CFLAGS)
++ifeq ($(BR2_PACKAGE_FFTW_FAST),y)
++FFTWL_CFLAGS += -O3 -ffast-math
++endif
++
++# x86 optimisations
++FFTWL_CONF_OPTS += $(if $(BR2_PACKAGE_FFTW_USE_SSE),--enable,--disable)-sse
++FFTWL_CONF_OPTS += $(if $(BR2_PACKAGE_FFTW_USE_SSE2),--enable,--disable)-sse2
++
++# Generic optimisations
++ifeq ($(BR2_TOOLCHAIN_HAS_THREADS),y)
++FFTWL_CONF_OPTS += --enable-threads
++FFTWL_CONF_OPTS += $(if $(BR2_GCC_ENABLE_OPENMP),--without,--with)-combined-threads
++else
++FFTWL_CONF_OPTS += --disable-threads
++endif
++FFTWL_CONF_OPTS += $(if $(BR2_GCC_ENABLE_OPENMP),--enable,--disable)-openmp
++
++FFTWL_CONF_OPTS += CFLAGS="$(FFTW_CFLAGS)"
++
++FFTWL_CONF_OPTS += --enable-long-double
++
++$(eval $(autotools-package))
+diff --git a/package/fftwq/fftwq.hash b/package/fftwq/fftwq.hash
+new file mode 120000
+index 0000000000..038319a1e7
+--- /dev/null
++++ b/package/fftwq/fftwq.hash
+@@ -0,0 +1 @@
++../fftw/fftw.hash
+\ No newline at end of file
+diff --git a/package/fftwq/fftwq.mk b/package/fftwq/fftwq.mk
+new file mode 100644
+index 0000000000..18d78d8274
+--- /dev/null
++++ b/package/fftwq/fftwq.mk
+@@ -0,0 +1,43 @@
++################################################################################
++#
++# fftwq
++#
++################################################################################
++
++FFTWQ__VERSION = 3.3.8
++FFTWQ__SITE = http://www.fftw.org
++FFTWQ__INSTALL_STAGING = YES
++FFTWQ__LICENSE = GPL-2.0+
++FFTWQ__LICENSE_FILES = COPYING
++
++# fortran support only enables generation and installation of fortran sources
++ifeq ($(BR2_TOOLCHAIN_HAS_FORTRAN),y)
++FFTWQ__CONF_OPTS += --enable-fortran
++FFTWQ__CONF_ENV += FLIBS="-lgfortran -lm"
++else
++FFTWQ__CONF_OPTS += --disable-fortran
++endif
++
++FFTWQ__CFLAGS = $(TARGET_CFLAGS)
++ifeq ($(BR2_PACKAGE_FFTW_FAST),y)
++FFTWQ__CFLAGS += -O3 -ffast-math
++endif
++
++# x86 optimisations
++FFTWQ__CONF_OPTS += $(if $(BR2_PACKAGE_FFTW_USE_SSE),--enable,--disable)-sse
++FFTWQ__CONF_OPTS += $(if $(BR2_PACKAGE_FFTW_USE_SSE2),--enable,--disable)-sse2
++
++# Generic optimisations
++ifeq ($(BR2_TOOLCHAIN_HAS_THREADS),y)
++FFTWQ__CONF_OPTS += --enable-threads
++FFTWQ__CONF_OPTS += $(if $(BR2_GCC_ENABLE_OPENMP),--without,--with)-combined-threads
++else
++FFTWQ__CONF_OPTS += --disable-threads
++endif
++FFTWQ__CONF_OPTS += $(if $(BR2_GCC_ENABLE_OPENMP),--enable,--disable)-openmp
++
++FFTWQ__CONF_OPTS += CFLAGS="$(FFTW_CFLAGS)"
++
++FFTWQ_CONF_OPTS += --enable-quad-precision
++
++$(eval $(autotools-package))

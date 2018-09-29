@@ -1,4 +1,3 @@
-source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/fftwf/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/libini/Config.in"
 menu "Applications and Tools for PlutoSDR, M2k & SidekiqZ2"
    source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/libad9361-iio/Config.in"
