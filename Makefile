@@ -43,6 +43,14 @@ endif
 
 ################################## Buildroot ###################################
 
+.PHONY: patch
+patch:
+	for patch in configs/patches/*.patch; do \
+		patch -d buildroot -p1 --forward < $$patch || true; \
+	done
+	rm -rf buildroot/package/fftw
+	cp -r configs/package/fftw buildroot/package/
+
 ## Pass targets to buildroot
 %:
 	$(MAKE) BR2_EXTERNAL=$(CURDIR)/configs BR2_DEFCONFIG=$(CURDIR)/configs/config -C buildroot $*

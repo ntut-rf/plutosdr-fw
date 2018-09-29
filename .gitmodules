@@ -1,7 +1,8 @@
 [submodule "buildroot"]
 	path = buildroot
-	url = https://github.com/seanstone/analog-buildroot
-	branch = pluto
+	url = https://github.com/buildroot/buildroot.git
+	branch = master
+	ignore = all
 [submodule "hdl"]
 	path = hdl
 	url = https://github.com/seanstone/hdl
