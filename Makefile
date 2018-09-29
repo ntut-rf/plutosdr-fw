@@ -48,8 +48,6 @@ patch:
 	for patch in configs/patches/*.patch; do \
 		patch -d buildroot -p1 --forward < $$patch || true; \
 	done
-	rm -rf buildroot/package/fftw
-	cp -r configs/package/fftw buildroot/package/
 
 ## Pass targets to buildroot
 %:
