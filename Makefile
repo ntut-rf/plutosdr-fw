@@ -108,7 +108,7 @@ rootfs: build/rootfs.cpio.xz
 
 build/rootfs.cpio.xz: license
 	mkdir -p $(@D)
-	cp build/LICENSE.html buildroot/board/$(TARGET)/msd/LICENSE.html
+	cp build/LICENSE.html configs/$(TARGET)/msd/LICENSE.html
 	$(MAKE) -C buildroot
 	cp buildroot/output/images/rootfs.cpio.xz $@
 
