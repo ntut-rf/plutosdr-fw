@@ -130,10 +130,10 @@ index 0000000000..038319a1e7
 \ No newline at end of file
 diff --git a/package/fftwf/fftwf.mk b/package/fftwf/fftwf.mk
 new file mode 100644
-index 0000000000..f69da80b68
+index 0000000000..727d73382c
 --- /dev/null
 +++ b/package/fftwf/fftwf.mk
-@@ -0,0 +1,47 @@
+@@ -0,0 +1,48 @@
 +################################################################################
 +#
 +# fftwf
@@ -142,6 +142,7 @@ index 0000000000..f69da80b68
 +
 +FFTWF_VERSION = 3.3.8
 +FFTWF_SITE = http://www.fftw.org
++FFTWF_SOURCE = fftw-$(FFTWF_VERSION).tar.gz
 +FFTWF_INSTALL_STAGING = YES
 +FFTWF_LICENSE = GPL-2.0+
 +FFTWF_LICENSE_FILES = COPYING
@@ -191,10 +192,10 @@ index 0000000000..038319a1e7
 \ No newline at end of file
 diff --git a/package/fftwl/fftwl.mk b/package/fftwl/fftwl.mk
 new file mode 100644
-index 0000000000..aca06e3612
+index 0000000000..b673b5ab65
 --- /dev/null
 +++ b/package/fftwl/fftwl.mk
-@@ -0,0 +1,43 @@
+@@ -0,0 +1,44 @@
 +################################################################################
 +#
 +# fftwl
@@ -203,6 +204,7 @@ index 0000000000..aca06e3612
 +
 +FFTWL_VERSION = 3.3.8
 +FFTWL_SITE = http://www.fftw.org
++FFTWL_SOURCE = fftw-$(FFTWL_VERSION).tar.gz
 +FFTWL_INSTALL_STAGING = YES
 +FFTWL_LICENSE = GPL-2.0+
 +FFTWL_LICENSE_FILES = COPYING
@@ -248,50 +250,64 @@ index 0000000000..038319a1e7
 \ No newline at end of file
 diff --git a/package/fftwq/fftwq.mk b/package/fftwq/fftwq.mk
 new file mode 100644
-index 0000000000..18d78d8274
+index 0000000000..940bbee86d
 --- /dev/null
 +++ b/package/fftwq/fftwq.mk
-@@ -0,0 +1,43 @@
+@@ -0,0 +1,44 @@
 +################################################################################
 +#
 +# fftwq
 +#
 +################################################################################
 +
-+FFTWQ__VERSION = 3.3.8
-+FFTWQ__SITE = http://www.fftw.org
-+FFTWQ__INSTALL_STAGING = YES
-+FFTWQ__LICENSE = GPL-2.0+
-+FFTWQ__LICENSE_FILES = COPYING
++FFTWQ_VERSION = 3.3.8
++FFTWQ_SITE = http://www.fftw.org
++FFTWQ_SOURCE = fftw-$(FFTWQ_VERSION).tar.gz
++FFTWQ_INSTALL_STAGING = YES
++FFTWQ_LICENSE = GPL-2.0+
++FFTWQ_LICENSE_FILES = COPYING
 +
 +# fortran support only enables generation and installation of fortran sources
 +ifeq ($(BR2_TOOLCHAIN_HAS_FORTRAN),y)
-+FFTWQ__CONF_OPTS += --enable-fortran
-+FFTWQ__CONF_ENV += FLIBS="-lgfortran -lm"
++FFTWQ_CONF_OPTS += --enable-fortran
++FFTWQ_CONF_ENV += FLIBS="-lgfortran -lm"
 +else
-+FFTWQ__CONF_OPTS += --disable-fortran
++FFTWQ_CONF_OPTS += --disable-fortran
 +endif
 +
-+FFTWQ__CFLAGS = $(TARGET_CFLAGS)
++FFTWQ_CFLAGS = $(TARGET_CFLAGS)
 +ifeq ($(BR2_PACKAGE_FFTW_FAST),y)
-+FFTWQ__CFLAGS += -O3 -ffast-math
++FFTWQ_CFLAGS += -O3 -ffast-math
 +endif
 +
 +# x86 optimisations
-+FFTWQ__CONF_OPTS += $(if $(BR2_PACKAGE_FFTW_USE_SSE),--enable,--disable)-sse
-+FFTWQ__CONF_OPTS += $(if $(BR2_PACKAGE_FFTW_USE_SSE2),--enable,--disable)-sse2
++FFTWQ_CONF_OPTS += $(if $(BR2_PACKAGE_FFTW_USE_SSE),--enable,--disable)-sse
++FFTWQ_CONF_OPTS += $(if $(BR2_PACKAGE_FFTW_USE_SSE2),--enable,--disable)-sse2
 +
 +# Generic optimisations
 +ifeq ($(BR2_TOOLCHAIN_HAS_THREADS),y)
-+FFTWQ__CONF_OPTS += --enable-threads
-+FFTWQ__CONF_OPTS += $(if $(BR2_GCC_ENABLE_OPENMP),--without,--with)-combined-threads
++FFTWQ_CONF_OPTS += --enable-threads
++FFTWQ_CONF_OPTS += $(if $(BR2_GCC_ENABLE_OPENMP),--without,--with)-combined-threads
 +else
-+FFTWQ__CONF_OPTS += --disable-threads
++FFTWQ_CONF_OPTS += --disable-threads
 +endif
-+FFTWQ__CONF_OPTS += $(if $(BR2_GCC_ENABLE_OPENMP),--enable,--disable)-openmp
++FFTWQ_CONF_OPTS += $(if $(BR2_GCC_ENABLE_OPENMP),--enable,--disable)-openmp
 +
-+FFTWQ__CONF_OPTS += CFLAGS="$(FFTW_CFLAGS)"
++FFTWQ_CONF_OPTS += CFLAGS="$(FFTW_CFLAGS)"
 +
 +FFTWQ_CONF_OPTS += --enable-quad-precision
 +
 +$(eval $(autotools-package))
+diff --git a/package/gnuradio/Config.in b/package/gnuradio/Config.in
+index 56957d59e4..cf19f19805 100644
+--- a/package/gnuradio/Config.in
++++ b/package/gnuradio/Config.in
+@@ -81,7 +81,7 @@ config BR2_PACKAGE_GNURADIO_ZEROMQ
+ comment "gr-fft, -filter, -analog, -channels, -digital, -trellis, -pager, -qtgui depends fftw's single precision"
+ 	depends on !BR2_PACKAGE_FFTW_PRECISION_SINGLE
+ 
+-if BR2_PACKAGE_FFTW_PRECISION_SINGLE
++if BR2_PACKAGE_FFTWF
+ 
+ config BR2_PACKAGE_GNURADIO_ANALOG
+ 	bool "gr-analog support"
