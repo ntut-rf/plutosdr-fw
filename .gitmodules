@@ -5,5 +5,5 @@
 	ignore = all
 [submodule "hdl"]
 	path = hdl
-	url = https://github.com/seanstone/hdl
+	url = https://github.com/analogdevicesinc/hdl
 	branch = master
