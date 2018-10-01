@@ -1,5 +1,5 @@
-LIBTUNTAP_VERSION := 943259e
-LIBTUNTAP_SITE := https://github.com/LaKabane/libtuntap
+LIBTUNTAP_VERSION := bf8e0fe
+LIBTUNTAP_SITE := https://github.com/tvelliott/libtuntap.git
 LIBTUNTAP_SITE_METHOD := git
 LIBTUNTAP_INSTALL_STAGING := YES
 LIBTUNTAP_INSTALL_TARGET := YES
