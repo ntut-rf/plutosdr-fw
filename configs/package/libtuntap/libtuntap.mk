@@ -1,6 +1,11 @@
 LIBTUNTAP_VERSION := 943259e
 LIBTUNTAP_SITE := https://github.com/LaKabane/libtuntap
 LIBTUNTAP_SITE_METHOD := git
+LIBTUNTAP_INSTALL_STAGING := YES
 LIBTUNTAP_INSTALL_TARGET := YES
+
+define LIBTUNTAP_INSTALL_STAGING_CMDS
+	$(INSTALL) -D -m 0644 $(@D)/*.h $(STAGING_DIR)/usr/include/
+endef
 
 $(eval $(cmake-package))
