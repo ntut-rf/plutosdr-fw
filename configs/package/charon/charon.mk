@@ -10,6 +10,7 @@ endef
 
 define CHARON_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/bin/* $(TARGET_DIR)/usr/bin/
+	cp -r $(@D)/target/* $(TARGET_DIR)/
 endef
 
 $(eval $(generic-package))
