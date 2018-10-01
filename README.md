@@ -18,6 +18,7 @@ Customized firmware for the [PlutoSDR](https://wiki.analog.com/university/tools/
 * Updated versions of buildroot packages
 
  The size of the resulting firmware is 21 MB.
+ It boots noticeably slower than the stock firmware.
 
 ## Instructions
 
