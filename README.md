@@ -19,6 +19,7 @@ Customized firmware for the [PlutoSDR](https://wiki.analog.com/university/tools/
 
 * Build
  ```bash
+$ git submodule update --init --recursive
 $ make patch
 $ make defconfig
 $ make
