@@ -1,6 +1,7 @@
 config BR2_PACKAGE_GR_IIO
-        bool "gr-iio"
-        help
-          IIO blocks for GNU Radio
+    bool "gr-iio"
+    select BR2_PACKAGE_LIBAD9361_IIO
+    help
+      IIO blocks for GNU Radio
 
-          https://github.com/analogdevicesinc/gr-iio
+      https://github.com/analogdevicesinc/gr-iio
