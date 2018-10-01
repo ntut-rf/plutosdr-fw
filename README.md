@@ -1,7 +1,21 @@
-# plutosdr-fw
+# PlutoSDR Firmware 
 Customized firmware for the [PlutoSDR](https://wiki.analog.com/university/tools/pluto "PlutoSDR Wiki Page")
 
-* Build Instructions
+## Customizations
+
+* Include hacks for [larger bandwidth](https://www.rtl-sdr.com/adalm-pluto-sdr-hack-tune-70-mhz-to-6-ghz-and-gqrx-install/) and [dual core](https://www.rtl-sdr.com/plutosdr-sdr-plugin-new-dual-core-cpu-hack/)
+* Add GNU Radio
+* Add Python 2
+* Add multiple precision (single and double) FFTW
+* Add NFS utils
+* Add nano, htop
+* Remove wifi firmware to save space
+* Use xz compression to save space
+* Updated versions of buildroot packages
+
+## Instructions
+
+* Build
  ```bash
 $ make patch
 $ make defconfig
@@ -14,7 +28,9 @@ $ make
   $ git submodule update --init --recursive
   ```
  
- * Main targets
+## Build Artifacts
+
+  * Main targets
  
      | File  | Comment |
      | ------------- | ------------- | 
