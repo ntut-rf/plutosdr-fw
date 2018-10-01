@@ -7,6 +7,8 @@ Customized firmware for the [PlutoSDR](https://wiki.analog.com/university/tools/
 * Add [GNU Radio](https://www.gnuradio.org/)
 * Add [Python 2](https://www.python.org/)
 * Add [FFTW](http://www.fftw.org/) with multiple precision (single and double) support
+* Add [libfec](https://github.com/quiet/libfec) (dependency for [Charon](https://github.com/tvelliott/charon))
+* Add [libtuntap](https://github.com/LaKabane/libtuntap) (dependency for [Charon](https://github.com/tvelliott/charon))
 * Add NFS utils
 * Add nano, htop
 * Remove wifi and other firmware to save space
