@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 841bc9f..3c43273 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,7 +22,6 @@ endif()
+ # -------------------
+ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib)
+ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib)
+-set(CMAKE_INSTALL_PREFIX "/usr/local/")
+ set(${CMAKE_SYSTEM_NAME} True)
+ 
+ # Tuntap library declaration and portable source files
+@@ -47,13 +46,6 @@ set_target_properties(tuntap PROPERTIES
+ # OS families specific things
+ # ---------------------------
+ if(UNIX)
+-    # Unix specific include directories
+-    # ---------------------------------
+-    target_include_directories(tuntap PUBLIC
+-        /usr/include/
+-        /usr/local/include/
+-    )
+-
+     # Unix specific definitions
+     # -------------------------
+     target_compile_definitions(tuntap PUBLIC -DUnix)
+@@ -77,7 +69,6 @@ endif(Windows)
+ # ------------------
+ if(UNIX)
+     if(Linux)
+-        set(CMAKE_INSTALL_PREFIX "/usr/")
+         target_compile_definitions(tuntap PUBLIC -D_GNU_SOURCE)
+         target_sources(tuntap PRIVATE tuntap-unix-linux.c)
+     elseif (OpenBSD)
+@@ -130,4 +121,3 @@ endif(UNIX)
+ if (BUILD_TESTING)
+     add_subdirectory(regress)
+ endif ()
+-
