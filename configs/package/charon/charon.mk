@@ -1,5 +1,5 @@
-CHARON_VERSION := f1ff805
-CHARON_SITE := https://github.com/seanstone/charon.git
+CHARON_VERSION := af15fb0
+CHARON_SITE := https://github.com/tvelliott/charon.git
 CHARON_SITE_METHOD := git
 CHARON_DEPENDENCIES += batctl bridge-utils fftwf iperf3 iproute2 liquid-dsp tunctl util-linux libfec libtuntap
 CHARON_INSTALL_TARGET := YES
@@ -10,8 +10,8 @@ endef
 
 define CHARON_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/bin/* $(TARGET_DIR)/usr/bin/
-	cp -r $(@D)/target/root $(TARGET_DIR)/
-	cp -r $(@D)/target/etc/init.d/* $(TARGET_DIR)/bin/
+	cp -r $(@D)/changes_to_plutosdr_fw_configs_rel_to_v28/buildroot/output/target/root $(TARGET_DIR)/
+	cp -r $(@D)/changes_to_plutosdr_fw_configs_rel_to_v28/buildroot/output/target/etc/init.d/* $(TARGET_DIR)/bin/
 endef
 
 $(eval $(generic-package))
