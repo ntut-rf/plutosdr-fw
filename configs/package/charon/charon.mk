@@ -11,7 +11,7 @@ endef
 define CHARON_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/bin/* $(TARGET_DIR)/usr/bin/
 	cp -r $(@D)/changes_to_plutosdr_fw_configs_rel_to_v28/buildroot/output/target/root $(TARGET_DIR)/
-	cp -r $(@D)/changes_to_plutosdr_fw_configs_rel_to_v28/buildroot/output/target/etc/init.d/* $(TARGET_DIR)/bin/
+	cp -r $(@D)/changes_to_plutosdr_fw_configs_rel_to_v28/buildroot/output/target/etc/init.d/* $(TARGET_DIR)/etc/init.d/
 endef
 
 $(eval $(generic-package))
