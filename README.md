@@ -69,5 +69,8 @@ $ make
      | zynq-pluto-sdr.dtb | Device Tree Blob for Rev.A |
      | zynq-pluto-sdr-revb.dtb | Device Tree Blob for Rev.B|     
 
+## Resources
+
+* [Pluto Stupid Tricks](https://archive.fosdem.org/2018/schedule/event/plutosdr/attachments/slides/2503/export/events/attachments/plutosdr/slides/2503/pluto_stupid_tricks.pdf)
  
 
