@@ -90,6 +90,16 @@ build/uboot-env.txt: uboot
 
 #################################### Linux ####################################
 
+LINUX_DIR = $(CURDIR)/buildroot/output/build/linux-$(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION)
+
+## Generate reference defconfig with missing options set to default as a base for comparison using diffconfig
+$(LINUX_DIR)/.$(BR2_LINUX_KERNEL_DEFCONFIG)_defconfig:
+	$(MAKE) -C $(LINUX_DIR) KCONFIG_CONFIG=$@ ARCH=arm $(BR2_LINUX_KERNEL_DEFCONFIG)_defconfig
+
+## Generate diff with reference config
+linux-diffconfig: $(LINUX_DIR)/.$(BR2_LINUX_KERNEL_DEFCONFIG)_defconfig linux-extract
+	$(LINUX_DIR)/scripts/diffconfig -m $< $(LINUX_DIR)/.config > configs/linux-extras.config
+
 build/zImage: linux
 	mkdir -p $(@D)
 	cp buildroot/output/images/zImage $@
