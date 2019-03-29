@@ -1,7 +1,6 @@
 export VIVADO_VERSION ?= 2018.2
 PATH := $(PATH):/opt/Xilinx/SDK/$(VIVADO_VERSION)/gnu/aarch32/lin/gcc-arm-linux-gnueabi/bin
 VIVADO_SETTINGS ?= /opt/Xilinx/Vivado/$(VIVADO_VERSION)/settings64.sh
-HAVE_VIVADO ?= 1
 
 CROSS_COMPILE ?= arm-linux-gnueabihf-
 
@@ -9,24 +8,15 @@ NCORES = $(shell grep -c ^processor /proc/cpuinfo)
 
 VERSION = $(shell git describe --abbrev=4 --dirty --always --tags)
 LATEST_TAG = $(shell git describe --abbrev=0 --tags)
-HAVE_VIVADO = $(shell bash -c "source $(VIVADO_SETTINGS) > /dev/null 2>&1 && vivado -version > /dev/null 2>&1 && echo 1 || echo 0")
 
 TARGET ?= pluto
 SUPPORTED_TARGETS := pluto sidekiqz2
 
 TARGETS += build/$(TARGET).frm
-ifeq ($(HAVE_VIVADO), 1)
 TARGETS += build/boot.frm jtag-bootstrap
-endif
 
-ifeq (, $(shell which dfu-suffix))
-$(warning "No dfu-utils in PATH consider doing: sudo apt-get install dfu-util")
-else
 TARGETS += build/$(TARGET).dfu build/uboot-env.dfu
-ifeq ($(HAVE_VIVADO), 1)
 TARGETS += build/boot.dfu
-endif
-endif
 
 ifeq ($(findstring $(TARGET),$(SUPPORTED_TARGETS)),)
 all:
@@ -129,25 +119,14 @@ build/system_top.bit: build/sdk/hw_0/system_top.bit
 
 build/sdk/fsbl/Release/fsbl.elf build/sdk/hw_0/system_top.bit: build/system_top.hdf
 	rm -Rf build/sdk
-ifeq (1, ${HAVE_VIVADO})
 	bash -c "source $(VIVADO_SETTINGS) && xsdk -batch -source scripts/create_fsbl_project.tcl"
-else
-	mkdir -p build/sdk/hw_0
-	unzip -o build/system_top.hdf system_top.bit -d build/sdk/hw_0
-endif
 
 build/sdk/hw_0/ps7_init.tcl:
 	cp hdl/projects/$(HDL_PROJECT)/$(HDL_PROJECT).srcs/sources_1/bd/system/ip/system_sys_ps7_0/ps7_init.tcl $@
 
 build/system_top.hdf:
 	mkdir -p $(@D)
-ifeq (1, ${HAVE_VIVADO})
 	bash -c "source $(VIVADO_SETTINGS) && make -C hdl/projects/$(HDL_PROJECT) && cp hdl/projects/$(HDL_PROJECT)/$(HDL_PROJECT).sdk/system_top.hdf $@"
-else
-ifneq ($(HDF_URL),)
-	wget -T 3 -t 1 -N --directory-prefix build $(HDF_URL)
-endif
-endif
 
 #################################### Images ####################################
 
