@@ -51,9 +51,9 @@ patch:
 
 ## Pass targets to buildroot
 %:
-	$(MAKE) BR2_EXTERNAL=$(CURDIR)/configs BR2_DEFCONFIG=$(CURDIR)/configs/config -C buildroot $*
+	$(MAKE) BR2_EXTERNAL=$(CURDIR)/configs BR2_DEFCONFIG=$(CURDIR)/configs/defconfig -C buildroot $*
 
-include configs/config
+include configs/defconfig
 
 ################################### Metadata ###################################
 
