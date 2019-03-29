@@ -53,6 +53,13 @@ patch:
 %:
 	$(MAKE) BR2_EXTERNAL=$(CURDIR)/configs BR2_DEFCONFIG=$(CURDIR)/configs/defconfig -C buildroot $*
 
+menuconfig: buildroot/.config
+
+## Making sure defconfig is already run
+buildroot/.config: 
+	$(MAKE) defconfig
+
+## Import BR2_* definitions
 include configs/defconfig
 
 ################################### Metadata ###################################
