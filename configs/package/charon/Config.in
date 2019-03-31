@@ -11,6 +11,7 @@ config BR2_PACKAGE_CHARON
     select BR2_PACKAGE_UTIL_LINUX_SCHEDUTILS
     select BR2_PACKAGE_LIBFEC
     select BR2_PACKAGE_LIBTUNTAP
+    select BR2_PACKAGE_LIBAD9361_IIO
     help
       Enable your Pluto SDR to become a stand-alone OFDM transceiver with batman-adv mesh network routing capabilities
 
