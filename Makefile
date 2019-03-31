@@ -29,8 +29,6 @@ export HDL_PROJECT ?= $(TARGET)
 all: zip-all
 endif
 
-.NOTPARALLEL: all
-
 ################################## Buildroot ###################################
 
 .PHONY: patch
