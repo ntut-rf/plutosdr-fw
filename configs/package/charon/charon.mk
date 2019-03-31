@@ -1,7 +1,7 @@
 CHARON_VERSION := af15fb0
 CHARON_SITE := https://github.com/tvelliott/charon.git
 CHARON_SITE_METHOD := git
-CHARON_DEPENDENCIES += batctl bridge-utils fftwf iperf3 iproute2 liquid-dsp tunctl util-linux libfec libtuntap
+CHARON_DEPENDENCIES += batctl bridge-utils fftw-single iperf3 iproute2 liquid-dsp tunctl util-linux libfec libtuntap
 CHARON_INSTALL_TARGET := YES
 
 define CHARON_BUILD_CMDS

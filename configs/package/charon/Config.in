@@ -2,7 +2,7 @@ config BR2_PACKAGE_CHARON
     bool "charon"
     select BR2_PACKAGE_BATCTL
     select BR2_PACKAGE_BRIDGE_UTILS
-    select BR2_PACKAGE_FFTWF
+    select BR2_PACKAGE_FFTW_SINGLE
     select BR2_PACKAGE_IPERF3
     select BR2_PACKAGE_IPROUTE2
     select BR2_PACKAGE_LIQUID_DSP
