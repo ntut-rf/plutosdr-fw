@@ -15,9 +15,6 @@ $(if $(filter $(TARGET),$(SUPPORTED_TARGETS)),,$(error Invalid TARGET variable; 
 # Include target specific constants
 include scripts/$(TARGET).mk
 
-export HDL_PROJECT ?= $(TARGET)
-export HDL_PROJECT_DIR ?= $(CURDIR)/hdl/projects/$(HDL_PROJECT)
-
 .PHONY: default
 default: frm dfu
 
@@ -65,15 +62,15 @@ configs/VERSIONS:
 
 UBOOT_DIR = $(CURDIR)/buildroot/output/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION)
 
-build/u-boot.elf:
+build/$(TARGET)/u-boot.elf:
 	$(MAKE) uboot
 	mkdir -p $(@D)
 	cp buildroot/output/images/u-boot $@
 
-build/uboot-env.bin: build/uboot-env.txt
+build/$(TARGET)/uboot-env.bin: build/$(TARGET)/uboot-env.txt
 	$(UBOOT_DIR)/tools/mkenvimage -s 0x20000 -o $@ $<
 
-build/uboot-env.txt:
+build/$(TARGET)/uboot-env.txt:
 	mkdir -p $(@D)
 	CROSS_COMPILE=$(CROSS_COMPILE) scripts/get_default_envs.sh > $@
 	echo attr_name=compatiable >> $@
@@ -110,21 +107,21 @@ build/$(TARGET)/sdk/fsbl/Release/fsbl.elf build/$(TARGET)/sdk/hw_0/system_top.bi
 	source $(VIVADO_SETTINGS) && cd build/$(TARGET) && xsdk -batch -source $(CURDIR)/scripts/create_fsbl_project.tcl
 
 $(HDL_PROJECT_DIR)/$(HDL_PROJECT).sdk/system_top.hdf:
-	source $(VIVADO_SETTINGS) && $(MAKE) -C hdl/projects/$(HDL_PROJECT)
+	source $(VIVADO_SETTINGS) && $(MAKE) -C $(HDL_PROJECT_DIR)
 
 #################################### Images ####################################
 
 .PHONY: frm dfu
-frm: build/$(TARGET)/$(TARGET).frm build/boot.frm
-dfu: build/$(TARGET)/$(TARGET).dfu build/uboot-env.dfu build/boot.dfu
+frm: build/$(TARGET)/$(TARGET).frm build/$(TARGET)/boot.frm
+dfu: build/$(TARGET)/$(TARGET).dfu build/$(TARGET)/uboot-env.dfu build/$(TARGET)/boot.dfu
 
 build/$(TARGET)/$(TARGET).itb: all hdl
 	$(UBOOT_DIR)/tools/mkimage -f scripts/$(TARGET).its $@
 
-build/boot.bif: build/$(TARGET)/sdk/fsbl/Release/fsbl.elf build/u-boot.elf
-	echo img:{[bootloader] $^ } > build/boot.bif
+build/$(TARGET)/boot.bif: build/$(TARGET)/sdk/fsbl/Release/fsbl.elf build/$(TARGET)/u-boot.elf
+	echo img:{[bootloader] $^ } > $@
 
-build/boot.bin: build/boot.bif
+build/$(TARGET)/boot.bin: build/$(TARGET)/boot.bif
 	source $(VIVADO_SETTINGS) && bootgen -image $< -w -o $@
 
 ### MSD update firmware file ###
@@ -133,7 +130,7 @@ build/$(TARGET)/$(TARGET).frm: build/$(TARGET)/$(TARGET).itb
 	md5sum $< | cut -d ' ' -f 1 > $@.md5
 	cat $< $@.md5 > $@
 
-build/boot.frm: build/boot.bin build/uboot-env.bin scripts/target_mtd_info.key
+build/$(TARGET)/boot.frm: build/$(TARGET)/boot.bin build/$(TARGET)/uboot-env.bin scripts/target_mtd_info.key
 	cat $^ | tee $@ | md5sum | cut -d ' ' -f1 | tee -a $@
 
 ### DFU update firmware file ###
@@ -143,7 +140,7 @@ build/$(TARGET)/$(TARGET).dfu: build/$(TARGET)/$(TARGET).itb
 	dfu-suffix -a $<.tmp -v $(DEVICE_VID) -p $(DEVICE_PID)
 	mv $<.tmp $@
 
-build/%.dfu: build/%.bin
+build/$(TARGET)/%.dfu: build/$(TARGET)/%.bin
 	cp $< $<.tmp
 	dfu-suffix -a $<.tmp -v $(DEVICE_VID) -p $(DEVICE_PID)
 	mv $<.tmp $@
@@ -172,15 +169,15 @@ dfu-$(TARGET): build/$(TARGET)/$(TARGET).dfu
 	dfu-util -D build/$(TARGET)/$(TARGET).dfu -a firmware.dfu
 	dfu-util -e
 
-dfu-sf-uboot: build/boot.dfu build/uboot-env.dfu
-	dfu-util -D build/boot.dfu -a boot.dfu && \
-	dfu-util -D build/uboot-env.dfu -a uboot-env.dfu
+dfu-sf-uboot: build/$(TARGET)/boot.dfu build/$(TARGET)/uboot-env.dfu
+	dfu-util -D build/$(TARGET)/boot.dfu -a boot.dfu && \
+	dfu-util -D build/$(TARGET)/uboot-env.dfu -a uboot-env.dfu
 	dfu-util -e
 
-dfu-all: build/$(TARGET)/$(TARGET).dfu build/boot.dfu build/uboot-env.dfu
+dfu-all: build/$(TARGET)/$(TARGET).dfu build/$(TARGET)/boot.dfu build/$(TARGET)/uboot-env.dfu
 	dfu-util -D build/$(TARGET)/$(TARGET).dfu -a firmware.dfu && \
-	dfu-util -D build/boot.dfu -a boot.dfu  && \
-	dfu-util -D build/uboot-env.dfu -a uboot-env.dfu
+	dfu-util -D build/$(TARGET)/boot.dfu -a boot.dfu  && \
+	dfu-util -D build/$(TARGET)/uboot-env.dfu -a uboot-env.dfu
 	dfu-util -e
 
 dfu-ram: build/$(TARGET)/$(TARGET).dfu
@@ -194,5 +191,10 @@ dfu-ram: build/$(TARGET)/$(TARGET).dfu
 .PHONY: upload
 upload:
 	cp build/$(TARGET).frm /run/media/*/PlutoSDR/
-	cp build/boot.frm /run/media/*/PlutoSDR/
-	sudo eject /run/media/$$USER/PlutoSDR
+	cp build/$(TARGET)/boot.frm /run/media/*/PlutoSDR/
+	eject /run/media/$$USER/PlutoSDR
+
+flash-%:
+	umount /dev/$*2
+	dd if=buildroot/output/images/rootfs.ext4 of=/dev/$*2 bs=4k
+	sync
