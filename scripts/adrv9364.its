@@ -25,7 +25,7 @@
 
 		fpga@1 {
 			description = "FPGA";
-			data = /incbin/("../build/adrv9364z7020/sdk/hw_0/system_top.bit");
+			data = /incbin/("../build/adrv9364/sdk/hw_0/system_top.bit");
 			type = "fpga";
 			arch = "arm";
 			compression = "none";

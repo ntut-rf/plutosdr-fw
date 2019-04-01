@@ -8,7 +8,7 @@ VERSION = $(shell git describe --abbrev=4 --dirty --always --tags)
 LATEST_TAG = $(shell git describe --abbrev=0 --tags)
 
 TARGET ?= pluto
-SUPPORTED_TARGETS := pluto sidekiqz2 adrv9364z7020
+SUPPORTED_TARGETS := pluto sidekiqz2 adrv9364
 
 $(if $(filter $(TARGET),$(SUPPORTED_TARGETS)),,$(error Invalid TARGET variable; valid values are: $(SUPPORTED_TARGETS)))
 
