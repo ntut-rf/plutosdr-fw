@@ -10,12 +10,6 @@ LATEST_TAG = $(shell git describe --abbrev=0 --tags)
 TARGET ?= pluto
 SUPPORTED_TARGETS := pluto sidekiqz2 adrv9364z7020
 
-TARGETS += build/$(TARGET).frm
-TARGETS += build/boot.frm
-
-TARGETS += build/$(TARGET).dfu build/uboot-env.dfu
-TARGETS += build/boot.dfu
-
 ifeq ($(findstring $(TARGET),$(SUPPORTED_TARGETS)),)
 default:
 	@echo "Invalid TARGET variable ; valid values are: $(SUPPORTED_TARGETS)" &&
@@ -28,7 +22,8 @@ include scripts/$(TARGET).mk
 export HDL_PROJECT ?= $(TARGET)
 export HDL_PROJECT_DIR ?= $(CURDIR)/hdl/projects/$(HDL_PROJECT)
 
-default: $(TARGETS)
+.PHONY: default
+default: frm dfu
 
 ################################## Buildroot ###################################
 
@@ -74,14 +69,15 @@ configs/VERSIONS:
 
 UBOOT_DIR = $(CURDIR)/buildroot/output/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION)
 
-build/u-boot.elf: uboot
+build/u-boot.elf:
+	$(MAKE) uboot
 	mkdir -p $(@D)
 	cp buildroot/output/images/u-boot $@
 
 build/uboot-env.bin: build/uboot-env.txt
 	$(UBOOT_DIR)/tools/mkenvimage -s 0x20000 -o $@ $<
 
-build/uboot-env.txt: uboot
+build/uboot-env.txt:
 	mkdir -p $(@D)
 	CROSS_COMPILE=$(CROSS_COMPILE) scripts/get_default_envs.sh > $@
 	echo attr_name=compatiable >> $@
@@ -115,15 +111,17 @@ $(HDL_PROJECT_DIR)/$(HDL_PROJECT).sdk/system_top.hdf:
 #################################### Images ####################################
 
 .PHONY: frm dfu
-frm: build/$(TARGET)/$(TARGET).frm
-dfu: build/$(TARGET)/$(TARGET).dfu
+frm: build/$(TARGET)/$(TARGET).frm build/boot.frm
+dfu: build/$(TARGET)/$(TARGET).dfu build/uboot-env.dfu build/boot.dfu
 
-build/$(TARGET)/$(TARGET).itb: all hdl
+build/$(TARGET)/$(TARGET).itb: #all hdl
 	$(UBOOT_DIR)/tools/mkimage -f scripts/$(TARGET).its $@
 
-build/boot.bin: build/$(TARGET)/sdk/fsbl/Release/fsbl.elf build/u-boot.elf
-	@echo img:{[bootloader] $^ } > build/boot.bif
-	source $(VIVADO_SETTINGS) && bootgen -image build/boot.bif -w -o $@
+build/boot.bif: build/$(TARGET)/sdk/fsbl/Release/fsbl.elf build/u-boot.elf
+	echo img:{[bootloader] $^ } > build/boot.bif
+
+build/boot.bin: build/boot.bif
+	source $(VIVADO_SETTINGS) && bootgen -image $< -w -o $@
 
 ### MSD update firmware file ###
 
@@ -136,12 +134,12 @@ build/boot.frm: build/boot.bin build/uboot-env.bin scripts/target_mtd_info.key
 
 ### DFU update firmware file ###
 
-build/%.dfu: build/%.bin
+build/$(TARGET)/$(TARGET).dfu: build/$(TARGET)/$(TARGET).itb
 	cp $< $<.tmp
 	dfu-suffix -a $<.tmp -v $(DEVICE_VID) -p $(DEVICE_PID)
 	mv $<.tmp $@
 
-build/$(TARGET).dfu: build/$(TARGET).itb
+build/%.dfu: build/%.bin
 	cp $< $<.tmp
 	dfu-suffix -a $<.tmp -v $(DEVICE_VID) -p $(DEVICE_PID)
 	mv $<.tmp $@
@@ -171,16 +169,14 @@ dfu-$(TARGET): build/$(TARGET).dfu
 	dfu-util -e
 
 dfu-sf-uboot: build/boot.dfu build/uboot-env.dfu
-	echo "Erasing u-boot be careful - Press Return to continue... " && read key  && \
-		dfu-util -D build/boot.dfu -a boot.dfu && \
-		dfu-util -D build/uboot-env.dfu -a uboot-env.dfu
+	dfu-util -D build/boot.dfu -a boot.dfu && \
+	dfu-util -D build/uboot-env.dfu -a uboot-env.dfu
 	dfu-util -e
 
 dfu-all: build/$(TARGET).dfu build/boot.dfu build/uboot-env.dfu
-	echo "Erasing u-boot be careful - Press Return to continue... " && read key && \
-		dfu-util -D build/$(TARGET).dfu -a firmware.dfu && \
-		dfu-util -D build/boot.dfu -a boot.dfu  && \
-		dfu-util -D build/uboot-env.dfu -a uboot-env.dfu
+	dfu-util -D build/$(TARGET).dfu -a firmware.dfu && \
+	dfu-util -D build/boot.dfu -a boot.dfu  && \
+	dfu-util -D build/uboot-env.dfu -a uboot-env.dfu
 	dfu-util -e
 
 dfu-ram: build/$(TARGET).dfu
