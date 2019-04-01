@@ -26,6 +26,7 @@ else
 # Include target specific constants
 include scripts/$(TARGET).mk
 export HDL_PROJECT ?= $(TARGET)
+export HDL_PROJECT_DIR ?= $(CURDIR)/hdl/projects/$(HDL_PROJECT)
 all: zip-all
 endif
 
@@ -115,21 +116,20 @@ build/rootfs.cpio.xz: build/LICENSE.html
 ###################################### HDL #####################################
 
 .PHONY: hdl
-hdl: build/system_top.bit
+hdl: build/$(TARGET)/system_top.bit
 
-build/system_top.bit: build/sdk/hw_0/system_top.bit
+build/$(TARGET)/system_top.bit: build/$(TARGET)/sdk/hw_0/system_top.bit
 	cp $< $@
 
-build/sdk/fsbl/Release/fsbl.elf build/sdk/hw_0/system_top.bit: build/system_top.hdf
-	rm -Rf build/sdk
-	bash -c "source $(VIVADO_SETTINGS) && xsdk -batch -source scripts/create_fsbl_project.tcl"
+build/$(TARGET)/sdk/fsbl/Release/fsbl.elf build/$(TARGET)/sdk/hw_0/system_top.bit: $(HDL_PROJECT_DIR)/$(HDL_PROJECT).sdk/system_top.hdf
+	mkdir -p build/$(TARGET)
+	source $(VIVADO_SETTINGS) && cd build/$(TARGET) && xsdk -batch -source $(CURDIR)/scripts/create_fsbl_project.tcl
+
+$(HDL_PROJECT_DIR)/$(HDL_PROJECT).sdk/system_top.hdf:
+	source $(VIVADO_SETTINGS) && $(MAKE) -C hdl/projects/$(HDL_PROJECT)
 
 build/sdk/hw_0/ps7_init.tcl:
-	cp hdl/projects/$(HDL_PROJECT)/$(HDL_PROJECT).srcs/sources_1/bd/system/ip/system_sys_ps7_0/ps7_init.tcl $@
-
-build/system_top.hdf:
-	mkdir -p $(@D)
-	bash -c "source $(VIVADO_SETTINGS) && make -C hdl/projects/$(HDL_PROJECT) && cp hdl/projects/$(HDL_PROJECT)/$(HDL_PROJECT).sdk/system_top.hdf $@"
+	cp $(HDL_PROJECT_DIR)/$(HDL_PROJECT).srcs/sources_1/bd/system/ip/system_sys_ps7_0/ps7_init.tcl $@
 
 #################################### Images ####################################
 
