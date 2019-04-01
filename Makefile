@@ -92,6 +92,14 @@ $(LINUX_DIR)/.$(BR2_LINUX_KERNEL_DEFCONFIG)_defconfig:
 linux-diffconfig: $(LINUX_DIR)/.$(BR2_LINUX_KERNEL_DEFCONFIG)_defconfig linux-extract
 	$(LINUX_DIR)/scripts/diffconfig -m $< $(LINUX_DIR)/.config > configs/linux-extras.config
 
+#################################### Busybox ##################################
+
+BUSYBOX_VERSION = $$(awk '/^BUSYBOX_VERSION/{print $$3}' buildroot/package/busybox/busybox.mk)
+BUSYBOX_DIR = $(CURDIR)/buildroot/output/build/busybox-$(BUSYBOX_VERSION)
+
+busybox-diffconfig: configs/busybox-1.25.0.config
+	$(LINUX_DIR)/scripts/diffconfig -m $< $(BUSYBOX_DIR)/.config > configs/busybox-extras.config
+
 ###################################### HDL #####################################
 
 .PHONY: hdl
