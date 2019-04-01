@@ -1,0 +1,5 @@
+config BR2_PACKAGE_RETROGRAM_PLUTOSDR
+	bool "retrogram-plutosdr"
+	help
+	  Wideband Spectrum analyzer on your terminal/ssh console with ASCII art.
+	  

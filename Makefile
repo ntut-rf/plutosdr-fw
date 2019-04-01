@@ -10,7 +10,7 @@ VERSION = $(shell git describe --abbrev=4 --dirty --always --tags)
 LATEST_TAG = $(shell git describe --abbrev=0 --tags)
 
 TARGET ?= pluto
-SUPPORTED_TARGETS := pluto sidekiqz2
+SUPPORTED_TARGETS := pluto sidekiqz2 adrv9364z7020
 
 TARGETS += build/$(TARGET).frm
 TARGETS += build/boot.frm jtag-bootstrap
@@ -20,7 +20,7 @@ TARGETS += build/boot.dfu
 
 ifeq ($(findstring $(TARGET),$(SUPPORTED_TARGETS)),)
 all:
-	@echo "Invalid TARGET variable ; valid values are: pluto, sidekiqz2" &&
+	@echo "Invalid TARGET variable ; valid values are: $(SUPPORTED_TARGETS)" &&
 	exit 1
 else
 # Include target specific constants
@@ -57,16 +57,16 @@ license: build/LICENSE.html
 
 .PRECIOUS: build/LICENSE.html
 build/LICENSE.html: versions legal-info
-	scripts/legal_info_html.sh "$(COMPLETE_NAME)" "configs/$(TARGET)/VERSIONS"
+	scripts/legal_info_html.sh "$(COMPLETE_NAME)" "configs/VERSIONS"
 
 .PHONY: versions
-versions: configs/$(TARGET)/VERSIONS
+versions: configs/VERSIONS
 
-configs/$(TARGET)/VERSIONS:
-	echo device-fw $(VERSION) > configs/$(TARGET)/VERSIONS
-	echo hdl $(shell cd hdl && git describe --abbrev=4 --dirty --always --tags) >> configs/$(TARGET)/VERSIONS
-	echo linux $(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION) >> configs/$(TARGET)/VERSIONS
-	echo u-boot-xlnx $(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION) >> configs/$(TARGET)/VERSIONS
+configs/VERSIONS:
+	echo device-fw $(VERSION) > configs/VERSIONS
+	echo hdl $(shell cd hdl && git describe --abbrev=4 --dirty --always --tags) >> configs/VERSIONS
+	echo linux $(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION) >> configs/VERSIONS
+	echo u-boot-xlnx $(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION) >> configs/VERSIONS
 
 ################################### U-Boot #####################################
 
@@ -113,7 +113,7 @@ rootfs: build/rootfs.cpio.xz
 
 build/rootfs.cpio.xz: license
 	mkdir -p $(@D)
-	cp build/LICENSE.html configs/$(TARGET)/msd/LICENSE.html
+	cp build/LICENSE.html configs/msd/LICENSE.html
 	$(MAKE) -C buildroot
 	cp buildroot/output/images/rootfs.cpio.xz $@
 
