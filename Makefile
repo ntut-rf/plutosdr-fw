@@ -4,8 +4,6 @@ VIVADO_SETTINGS ?= /opt/Xilinx/Vivado/$(VIVADO_VERSION)/settings64.sh
 
 CROSS_COMPILE ?= arm-linux-gnueabihf-
 
-NCORES = $(shell grep -c ^processor /proc/cpuinfo)
-
 VERSION = $(shell git describe --abbrev=4 --dirty --always --tags)
 LATEST_TAG = $(shell git describe --abbrev=0 --tags)
 
@@ -13,7 +11,7 @@ TARGET ?= pluto
 SUPPORTED_TARGETS := pluto sidekiqz2 adrv9364z7020
 
 TARGETS += build/$(TARGET).frm
-TARGETS += build/boot.frm jtag-bootstrap
+TARGETS += build/boot.frm
 
 TARGETS += build/$(TARGET).dfu build/uboot-env.dfu
 TARGETS += build/boot.dfu
@@ -22,15 +20,15 @@ ifeq ($(findstring $(TARGET),$(SUPPORTED_TARGETS)),)
 default:
 	@echo "Invalid TARGET variable ; valid values are: $(SUPPORTED_TARGETS)" &&
 	exit 1
-else
-# Include target specific constants
-include scripts/$(TARGET).mk
-export HDL_PROJECT ?= $(TARGET)
-export HDL_PROJECT_DIR ?= $(CURDIR)/hdl/projects/$(HDL_PROJECT)
-default: $(TARGETS)
 endif
 
-UBOOT_DIR = buildroot/output/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION)
+# Include target specific constants
+include scripts/$(TARGET).mk
+
+export HDL_PROJECT ?= $(TARGET)
+export HDL_PROJECT_DIR ?= $(CURDIR)/hdl/projects/$(HDL_PROJECT)
+
+default: $(TARGETS)
 
 ################################## Buildroot ###################################
 
@@ -62,6 +60,7 @@ configs/msd/LICENSE.html: build/LICENSE.html
 
 .PRECIOUS: build/LICENSE.html
 build/LICENSE.html: configs/VERSIONS
+	mkdir -p $(@D)
 	$(MAKE) legal-info
 	scripts/legal_info_html.sh "$(COMPLETE_NAME)" $<
 
@@ -73,14 +72,14 @@ configs/VERSIONS:
 
 ################################### U-Boot #####################################
 
-export UIMAGE_LOADADDR=0x8000
+UBOOT_DIR = $(CURDIR)/buildroot/output/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION)
 
 build/u-boot.elf: uboot
 	mkdir -p $(@D)
 	cp buildroot/output/images/u-boot $@
 
 build/uboot-env.bin: build/uboot-env.txt
-	buildroot/output/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION)/tools/mkenvimage -s 0x20000 -o $@ $<
+	$(UBOOT_DIR)/tools/mkenvimage -s 0x20000 -o $@ $<
 
 build/uboot-env.txt: uboot
 	mkdir -p $(@D)
@@ -115,28 +114,20 @@ $(HDL_PROJECT_DIR)/$(HDL_PROJECT).sdk/system_top.hdf:
 
 #################################### Images ####################################
 
-.PHONY: itb
-itb: build/$(TARGET).itb
+.PHONY: frm dfu
+frm: build/$(TARGET)/$(TARGET).frm
+dfu: build/$(TARGET)/$(TARGET).dfu
 
-build/$(TARGET).itb: all hdl
+build/$(TARGET)/$(TARGET).itb: all hdl
 	$(UBOOT_DIR)/tools/mkimage -f scripts/$(TARGET).its $@
 
 build/boot.bin: build/$(TARGET)/sdk/fsbl/Release/fsbl.elf build/u-boot.elf
 	@echo img:{[bootloader] $^ } > build/boot.bif
-	bash -c "source $(VIVADO_SETTINGS) && bootgen -image build/boot.bif -w -o $@"
-
-################################### Products ###################################
-
-.PHONY: fw frm dfu
-fw: frm dfu
-
-frm: build/$(TARGET).frm
-
-dfu: build/$(TARGET).dfu
+	source $(VIVADO_SETTINGS) && bootgen -image build/boot.bif -w -o $@
 
 ### MSD update firmware file ###
 
-build/$(TARGET).frm: build/$(TARGET).itb
+build/$(TARGET)/$(TARGET).frm: build/$(TARGET)/$(TARGET).itb
 	md5sum $< | cut -d ' ' -f 1 > $@.md5
 	cat $< $@.md5 > $@
 
