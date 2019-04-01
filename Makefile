@@ -19,7 +19,7 @@ TARGETS += build/$(TARGET).dfu build/uboot-env.dfu
 TARGETS += build/boot.dfu
 
 ifeq ($(findstring $(TARGET),$(SUPPORTED_TARGETS)),)
-all:
+default:
 	@echo "Invalid TARGET variable ; valid values are: $(SUPPORTED_TARGETS)" &&
 	exit 1
 else
@@ -27,8 +27,10 @@ else
 include scripts/$(TARGET).mk
 export HDL_PROJECT ?= $(TARGET)
 export HDL_PROJECT_DIR ?= $(CURDIR)/hdl/projects/$(HDL_PROJECT)
-all: $(TARGETS)
+default: $(TARGETS)
 endif
+
+UBOOT_DIR = buildroot/output/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION)
 
 ################################## Buildroot ###################################
 
@@ -52,6 +54,11 @@ buildroot/.config:
 include configs/defconfig
 
 ################################### Metadata ###################################
+
+all: configs/msd/LICENSE.html
+
+configs/msd/LICENSE.html: build/LICENSE.html
+	cp $< $@
 
 .PRECIOUS: build/LICENSE.html
 build/LICENSE.html: configs/VERSIONS
@@ -94,32 +101,10 @@ $(LINUX_DIR)/.$(BR2_LINUX_KERNEL_DEFCONFIG)_defconfig:
 linux-diffconfig: $(LINUX_DIR)/.$(BR2_LINUX_KERNEL_DEFCONFIG)_defconfig linux-extract
 	$(LINUX_DIR)/scripts/diffconfig -m $< $(LINUX_DIR)/.config > configs/linux-extras.config
 
-build/zImage: linux
-	mkdir -p $(@D)
-	cp buildroot/output/images/zImage $@
-
-build/%.dtb: linux
-	mkdir -p $(@D)
-	cp buildroot/output/images/*.dtb $(@D)
-
-#################################### Rootfs ####################################
-
-.PHONY: rootfs
-rootfs: build/rootfs.cpio.xz
-
-build/rootfs.cpio.xz: build/LICENSE.html
-	mkdir -p $(@D)
-	cp build/LICENSE.html configs/msd/LICENSE.html
-	$(MAKE) -C buildroot
-	cp buildroot/output/images/rootfs.cpio.xz $@
-
 ###################################### HDL #####################################
 
 .PHONY: hdl
-hdl: build/$(TARGET)/system_top.bit
-
-build/$(TARGET)/system_top.bit: build/$(TARGET)/sdk/hw_0/system_top.bit
-	cp $< $@
+hdl: build/$(TARGET)/sdk/hw_0/system_top.bit
 
 build/$(TARGET)/sdk/fsbl/Release/fsbl.elf build/$(TARGET)/sdk/hw_0/system_top.bit: $(HDL_PROJECT_DIR)/$(HDL_PROJECT).sdk/system_top.hdf
 	mkdir -p build/$(TARGET)
@@ -128,18 +113,15 @@ build/$(TARGET)/sdk/fsbl/Release/fsbl.elf build/$(TARGET)/sdk/hw_0/system_top.bi
 $(HDL_PROJECT_DIR)/$(HDL_PROJECT).sdk/system_top.hdf:
 	source $(VIVADO_SETTINGS) && $(MAKE) -C hdl/projects/$(HDL_PROJECT)
 
-build/sdk/hw_0/ps7_init.tcl:
-	cp $(HDL_PROJECT_DIR)/$(HDL_PROJECT).srcs/sources_1/bd/system/ip/system_sys_ps7_0/ps7_init.tcl $@
-
 #################################### Images ####################################
 
 .PHONY: itb
 itb: build/$(TARGET).itb
 
-build/$(TARGET).itb: uboot build/zImage build/rootfs.cpio.xz $(addprefix build/,$(TARGET_DTS_FILES)) build/system_top.bit
-	buildroot/output/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION)/tools/mkimage -f scripts/$(TARGET).its $@
+build/$(TARGET).itb: all hdl
+	$(UBOOT_DIR)/tools/mkimage -f scripts/$(TARGET).its $@
 
-build/boot.bin: build/sdk/fsbl/Release/fsbl.elf build/u-boot.elf
+build/boot.bin: build/$(TARGET)/sdk/fsbl/Release/fsbl.elf build/u-boot.elf
 	@echo img:{[bootloader] $^ } > build/boot.bif
 	bash -c "source $(VIVADO_SETTINGS) && bootgen -image build/boot.bif -w -o $@"
 
