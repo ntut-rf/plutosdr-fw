@@ -27,7 +27,7 @@ else
 include scripts/$(TARGET).mk
 export HDL_PROJECT ?= $(TARGET)
 export HDL_PROJECT_DIR ?= $(CURDIR)/hdl/projects/$(HDL_PROJECT)
-all: zip-all
+all: $(TARGETS)
 endif
 
 ################################## Buildroot ###################################
@@ -172,15 +172,6 @@ build/$(TARGET).dfu: build/$(TARGET).itb
 	cp $< $<.tmp
 	dfu-suffix -a $<.tmp -v $(DEVICE_VID) -p $(DEVICE_PID)
 	mv $<.tmp $@
-
-###
-
-zip-all: $(TARGETS)
-	zip -j build/$(ZIP_ARCHIVE_PREFIX)-fw-$(VERSION).zip $^
-
-jtag-bootstrap: build/u-boot.elf build/sdk/hw_0/ps7_init.tcl build/sdk/hw_0/system_top.bit scripts/run.tcl
-	$(CROSS_COMPILE)strip build/u-boot.elf
-	zip -j build/$(ZIP_ARCHIVE_PREFIX)-$@-$(VERSION).zip $^
 
 #################################### Clean #####################################
 
