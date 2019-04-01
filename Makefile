@@ -10,11 +10,7 @@ LATEST_TAG = $(shell git describe --abbrev=0 --tags)
 TARGET ?= pluto
 SUPPORTED_TARGETS := pluto sidekiqz2 adrv9364z7020
 
-ifeq ($(findstring $(TARGET),$(SUPPORTED_TARGETS)),)
-default:
-	@echo "Invalid TARGET variable ; valid values are: $(SUPPORTED_TARGETS)" &&
-	exit 1
-endif
+$(if $(filter $(TARGET),$(SUPPORTED_TARGETS)),,$(error Invalid TARGET variable; valid values are: $(SUPPORTED_TARGETS)))
 
 # Include target specific constants
 include scripts/$(TARGET).mk
@@ -114,7 +110,7 @@ $(HDL_PROJECT_DIR)/$(HDL_PROJECT).sdk/system_top.hdf:
 frm: build/$(TARGET)/$(TARGET).frm build/boot.frm
 dfu: build/$(TARGET)/$(TARGET).dfu build/uboot-env.dfu build/boot.dfu
 
-build/$(TARGET)/$(TARGET).itb: #all hdl
+build/$(TARGET)/$(TARGET).itb: all hdl
 	$(UBOOT_DIR)/tools/mkimage -f scripts/$(TARGET).its $@
 
 build/boot.bif: build/$(TARGET)/sdk/fsbl/Release/fsbl.elf build/u-boot.elf
