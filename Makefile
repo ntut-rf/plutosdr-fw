@@ -164,8 +164,8 @@ clean-target:
 
 .PHONY: dfu-$(TARGET) dfu-sf-uboot dfu-all dfu-ram
 
-dfu-$(TARGET): build/$(TARGET).dfu
-	dfu-util -D build/$(TARGET).dfu -a firmware.dfu
+dfu-$(TARGET): build/$(TARGET)/$(TARGET).dfu
+	dfu-util -D build/$(TARGET)/$(TARGET).dfu -a firmware.dfu
 	dfu-util -e
 
 dfu-sf-uboot: build/boot.dfu build/uboot-env.dfu
@@ -173,16 +173,16 @@ dfu-sf-uboot: build/boot.dfu build/uboot-env.dfu
 	dfu-util -D build/uboot-env.dfu -a uboot-env.dfu
 	dfu-util -e
 
-dfu-all: build/$(TARGET).dfu build/boot.dfu build/uboot-env.dfu
-	dfu-util -D build/$(TARGET).dfu -a firmware.dfu && \
+dfu-all: build/$(TARGET)/$(TARGET).dfu build/boot.dfu build/uboot-env.dfu
+	dfu-util -D build/$(TARGET)/$(TARGET).dfu -a firmware.dfu && \
 	dfu-util -D build/boot.dfu -a boot.dfu  && \
 	dfu-util -D build/uboot-env.dfu -a uboot-env.dfu
 	dfu-util -e
 
-dfu-ram: build/$(TARGET).dfu
-	sshpass -p analog ssh root@$(TARGET) '/usr/sbin/device_reboot ram;'
+dfu-ram: build/$(TARGET)/$(TARGET).dfu
+	sshpass -p analog ssh root@$(TARGET).local '/usr/sbin/device_reboot ram;'
 	sleep 5
-	dfu-util -D build/$(TARGET).dfu -a firmware.dfu
+	dfu-util -D build/$(TARGET)/$(TARGET).dfu -a firmware.dfu
 	dfu-util -e
 
 ################################################################################
