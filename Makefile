@@ -28,7 +28,7 @@ patch:
 
 ## Pass targets to buildroot
 %:
-	$(MAKE) BR2_EXTERNAL=$(CURDIR)/configs BR2_DEFCONFIG=$(CURDIR)/configs/defconfig -C buildroot $*
+	$(MAKE) BR2_EXTERNAL=$(CURDIR)/configs BR2_DEFCONFIG=$(CURDIR)/configs/$(TARGET)_defconfig -C buildroot $*
 
 menuconfig: buildroot/.config
 
@@ -37,7 +37,7 @@ buildroot/.config:
 	$(MAKE) defconfig
 
 ## Import BR2_* definitions
-include configs/defconfig
+include configs/$(TARGET)_defconfig
 
 ################################### Metadata ###################################
 
