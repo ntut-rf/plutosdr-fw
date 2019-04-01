@@ -52,21 +52,16 @@ include configs/defconfig
 
 ################################### Metadata ###################################
 
-.PHONY: license
-license: build/LICENSE.html
-
 .PRECIOUS: build/LICENSE.html
-build/LICENSE.html: versions legal-info
-	scripts/legal_info_html.sh "$(COMPLETE_NAME)" "configs/VERSIONS"
-
-.PHONY: versions
-versions: configs/VERSIONS
+build/LICENSE.html: configs/VERSIONS
+	$(MAKE) legal-info
+	scripts/legal_info_html.sh "$(COMPLETE_NAME)" $<
 
 configs/VERSIONS:
-	echo device-fw $(VERSION) > configs/VERSIONS
-	echo hdl $(shell cd hdl && git describe --abbrev=4 --dirty --always --tags) >> configs/VERSIONS
-	echo linux $(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION) >> configs/VERSIONS
-	echo u-boot-xlnx $(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION) >> configs/VERSIONS
+	echo device-fw $(VERSION) > $@
+	echo hdl $(shell cd hdl && git describe --abbrev=4 --dirty --always --tags) >> $@
+	echo linux $(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION) >> $@
+	echo u-boot-xlnx $(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION) >> $@
 
 ################################### U-Boot #####################################
 
@@ -111,7 +106,7 @@ build/%.dtb: linux
 .PHONY: rootfs
 rootfs: build/rootfs.cpio.xz
 
-build/rootfs.cpio.xz: license
+build/rootfs.cpio.xz: build/LICENSE.html
 	mkdir -p $(@D)
 	cp build/LICENSE.html configs/msd/LICENSE.html
 	$(MAKE) -C buildroot
