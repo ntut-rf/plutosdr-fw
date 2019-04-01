@@ -4,6 +4,7 @@ Customized firmware for the [PlutoSDR](https://wiki.analog.com/university/tools/
 ## Customizations
 
 * Include hacks for [larger bandwidth](https://www.rtl-sdr.com/adalm-pluto-sdr-hack-tune-70-mhz-to-6-ghz-and-gqrx-install/) and [dual core](https://www.rtl-sdr.com/plutosdr-sdr-plugin-new-dual-core-cpu-hack/)
+* Add [retrogram-plutosdr](https://github.com/r4d10n/retrogram-plutosdr)
 * Add [Charon](https://github.com/tvelliott/charon)
 * Add [liquid-dsp](http://liquidsdr.org/blog/)
 * Add [GNU Radio](https://www.gnuradio.org/)
