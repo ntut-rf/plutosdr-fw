@@ -7,9 +7,18 @@ CROSS_COMPILE ?= arm-linux-gnueabihf-
 VERSION = $(shell git describe --abbrev=4 --dirty --always --tags)
 LATEST_TAG = $(shell git describe --abbrev=0 --tags)
 
-TARGET ?= pluto
-SUPPORTED_TARGETS := pluto sidekiqz2 adrv9364
+ifdef TARGET
+$(shell echo $(TARGET) > .target)
+else
+ifeq (,$(wildcard .target))
+TARGET = pluto
+else
+TARGET = $(shell cat .target)
+endif
+endif
 
+$(info TARGET: $(TARGET))
+SUPPORTED_TARGETS := pluto sidekiqz2 adrv9364
 $(if $(filter $(TARGET),$(SUPPORTED_TARGETS)),,$(error Invalid TARGET variable; valid values are: $(SUPPORTED_TARGETS)))
 
 # Include target specific constants
