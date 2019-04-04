@@ -75,9 +75,8 @@ configs/VERSIONS:
 
 UBOOT_DIR = $(O)/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION)
 
-build/$(TARGET)/u-boot.elf:
+$(O)/images/u-boot.elf:
 	$(MAKE) uboot
-	mkdir -p $(@D)
 	cp $(O)/images/u-boot $@
 
 build/$(TARGET)/uboot-env.bin: build/$(TARGET)/uboot-env.txt
@@ -124,18 +123,20 @@ $(HDL_PROJECT_DIR)/$(HDL_PROJECT).sdk/system_top.hdf:
 
 #################################### Images ####################################
 
+build/$(TARGET)/boot.bif: build/$(TARGET)/sdk/fsbl/Release/fsbl.elf build/$(TARGET)/sdk/hw_0/system_top.bit $(O)/images/u-boot.elf
+	echo img:{[bootloader] $^ } > $@
+
+build/$(TARGET)/boot.bin: build/$(TARGET)/boot.bif
+	source $(VIVADO_SETTINGS) && bootgen -image $< -w -o $@
+
+################################################################################
+
 .PHONY: frm dfu
 frm: build/$(TARGET)/$(TARGET).frm build/$(TARGET)/boot.frm
 dfu: build/$(TARGET)/$(TARGET).dfu build/$(TARGET)/uboot-env.dfu build/$(TARGET)/boot.dfu
 
 build/$(TARGET)/$(TARGET).itb: all hdl
 	$(UBOOT_DIR)/tools/mkimage -f scripts/$(TARGET).its $@
-
-build/$(TARGET)/boot.bif: build/$(TARGET)/sdk/fsbl/Release/fsbl.elf build/$(TARGET)/u-boot.elf
-	echo img:{[bootloader] $^ } > $@
-
-build/$(TARGET)/boot.bin: build/$(TARGET)/boot.bif
-	source $(VIVADO_SETTINGS) && bootgen -image $< -w -o $@
 
 ### MSD update firmware file ###
 
