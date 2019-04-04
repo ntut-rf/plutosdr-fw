@@ -72,6 +72,6 @@ $ make
 
 ## Resources
 
-* [Pluto Stupid Tricks](https://archive.fosdem.org/2018/schedule/event/plutosdr/attachments/slides/2503/export/events/attachments/plutosdr/slides/2503/pluto_stupid_tricks.pdf)
+* [PlutoSDR BSP](https://github.com/PlutoSDR/plutosdr-bsp)
  
 
