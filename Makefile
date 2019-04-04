@@ -216,10 +216,13 @@ upload:
 
 .PHONY: flash-%
 flash-%:
-	umount /dev/$*1
-	umount /dev/$*2
-	dd if=$(O)/images/sdcard.img of=/dev/$* bs=4k status=progress
-	sync
+	@if lsblk -do name,tran | grep usb | grep $*; then \
+		(umount /dev/$*1 || true) && \
+		(umount /dev/$*2 || true) && \
+		dd if=$(O)/images/sdcard.img of=/dev/$* bs=4k status=progress && \
+		sync; \
+	else echo "Invalid device"; \
+	fi
 
 .PHONY: upstream br-upstream update-msd update
 
