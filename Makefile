@@ -73,12 +73,12 @@ configs/VERSIONS:
 
 ################################### U-Boot #####################################
 
-UBOOT_DIR = $(CURDIR)/buildroot/output/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION)
+UBOOT_DIR = $(O)/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION)
 
 build/$(TARGET)/u-boot.elf:
 	$(MAKE) uboot
 	mkdir -p $(@D)
-	cp buildroot/output/images/u-boot $@
+	cp $(O)/images/u-boot $@
 
 build/$(TARGET)/uboot-env.bin: build/$(TARGET)/uboot-env.txt
 	$(UBOOT_DIR)/tools/mkenvimage -s 0x20000 -o $@ $<
@@ -92,7 +92,7 @@ build/$(TARGET)/uboot-env.txt:
 
 #################################### Linux ####################################
 
-LINUX_DIR = $(CURDIR)/buildroot/output/build/linux-$(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION)
+LINUX_DIR = $(O)/build/linux-$(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION)
 
 ## Generate reference defconfig with missing options set to default as a base for comparison using diffconfig
 $(LINUX_DIR)/.$(BR2_LINUX_KERNEL_DEFCONFIG)_defconfig:
@@ -105,7 +105,7 @@ linux-diffconfig: $(LINUX_DIR)/.$(BR2_LINUX_KERNEL_DEFCONFIG)_defconfig linux-ex
 #################################### Busybox ##################################
 
 BUSYBOX_VERSION = $$(awk '/^BUSYBOX_VERSION/{print $$3}' buildroot/package/busybox/busybox.mk)
-BUSYBOX_DIR = $(CURDIR)/buildroot/output/build/busybox-$(BUSYBOX_VERSION)
+BUSYBOX_DIR = $(O)/build/busybox-$(BUSYBOX_VERSION)
 
 busybox-diffconfig: configs/busybox-1.25.0.config
 	$(LINUX_DIR)/scripts/diffconfig -m $< $(BUSYBOX_DIR)/.config > configs/busybox-extras.config
@@ -165,14 +165,15 @@ build/$(TARGET)/%.dfu: build/$(TARGET)/%.bin
 clean-all: clean-build clean-hdl clean
 
 clean-build:
-	rm -rf build
+	-rm -f build/$(TARGET)/* 
+	rm -rf build/$(TARGET)/sdk
 
 clean-hdl:
-	make -C hdl clean
+	$(MAKE) -C hdl clean
 
 clean-target:
-	rm -rf buildroot/output/target
-	find buildroot/output/ -name ".stamp_target_installed" |xargs rm -rf
+	rm -rf $(O)/target
+	find $(O) -name ".stamp_target_installed" |xargs rm -rf
 
 ##################################### DFU ######################################
 
@@ -209,5 +210,5 @@ upload:
 
 flash-%:
 	umount /dev/$*2
-	dd if=buildroot/output/images/rootfs.ext4 of=/dev/$*2 bs=4k
+	dd if=$(O)/images/rootfs.ext4 of=/dev/$*2 bs=4k
 	sync

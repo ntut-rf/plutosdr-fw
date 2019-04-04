@@ -17,7 +17,7 @@
 
 		fdt@1 {
 			description = "zynq-adrv9364-z7020-bob";
-			data = /incbin/("../buildroot/output/images/zynq-adrv9364-z7020-bob.dtb");
+			data = /incbin/("../build/adrv9364/buildroot/images/adrv9364.dtb");
 			type = "flat_dt";
 			arch = "arm";
 			compression = "none";
@@ -37,7 +37,7 @@
 
 		linux_kernel@1 {
 			description = "Linux";
-			data = /incbin/("../buildroot/output/images/zImage");
+			data = /incbin/("../build/adrv9364/buildroot/images/uImage");
 			type = "kernel";
 			arch = "arm";
 			os = "linux";
@@ -50,7 +50,7 @@
 		};
 		ramdisk@1 {
 			description = "Ramdisk";
-			data = /incbin/("../buildroot/output/images/rootfs.cpio.xz");
+			data = /incbin/("../build/adrv9364/buildroot/images/rootfs.cpio.xz");
 			type = "ramdisk";
 			arch = "arm";
 			os = "linux";
