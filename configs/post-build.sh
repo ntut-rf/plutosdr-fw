@@ -43,3 +43,11 @@ ln -sf device_reboot ${TARGET_DIR}/sbin/pluto_reboot
 rm -rf ${TARGET_DIR}/usr/include/
 rm -rf ${TARGET_DIR}/usr/lib/python2.7/site-packages/numpy/core/include/
 rm -rf ${TARGET_DIR}/usr/lib/python2.7/distutils/command/*.exe
+
+rm -rf "${GENIMAGE_TMP}"
+genimage                           \
+	--rootpath "${TARGET_DIR}"     \
+	--tmppath "${GENIMAGE_TMP}"    \
+	--inputpath "${O}/images"  \
+	--outputpath "${O}/images" \
+	--config "${BOARD_DIR}/genimage-sdcard.cfg"

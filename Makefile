@@ -123,11 +123,19 @@ $(HDL_PROJECT_DIR)/$(HDL_PROJECT).sdk/system_top.hdf:
 
 #################################### Images ####################################
 
-build/$(TARGET)/boot.bif: build/$(TARGET)/sdk/fsbl/Release/fsbl.elf build/$(TARGET)/sdk/hw_0/system_top.bit $(O)/images/u-boot.elf
+.PHONY: boot.bin
+boot.bin: $(O)/images/boot.bin
+
+all: $(O)/images/boot.bin $(O)/images/uEnv.txt
+
+$(O)/images/boot.bif: build/$(TARGET)/sdk/fsbl/Release/fsbl.elf build/$(TARGET)/sdk/hw_0/system_top.bit $(O)/images/u-boot.elf
 	echo img:{[bootloader] $^ } > $@
 
-build/$(TARGET)/boot.bin: build/$(TARGET)/boot.bif
+$(O)/images/boot.bin: build/$(TARGET)/boot.bif
 	source $(VIVADO_SETTINGS) && bootgen -image $< -w -o $@
+
+$(O)/images/uEnv.txt: configs/uEnv.txt
+	cp $< $@
 
 ################################################################################
 
