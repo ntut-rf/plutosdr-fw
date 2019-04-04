@@ -35,14 +35,18 @@ patch:
 		patch -d buildroot -p1 --forward < $$patch || true; \
 	done
 
+export BR2_EXTERNAL=$(CURDIR)/configs
+export BR2_DEFCONFIG=$(CURDIR)/configs/$(TARGET)_defconfig
+export O=$(CURDIR)/build/$(TARGET)/buildroot
+
 ## Pass targets to buildroot
 %:
-	$(MAKE) BR2_EXTERNAL=$(CURDIR)/configs BR2_DEFCONFIG=$(CURDIR)/configs/$(TARGET)_defconfig -C buildroot $*
+	$(MAKE) BR2_EXTERNAL=$(BR2_EXTERNAL) BR2_DEFCONFIG=$(BR2_DEFCONFIG) O=$(O) -C buildroot $*
 
-menuconfig: buildroot/.config
+menuconfig: $(O)/.config
 
 ## Making sure defconfig is already run
-buildroot/.config: 
+$(O)/.config: 
 	$(MAKE) defconfig
 
 ## Import BR2_* definitions
