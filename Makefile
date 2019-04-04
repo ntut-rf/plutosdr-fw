@@ -134,25 +134,13 @@ $(O)/images/boot.bif: build/$(TARGET)/sdk/fsbl/Release/fsbl.elf build/$(TARGET)/
 $(O)/images/boot.bin: $(O)/images/boot.bif
 	source $(VIVADO_SETTINGS) && bootgen -image $< -w -o $@
 
-################################################################################
+########################### DFU update firmware file ###########################
 
-.PHONY: frm dfu
-frm: build/$(TARGET)/$(TARGET).frm build/$(TARGET)/boot.frm
+.PHONY: dfu
 dfu: build/$(TARGET)/$(TARGET).dfu build/$(TARGET)/uboot-env.dfu build/$(TARGET)/boot.dfu
 
 build/$(TARGET)/$(TARGET).itb: all hdl
 	$(UBOOT_DIR)/tools/mkimage -f configs/targets/$(TARGET)/$(TARGET).its $@
-
-### MSD update firmware file ###
-
-build/$(TARGET)/$(TARGET).frm: build/$(TARGET)/$(TARGET).itb
-	md5sum $< | cut -d ' ' -f 1 > $@.md5
-	cat $< $@.md5 > $@
-
-build/$(TARGET)/boot.frm: build/$(TARGET)/boot.bin build/$(TARGET)/uboot-env.bin scripts/target_mtd_info.key
-	cat $^ | tee $@ | md5sum | cut -d ' ' -f1 | tee -a $@
-
-### DFU update firmware file ###
 
 build/$(TARGET)/$(TARGET).dfu: build/$(TARGET)/$(TARGET).itb
 	cp $< $<.tmp
@@ -163,6 +151,18 @@ build/$(TARGET)/%.dfu: build/$(TARGET)/%.bin
 	cp $< $<.tmp
 	dfu-suffix -a $<.tmp -v $(DEVICE_VID) -p $(DEVICE_PID)
 	mv $<.tmp $@
+
+########################### MSD update firmware file ###########################
+
+.PHONY: frm
+frm: build/$(TARGET)/$(TARGET).frm build/$(TARGET)/boot.frm
+
+build/$(TARGET)/$(TARGET).frm: build/$(TARGET)/$(TARGET).itb
+	md5sum $< | cut -d ' ' -f 1 > $@.md5
+	cat $< $@.md5 > $@
+
+build/$(TARGET)/boot.frm: build/$(TARGET)/boot.bin build/$(TARGET)/uboot-env.bin scripts/target_mtd_info.key
+	cat $^ | tee $@ | md5sum | cut -d ' ' -f1 | tee -a $@
 
 #################################### Clean #####################################
 
