@@ -39,13 +39,3 @@ ${INSTALL} -D -m 0644 ${MSD_DIR}/img/* ${TARGET_DIR}/www/img/
 ${INSTALL} -D -m 0644 ${MSD_DIR}/index.html ${TARGET_DIR}/www/
 
 ln -sf device_reboot ${TARGET_DIR}/sbin/pluto_reboot
-
-cp "${BOARD_DIR}/uEnv.txt" "${O}/images/"
-
-rm -rf "${GENIMAGE_TMP}"
-genimage                           \
-	--rootpath "${TARGET_DIR}"     \
-	--tmppath "${GENIMAGE_TMP}"    \
-	--inputpath "${O}/images"  \
-	--outputpath "${O}/images" \
-	--config "${BOARD_DIR}/genimage-sdcard.cfg"
