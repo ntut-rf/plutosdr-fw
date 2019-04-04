@@ -214,8 +214,17 @@ upload:
 	cp build/$(TARGET)/boot.frm /run/media/*/PlutoSDR/
 	eject /run/media/$$USER/PlutoSDR
 
+.PHONY: flash-%
 flash-%:
 	umount /dev/$*1
 	umount /dev/$*2
 	dd if=$(O)/images/sdcard.img of=/dev/$* bs=4k status=progress
 	sync
+	
+MSD_DIR = configs/msd
+.PHONY: update-msd
+update-msd:
+	git remote add -f -t pluto --no-tags br-analog https://github.com/analogdevicesinc/buildroot.git || true
+	rm -rf $(MSD_DIR)
+	git rm -rf $(MSD_DIR) || true
+	git read-tree --prefix=$(MSD_DIR) -u br-analog/pluto:board/pluto/msd
