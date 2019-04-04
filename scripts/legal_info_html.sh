@@ -335,13 +335,13 @@ html_hr
 html_h1_id "Package: linux" "$((var++))"
 package_list_items $(get_version linux) "GPLv2" "https://github.com/analogdevicesinc/linux"
 html_h2 "License:"
-html_pre_file buildroot/build/linux-master/COPYING
+html_pre_file "${LINUX_DIR}/COPYING"
 html_hr
 ### U-Boot
 html_h1_id "Package: u-boot" "$((var++))"
 package_list_items $(get_version u-boot-xlnx) "GPLv2" "https://github.com/analogdevicesinc/u-boot-xlnx"
 html_h2 "License:"
-html_pre_file buildroot/build/uboot-pluto/Licenses/gpl-2.0.txt
+html_pre_file "${UBOOT_DIR}/Licenses/gpl-2.0.txt"
 html_hr
 
 #### All other  Buildroot Packages

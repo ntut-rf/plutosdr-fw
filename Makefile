@@ -73,7 +73,7 @@ configs/VERSIONS:
 
 ################################### U-Boot #####################################
 
-UBOOT_DIR = $(O)/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION)
+export UBOOT_DIR = $(O)/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION)
 
 $(O)/images/u-boot.elf:
 	$(MAKE) uboot
@@ -91,7 +91,7 @@ build/$(TARGET)/uboot-env.txt:
 
 #################################### Linux ####################################
 
-LINUX_DIR = $(O)/build/linux-$(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION)
+export LINUX_DIR = $(O)/build/linux-$(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION)
 
 ## Generate reference defconfig with missing options set to default as a base for comparison using diffconfig
 $(LINUX_DIR)/.$(BR2_LINUX_KERNEL_DEFCONFIG)_defconfig:
@@ -104,7 +104,7 @@ linux-diffconfig: $(LINUX_DIR)/.$(BR2_LINUX_KERNEL_DEFCONFIG)_defconfig linux-ex
 #################################### Busybox ##################################
 
 BUSYBOX_VERSION = $$(awk '/^BUSYBOX_VERSION/{print $$3}' buildroot/package/busybox/busybox.mk)
-BUSYBOX_DIR = $(O)/build/busybox-$(BUSYBOX_VERSION)
+export BUSYBOX_DIR = $(O)/build/busybox-$(BUSYBOX_VERSION)
 
 busybox-diffconfig: configs/busybox-1.25.0.config
 	$(LINUX_DIR)/scripts/diffconfig -m $< $(BUSYBOX_DIR)/.config > configs/busybox-extras.config
@@ -221,10 +221,14 @@ flash-%:
 	dd if=$(O)/images/sdcard.img of=/dev/$* bs=4k status=progress
 	sync
 
-.PHONY: br-upstream update-msd update
+.PHONY: upstream br-upstream update-msd update
+
+upstream:
+	git remote add -f -t master --no-tags upstream https://github.com/analogdevicesinc/plutosdr-fw.git || true
+
 br-upstream:
 	git remote add -f -t pluto --no-tags br-analog https://github.com/analogdevicesinc/buildroot.git || true
-	
+
 MSD_DIR = configs/msd
 update-msd: br-upstream
 	rm -rf $(MSD_DIR)
@@ -245,3 +249,11 @@ update: br-upstream update-msd
 	chmod +x configs/rootfs_overlay/usr/sbin/*
 	mv build/update/{automounter.sh,ifupdown.sh} configs/rootfs_overlay/usr/lib/mdev/
 	chmod +x configs/rootfs_overlay/usr/lib/mdev/{automounter.sh,ifupdown.sh}
+
+update-scripts: upstream
+	rm -rf build/scripts
+	git rm -rf build/scripts || true
+	mkdir -p build/scripts
+	git read-tree --prefix=build/scripts -u upstream/master:scripts
+	git rm -rf --cached build/scripts
+	mv build/scripts/{53-adi-plutosdr-usb.rules,create_fsbl_project.tcl,get_default_envs.sh,legal_info_html.sh,run.tcl,target_mtd_info.key} scripts/
