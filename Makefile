@@ -218,6 +218,7 @@ upload:
 	eject /run/media/$$USER/PlutoSDR
 
 flash-%:
+	umount /dev/$*1
 	umount /dev/$*2
-	dd if=$(O)/images/rootfs.ext4 of=/dev/$*2 bs=4k
+	dd if=$(O)/images/sdcard.img of=/dev/$* bs=4k status=progress
 	sync
