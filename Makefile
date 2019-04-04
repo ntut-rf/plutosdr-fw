@@ -231,7 +231,7 @@ update-msd: br-upstream
 	git rm -rf $(MSD_DIR) || true
 	git read-tree --prefix=$(MSD_DIR) -u br-analog/pluto:board/pluto/msd
 
-update: br-upstream
+update: br-upstream update-msd
 	rm -rf build/update
 	git rm -rf build/update || true
 	mkdir -p build/update
@@ -239,3 +239,9 @@ update: br-upstream
 	git rm -rf --cached build/update
 	mv build/update/S* configs/rootfs_overlay/etc/init.d/
 	chmod +x configs/rootfs_overlay/etc/init.d/*
+	mv build/update/{busybox-1.25.0.config,genimage-msd.cfg} configs/
+	mv build/update/{device_config,fw_env.config,input-event-daemon.conf,mdev.conf,motd} configs/rootfs_overlay/etc/
+	mv build/update/{device_reboot,udc_handle_suspend.sh,test_ensm_pinctrl.sh,update_frm.sh,update.sh} configs/rootfs_overlay/usr/sbin/
+	chmod +x configs/rootfs_overlay/usr/sbin/*
+	mv build/update/{automounter.sh,ifupdown.sh} configs/rootfs_overlay/usr/lib/mdev/
+	chmod +x configs/rootfs_overlay/usr/lib/mdev/{automounter.sh,ifupdown.sh}
