@@ -220,11 +220,22 @@ flash-%:
 	umount /dev/$*2
 	dd if=$(O)/images/sdcard.img of=/dev/$* bs=4k status=progress
 	sync
+
+.PHONY: br-upstream update-msd update
+br-upstream:
+	git remote add -f -t pluto --no-tags br-analog https://github.com/analogdevicesinc/buildroot.git || true
 	
 MSD_DIR = configs/msd
-.PHONY: update-msd
-update-msd:
-	git remote add -f -t pluto --no-tags br-analog https://github.com/analogdevicesinc/buildroot.git || true
+update-msd: br-upstream
 	rm -rf $(MSD_DIR)
 	git rm -rf $(MSD_DIR) || true
 	git read-tree --prefix=$(MSD_DIR) -u br-analog/pluto:board/pluto/msd
+
+update: br-upstream
+	rm -rf build/update
+	git rm -rf build/update || true
+	mkdir -p build/update
+	git read-tree --prefix=build/update -u br-analog/pluto:board/pluto
+	git rm -rf --cached build/update
+	mv build/update/S* configs/rootfs_overlay/etc/init.d/
+	chmod +x configs/rootfs_overlay/etc/init.d/*
