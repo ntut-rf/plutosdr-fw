@@ -22,10 +22,10 @@ SUPPORTED_TARGETS := pluto sidekiqz2 adrv9364
 $(if $(filter $(TARGET),$(SUPPORTED_TARGETS)),,$(error Invalid TARGET variable; valid values are: $(SUPPORTED_TARGETS)))
 
 # Include target specific constants
-include scripts/$(TARGET).mk
+include configs/targets/$(TARGET)/$(TARGET).mk
 
 .PHONY: default
-default: frm dfu
+default: all
 
 ################################## Buildroot ###################################
 
@@ -36,7 +36,7 @@ patch:
 	done
 
 export BR2_EXTERNAL=$(CURDIR)/configs
-export BR2_DEFCONFIG=$(CURDIR)/configs/$(TARGET)_defconfig
+export BR2_DEFCONFIG=$(CURDIR)/configs/targets/$(TARGET)/defconfig
 export O=$(CURDIR)/build/$(TARGET)/buildroot
 
 ## Pass targets to buildroot
@@ -50,7 +50,7 @@ $(O)/.config:
 	$(MAKE) defconfig
 
 ## Import BR2_* definitions
-include configs/$(TARGET)_defconfig
+include $(BR2_DEFCONFIG)
 
 ################################### Metadata ###################################
 
@@ -126,16 +126,13 @@ $(HDL_PROJECT_DIR)/$(HDL_PROJECT).sdk/system_top.hdf:
 .PHONY: boot.bin
 boot.bin: $(O)/images/boot.bin
 
-all: $(O)/images/boot.bin $(O)/images/uEnv.txt
+all: $(O)/images/boot.bin
 
 $(O)/images/boot.bif: build/$(TARGET)/sdk/fsbl/Release/fsbl.elf build/$(TARGET)/sdk/hw_0/system_top.bit $(O)/images/u-boot.elf
 	echo img:{[bootloader] $^ } > $@
 
 $(O)/images/boot.bin: $(O)/images/boot.bif
 	source $(VIVADO_SETTINGS) && bootgen -image $< -w -o $@
-
-$(O)/images/uEnv.txt: configs/uEnv.txt
-	cp $< $@
 
 ################################################################################
 
@@ -144,7 +141,7 @@ frm: build/$(TARGET)/$(TARGET).frm build/$(TARGET)/boot.frm
 dfu: build/$(TARGET)/$(TARGET).dfu build/$(TARGET)/uboot-env.dfu build/$(TARGET)/boot.dfu
 
 build/$(TARGET)/$(TARGET).itb: all hdl
-	$(UBOOT_DIR)/tools/mkimage -f scripts/$(TARGET).its $@
+	$(UBOOT_DIR)/tools/mkimage -f configs/targets/$(TARGET)/$(TARGET).its $@
 
 ### MSD update firmware file ###
 

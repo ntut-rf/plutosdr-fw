@@ -17,26 +17,26 @@ sed -i '/hostname/a\
 sed -i -e '/::sysinit:\/bin\/hostname -F \/etc\/hostname/d' ${TARGET_DIR}/etc/inittab
 
 BOARD_DIR="$(dirname $0)"
-GENIMAGE_CFG="${BOARD_DIR}/genimage-msd.cfg"
 GENIMAGE_TMP="${BUILD_DIR}/genimage.tmp"
 
-rm -rf "${GENIMAGE_TMP}"
+MSD_DIR="${BOARD_DIR}/../../msd"
 
+rm -rf "${GENIMAGE_TMP}"
 genimage                           \
 	--rootpath "${TARGET_DIR}"     \
 	--tmppath "${GENIMAGE_TMP}"    \
-	--inputpath "${BOARD_DIR}/msd"  \
+	--inputpath "${MSD_DIR}"  \
 	--outputpath "${TARGET_DIR}/opt/" \
-	--config "${GENIMAGE_CFG}"
+	--config "${BOARD_DIR}/../../genimage-msd.cfg"
 
 rm -f ${TARGET_DIR}/opt/boot.vfat
 rm -f ${TARGET_DIR}/etc/init.d/S99iiod
 
-${INSTALL} -D -m 0644 ${BOARD_DIR}/VERSIONS ${TARGET_DIR}/opt/
+${INSTALL} -D -m 0644 ${BOARD_DIR}/../../VERSIONS ${TARGET_DIR}/opt/
 
 mkdir -p ${TARGET_DIR}/www/img
-${INSTALL} -D -m 0644 ${BOARD_DIR}/msd/img/* ${TARGET_DIR}/www/img/
-${INSTALL} -D -m 0644 ${BOARD_DIR}/msd/index.html ${TARGET_DIR}/www/
+${INSTALL} -D -m 0644 ${MSD_DIR}/img/* ${TARGET_DIR}/www/img/
+${INSTALL} -D -m 0644 ${MSD_DIR}/index.html ${TARGET_DIR}/www/
 
 ln -sf device_reboot ${TARGET_DIR}/sbin/pluto_reboot
 

@@ -1,6 +1,3 @@
-
-# Target specific constants go here
-
 COMPLETE_NAME:=PlutoSDR
 DEVICE_VID:=0x0456
 DEVICE_PID:=0xb673
