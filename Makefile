@@ -161,7 +161,7 @@ build/$(TARGET)/$(TARGET).frm: build/$(TARGET)/$(TARGET).itb
 	md5sum $< | cut -d ' ' -f 1 > $@.md5
 	cat $< $@.md5 > $@
 
-build/$(TARGET)/boot.frm: build/$(TARGET)/boot.bin build/$(TARGET)/uboot-env.bin scripts/target_mtd_info.key
+build/$(TARGET)/boot.frm: $(O)/images/boot.bin build/$(TARGET)/uboot-env.bin scripts/target_mtd_info.key
 	cat $^ | tee $@ | md5sum | cut -d ' ' -f1 | tee -a $@
 
 #################################### Clean #####################################
@@ -210,7 +210,7 @@ dfu-ram: build/$(TARGET)/$(TARGET).dfu
 
 .PHONY: upload
 upload:
-	cp build/$(TARGET).frm /run/media/*/PlutoSDR/
+	cp build/$(TARGET)/$(TARGET).frm /run/media/*/PlutoSDR/
 	cp build/$(TARGET)/boot.frm /run/media/*/PlutoSDR/
 	eject /run/media/$$USER/PlutoSDR
 
