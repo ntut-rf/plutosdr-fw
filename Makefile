@@ -221,6 +221,8 @@ flash-%:
 		(umount /dev/$*2 || true) && \
 		dd if=$(O)/images/sdcard.img of=/dev/$* bs=4k status=progress && \
 		sync; \
+		scripts/expand-rootfs.sh /dev/$*; \
+		sync; partprobe; \
 	else echo "Invalid device"; \
 	fi
 
