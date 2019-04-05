@@ -47,9 +47,7 @@ $ make
      | pluto.dfu | Main PlutoSDR firmware file used in DFU mode |
      | boot.frm  | First and Second Stage Bootloader (u-boot + fsbl + uEnv) used with the USB Mass Storage Device |
      | boot.dfu  | First and Second Stage Bootloader (u-boot + fsbl) used in DFU mode |
-     | uboot-env.dfu  | u-boot default environment used in DFU mode |
-     | plutosdr-fw-vX.XX.zip  | ZIP archive containg all of the files above |  
-     | plutosdr-jtag-bootstrap-vX.XX.zip  | ZIP archive containg u-boot and Vivao TCL used for JATG bootstrapping |       
+     | uboot-env.dfu  | u-boot default environment used in DFU mode |      
  
   * Other intermediate targets
 
