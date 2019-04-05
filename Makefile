@@ -89,6 +89,14 @@ build/$(TARGET)/uboot-env.txt:
 	echo attr_val=ad9364 >> $@
 	sed -i 's,^\(maxcpus[ ]*=\).*,\1'2',g' $@
 
+## Generate reference defconfig with missing options set to default as a base for comparison using diffconfig
+$(UBOOT_DIR)/.$(BR2_TARGET_UBOOT_BOARD_DEFCONFIG)_defconfig:
+	$(MAKE) -C $(UBOOT_DIR) KCONFIG_CONFIG=$@ $(BR2_TARGET_UBOOT_BOARD_DEFCONFIG)_defconfig
+
+## Generate diff with reference config
+uboot-diffconfig: $(UBOOT_DIR)/.$(BR2_TARGET_UBOOT_BOARD_DEFCONFIG)_defconfig linux-extract
+	$(LINUX_DIR)/scripts/diffconfig -m $< $(UBOOT_DIR)/.config > $(BR2_TARGET_UBOOT_CONFIG_FRAGMENT_FILES)
+
 #################################### Linux ####################################
 
 export LINUX_DIR = $(O)/build/linux-$(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION)
