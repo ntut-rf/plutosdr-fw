@@ -1,0 +1,6 @@
+config BR2_PACKAGE_ITPP
+        bool "itpp"
+        help
+          IT++ is a C++ library of mathematical, signal processing and communication classes and functions.
+
+          http://itpp.sourceforge.net
