@@ -19,9 +19,9 @@ sed -i -e '/::sysinit:\/bin\/hostname -F \/etc\/hostname/d' ${TARGET_DIR}/etc/in
 BOARD_DIR="$(dirname $0)"
 GENIMAGE_TMP="${BUILD_DIR}/genimage.tmp"
 
-MSD_DIR="${BOARD_DIR}/../msd"
+MSD_DIR="${BOARD_DIR}/msd"
 
-cp ${O}/LICENSE.html ${MSD_DIR}
+cp ${O}/../LICENSE.html ${MSD_DIR}
 
 rm -rf "${GENIMAGE_TMP}"
 genimage                           \
@@ -29,7 +29,7 @@ genimage                           \
 	--tmppath "${GENIMAGE_TMP}"    \
 	--inputpath "${MSD_DIR}"  \
 	--outputpath "${TARGET_DIR}/opt/" \
-	--config "${BOARD_DIR}/../../genimage-msd.cfg"
+	--config "${BOARD_DIR}/genimage-msd.cfg"
 
 rm -f ${TARGET_DIR}/opt/boot.vfat
 rm -f ${TARGET_DIR}/etc/init.d/S99iiod
