@@ -218,7 +218,7 @@ dfu-ram: $(O)/images/$(TARGET).dfu
 upload:
 	cp $(O)/images/$(TARGET).frm /run/media/*/PlutoSDR/
 	cp $(O)/images/boot.frm /run/media/*/PlutoSDR/
-	eject /run/media/$$USER/PlutoSDR
+	sudo eject /run/media/$$USER/PlutoSDR
 
 .PHONY: flash-%
 flash-%:
