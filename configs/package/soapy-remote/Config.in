@@ -1,6 +1,6 @@
-config BR2_PACKAGE_SOAPYREMOTE
-	bool "soapyremote"
-	select BR2_PACKAGE_SOAPYSDR
+config BR2_PACKAGE_SOAPY_REMOTE
+	bool "soapy-remote"
+	select BR2_PACKAGE_SOAPY_SDR
 	help
 	  Use any Soapy SDR remotely
 

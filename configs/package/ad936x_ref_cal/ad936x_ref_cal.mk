@@ -5,7 +5,7 @@
 ################################################################################
 
 
-AD936X_REF_CAL_VERSION = 01747db5cd60ff64115a73ac1f3bb97911f5c58e
+AD936X_REF_CAL_VERSION = 82d3116
 AD936X_REF_CAL_SITE = https://github.com/analogdevicesinc/plutosdr_scripts.git
 AD936X_REF_CAL_SITE_METHOD = git
 AD936X_REF_CAL_LICENSE = GPLv2

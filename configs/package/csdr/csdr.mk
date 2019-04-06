@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-CSDR_VERSION  = 07236afacdf1fc06562072e4a3aec3330d2def92
+CSDR_VERSION = 6ef2a74
 CSDR_SITE = https://github.com/simonyiszk/csdr.git
 CSDR_SITE_METHOD = git
 CSDR_LICENSE = BSD-3c
