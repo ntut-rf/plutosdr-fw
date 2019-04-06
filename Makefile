@@ -4,9 +4,6 @@ VIVADO_SETTINGS ?= /opt/Xilinx/Vivado/$(VIVADO_VERSION)/settings64.sh
 
 CROSS_COMPILE ?= arm-linux-gnueabihf-
 
-VERSION = $(shell git describe --abbrev=4 --dirty --always --tags)
-LATEST_TAG = $(shell git describe --abbrev=0 --tags)
-
 ifdef TARGET
 $(shell echo $(TARGET) > .target)
 else
@@ -61,9 +58,10 @@ build/LICENSE.html: build/VERSIONS
 	$(MAKE) legal-info
 	scripts/legal_info_html.sh "$(COMPLETE_NAME)" $<
 
+version = git describe --abbrev=4 --dirty --always --tags
 build/VERSIONS:
-	echo device-fw $(VERSION) > $@
-	echo hdl $(shell cd hdl && git describe --abbrev=4 --dirty --always --tags) >> $@
+	echo device-fw $$($(version)) > $@
+	echo hdl $$(cd hdl && $(version)) >> $@
 	echo linux $(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION) >> $@
 	echo u-boot-xlnx $(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION) >> $@
 
