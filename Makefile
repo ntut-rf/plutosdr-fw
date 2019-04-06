@@ -79,10 +79,10 @@ $(O)/images/u-boot.elf:
 	$(MAKE) uboot
 	cp $(O)/images/u-boot $@
 
-$(O)/uboot-env.bin: $(O)/uboot-env.txt
+$(O)/images/uboot-env.bin: $(O)/images/uboot-env.txt
 	$(UBOOT_DIR)/tools/mkenvimage -s 0x20000 -o $@ $<
 
-$(O)/uboot-env.txt:
+$(O)/images/uboot-env.txt:
 	mkdir -p $(@D)
 	CROSS_COMPILE=$(CROSS_COMPILE) scripts/get_default_envs.sh > $@
 	echo attr_name=compatible >> $@
@@ -145,17 +145,17 @@ $(O)/images/boot.bin: $(O)/images/boot.bif
 ########################### DFU update firmware file ###########################
 
 .PHONY: dfu
-dfu: $(O)/$(TARGET).dfu $(O)/uboot-env.dfu $(O)/boot.dfu
+dfu: $(O)/images/$(TARGET).dfu $(O)/images/uboot-env.dfu $(O)/images/boot.dfu
 
-$(O)/$(TARGET).itb: all hdl
+$(O)/images/$(TARGET).itb: all hdl
 	$(UBOOT_DIR)/tools/mkimage -f configs/targets/$(TARGET)/$(TARGET).its $@
 
-$(O)/$(TARGET).dfu: $(O)/$(TARGET).itb
+$(O)/images/$(TARGET).dfu: $(O)/images/$(TARGET).itb
 	cp $< $<.tmp
 	dfu-suffix -a $<.tmp -v $(DEVICE_VID) -p $(DEVICE_PID)
 	mv $<.tmp $@
 
-$(O)/%.dfu: $(O)/%.bin
+$(O)/images/%.dfu: $(O)/images/%.bin
 	cp $< $<.tmp
 	dfu-suffix -a $<.tmp -v $(DEVICE_VID) -p $(DEVICE_PID)
 	mv $<.tmp $@
@@ -163,13 +163,13 @@ $(O)/%.dfu: $(O)/%.bin
 ########################### MSD update firmware file ###########################
 
 .PHONY: frm
-frm: $(O)/$(TARGET).frm $(O)/boot.frm
+frm: $(O)/images/$(TARGET).frm $(O)/images/boot.frm
 
-$(O)/$(TARGET).frm: $(O)/$(TARGET).itb
+$(O)/images/$(TARGET).frm: $(O)/images/$(TARGET).itb
 	md5sum $< | cut -d ' ' -f 1 > $@.md5
 	cat $< $@.md5 > $@
 
-$(O)/boot.frm: $(O)/images/boot.bin $(O)/uboot-env.bin scripts/target_mtd_info.key
+$(O)/images/boot.frm: $(O)/images/boot.bin $(O)/images/uboot-env.bin scripts/target_mtd_info.key
 	cat $^ | tee $@ | md5sum | cut -d ' ' -f1 | tee -a $@
 
 #################################### Clean #####################################
@@ -190,31 +190,31 @@ clean-target:
 
 ##################################### DFU ######################################
 
-.PHONY: dfu-fw dfu-sf-uboot dfu-all dfu-ram
+.PHONY: dfu-fw dfu-uboot dfu-all dfu-ram
 
-dfu-fw: $(O)/$(TARGET).dfu
+dfu-fw: $(O)/images/$(TARGET).dfu
 	dfu-util -D $(O)/$(TARGET).dfu -a firmware.dfu
 	dfu-util -e
 
-dfu-boot: $(O)/boot.dfu $(O)/uboot-env.dfu
+dfu-boot: $(O)/images/boot.dfu $(O)/images/uboot-env.dfu
 	dfu-util -D $(O)/boot.dfu -a boot.dfu && \
 	dfu-util -D $(O)/uboot-env.dfu -a uboot-env.dfu
 	dfu-util -e
 
 dfu-all: dfu-fw dfu-boot
 
-dfu-ram: $(O)/$(TARGET).dfu
+dfu-ram: $(O)/images/$(TARGET).dfu
 	sshpass -p analog ssh root@$(TARGET).local '/usr/sbin/device_reboot ram;'
 	sleep 5
-	dfu-util -D $(O)/$(TARGET).dfu -a firmware.dfu
+	dfu-util -D $(O)/images/$(TARGET).dfu -a firmware.dfu
 	dfu-util -e
 
 ################################################################################
 
 .PHONY: upload
 upload:
-	cp $(O)/$(TARGET).frm /run/media/*/PlutoSDR/
-	cp $(O)/boot.frm /run/media/*/PlutoSDR/
+	cp $(O)/images/$(TARGET).frm /run/media/*/PlutoSDR/
+	cp $(O)/images/boot.frm /run/media/*/PlutoSDR/
 	eject /run/media/$$USER/PlutoSDR
 
 .PHONY: flash-%
