@@ -15,31 +15,31 @@ endif
 endif
 
 $(info TARGET: $(TARGET))
-SUPPORTED_TARGETS := $(notdir $(wildcard configs/targets/*))
+SUPPORTED_TARGETS := $(notdir $(wildcard targets/*))
 $(if $(filter $(TARGET),$(SUPPORTED_TARGETS)),,$(error Invalid TARGET variable; valid values are: $(SUPPORTED_TARGETS)))
 
 .PHONY: default
 
 # Include target specific settings
-include configs/targets/$(TARGET)/$(TARGET).mk
+include targets/$(TARGET)/$(TARGET).mk
 
 ################################## Buildroot ###################################
 
 .PHONY: patch
 patch:
-	for patch in configs/patches/*.patch; do \
+	for patch in patches/*.patch; do \
 		patch -d buildroot -p1 --forward < $$patch || true; \
 	done
 
-export BR2_EXTERNAL=$(CURDIR)/configs
-export BR2_DEFCONFIG=$(CURDIR)/configs/targets/$(TARGET)/defconfig
+export BR2_EXTERNAL=$(CURDIR)
+export BR2_DEFCONFIG=$(CURDIR)/targets/$(TARGET)/defconfig
 export O=$(CURDIR)/build/$(TARGET)
 
 ## Pass targets to buildroot
 %:
 	$(MAKE) BR2_EXTERNAL=$(BR2_EXTERNAL) BR2_DEFCONFIG=$(BR2_DEFCONFIG) O=$(O) -C buildroot $*
 
-menuconfig: $(O)/.config
+all menuconfig: $(O)/.config
 
 ## Making sure defconfig is already run
 $(O)/.config: 
@@ -129,7 +129,7 @@ boot.bin: $(O)/images/boot.bin
 
 all: $(O)/images/boot.bin
 
-$(O)/images/boot.bif: $(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit $(O)/images/u-boot.elf
+$(O)/images/boot.bif: $(O)/sdk/fsbl/Release/fsbl.elf $(O)/images/u-boot.elf
 	echo img:{[bootloader] $^ } > $@
 
 $(O)/images/boot.bin: $(O)/images/boot.bif
@@ -144,7 +144,7 @@ $(O)/images/rootfs.cpio.xz:
 	$(MAKE) all
 
 $(O)/images/$(TARGET).itb: $(O)/images/rootfs.cpio.xz hdl
-	$(UBOOT_DIR)/tools/mkimage -f configs/targets/$(TARGET)/$(TARGET).its $@
+	$(UBOOT_DIR)/tools/mkimage -f targets/$(TARGET)/$(TARGET).its $@
 
 $(O)/images/$(TARGET).dfu: $(O)/images/$(TARGET).itb
 	cp $< $<.tmp
@@ -236,7 +236,7 @@ upstream:
 br-upstream:
 	git remote add -f -t pluto --no-tags br-analog https://github.com/analogdevicesinc/buildroot.git || true
 
-MSD_DIR = configs/msd
+MSD_DIR = platform/msd
 update-msd: br-upstream
 	rm -rf $(MSD_DIR)
 	git rm -rf $(MSD_DIR) || true
@@ -248,14 +248,14 @@ update: br-upstream update-msd
 	mkdir -p build/update
 	git read-tree --prefix=build/update -u br-analog/pluto:board/pluto
 	git rm -rf --cached build/update
-	mv build/update/S* configs/rootfs_overlay/etc/init.d/
-	chmod +x configs/rootfs_overlay/etc/init.d/*
-	mv build/update/{busybox-1.25.0.config,genimage-msd.cfg} configs/
-	mv build/update/{device_config,fw_env.config,input-event-daemon.conf,mdev.conf,motd} configs/rootfs_overlay/etc/
-	mv build/update/{device_reboot,udc_handle_suspend.sh,test_ensm_pinctrl.sh,update_frm.sh,update.sh} configs/rootfs_overlay/usr/sbin/
-	chmod +x configs/rootfs_overlay/usr/sbin/*
-	mv build/update/{automounter.sh,ifupdown.sh} configs/rootfs_overlay/usr/lib/mdev/
-	chmod +x configs/rootfs_overlay/usr/lib/mdev/{automounter.sh,ifupdown.sh}
+	mv build/update/S* platform/rootfs_overlay/etc/init.d/
+	chmod +x platform/rootfs_overlay/etc/init.d/*
+	mv build/update/{busybox-1.25.0.config,genimage-msd.cfg} platform/
+	mv build/update/{device_config,fw_env.config,input-event-daemon.conf,mdev.conf,motd} platform/rootfs_overlay/etc/
+	mv build/update/{device_reboot,udc_handle_suspend.sh,test_ensm_pinctrl.sh,update_frm.sh,update.sh} platform/rootfs_overlay/usr/sbin/
+	chmod +x platform/rootfs_overlay/usr/sbin/*
+	mv build/update/{automounter.sh,ifupdown.sh} platform/rootfs_overlay/usr/lib/mdev/
+	chmod +x platform/rootfs_overlay/usr/lib/mdev/{automounter.sh,ifupdown.sh}
 
 update-scripts: upstream
 	rm -rf build/scripts
