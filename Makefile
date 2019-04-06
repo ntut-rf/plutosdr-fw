@@ -129,7 +129,7 @@ boot.bin: $(O)/images/boot.bin
 
 all: $(O)/images/boot.bin
 
-$(O)/images/boot.bif: $(O)/sdk/fsbl/Release/fsbl.elf $(O)/images/u-boot.elf
+$(O)/images/boot.bif: $(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit $(O)/images/u-boot.elf
 	echo img:{[bootloader] $^ } > $@
 
 $(O)/images/boot.bin: $(O)/images/boot.bif
