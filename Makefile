@@ -54,12 +54,8 @@ include $(BR2_DEFCONFIG)
 
 ################################### Metadata ###################################
 
-all: configs/msd/LICENSE.html
+all: build/LICENSE.html
 
-configs/msd/LICENSE.html: build/LICENSE.html
-	cp $< $@
-
-.PRECIOUS: build/LICENSE.html
 build/LICENSE.html: build/VERSIONS
 	mkdir -p $(@D)
 	$(MAKE) legal-info

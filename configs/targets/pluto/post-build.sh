@@ -21,6 +21,8 @@ GENIMAGE_TMP="${BUILD_DIR}/genimage.tmp"
 
 MSD_DIR="${BOARD_DIR}/../../msd"
 
+cp ${O}/LICENSE.html ${MSD_DIR}
+
 rm -rf "${GENIMAGE_TMP}"
 genimage                           \
 	--rootpath "${TARGET_DIR}"     \
