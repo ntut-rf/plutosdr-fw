@@ -107,8 +107,8 @@ linux-diffconfig: $(LINUX_DIR)/.$(BR2_LINUX_KERNEL_DEFCONFIG)_defconfig linux-ex
 BUSYBOX_VERSION = $$(awk '/^BUSYBOX_VERSION/{print $$3}' buildroot/package/busybox/busybox.mk)
 export BUSYBOX_DIR = $(O)/build/busybox-$(BUSYBOX_VERSION)
 
-busybox-diffconfig: configs/busybox-1.25.0.config
-	$(LINUX_DIR)/scripts/diffconfig -m $< $(BUSYBOX_DIR)/.config > configs/busybox-extras.config
+busybox-diffconfig: $(BR2_PACKAGE_BUSYBOX_CONFIG)
+	$(LINUX_DIR)/scripts/diffconfig -m $< $(BUSYBOX_DIR)/.config > $(BR2_PACKAGE_BUSYBOX_CONFIG_FRAGMENT_FILES)
 
 ###################################### HDL #####################################
 
