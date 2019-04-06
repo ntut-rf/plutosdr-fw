@@ -19,7 +19,7 @@ sed -i -e '/::sysinit:\/bin\/hostname -F \/etc\/hostname/d' ${TARGET_DIR}/etc/in
 BOARD_DIR="$(dirname $0)"
 GENIMAGE_TMP="${BUILD_DIR}/genimage.tmp"
 
-MSD_DIR="${BOARD_DIR}/../../msd"
+MSD_DIR="${BOARD_DIR}/../msd"
 
 cp ${O}/LICENSE.html ${MSD_DIR}
 
@@ -27,7 +27,7 @@ rm -rf "${GENIMAGE_TMP}"
 genimage                           \
 	--rootpath "${TARGET_DIR}"     \
 	--tmppath "${GENIMAGE_TMP}"    \
-	--inputpath "${BOARD_DIR}/../../msd"  \
+	--inputpath "${MSD_DIR}"  \
 	--outputpath "${TARGET_DIR}/opt/" \
 	--config "${BOARD_DIR}/../../genimage-msd.cfg"
 
@@ -41,3 +41,7 @@ ${INSTALL} -D -m 0644 ${MSD_DIR}/img/* ${TARGET_DIR}/www/img/
 ${INSTALL} -D -m 0644 ${MSD_DIR}/index.html ${TARGET_DIR}/www/
 
 ln -sf device_reboot ${TARGET_DIR}/sbin/pluto_reboot
+
+rm -rf ${TARGET_DIR}/usr/include/
+rm -rf ${TARGET_DIR}/usr/lib/python2.7/site-packages/numpy/core/include/
+rm -rf ${TARGET_DIR}/usr/lib/python2.7/distutils/command/*.exe
