@@ -7,3 +7,4 @@
 	path = hdl
 	url = https://github.com/analogdevicesinc/hdl
 	branch = master
+	ignore = all
