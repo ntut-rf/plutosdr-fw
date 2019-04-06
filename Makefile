@@ -18,11 +18,10 @@ $(info TARGET: $(TARGET))
 SUPPORTED_TARGETS := pluto sidekiqz2 adrv9364
 $(if $(filter $(TARGET),$(SUPPORTED_TARGETS)),,$(error Invalid TARGET variable; valid values are: $(SUPPORTED_TARGETS)))
 
-# Include target specific constants
-include configs/targets/$(TARGET)/$(TARGET).mk
-
 .PHONY: default
-default: all
+
+# Include target specific settings
+include configs/targets/$(TARGET)/$(TARGET).mk
 
 ################################## Buildroot ###################################
 
@@ -130,7 +129,7 @@ boot.bin: $(O)/images/boot.bin
 
 all: $(O)/images/boot.bin
 
-$(O)/images/boot.bif: $(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit $(O)/images/u-boot.elf
+$(O)/images/boot.bif: $(O)/sdk/fsbl/Release/fsbl.elf $(O)/images/u-boot.elf
 	echo img:{[bootloader] $^ } > $@
 
 $(O)/images/boot.bin: $(O)/images/boot.bif

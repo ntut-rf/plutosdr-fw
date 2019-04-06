@@ -4,3 +4,4 @@ DEVICE_PID:=0xb673
 export HDL_PROJECT := pluto
 export HDL_PROJECT_DIR := $(CURDIR)/hdl/projects/pluto
 
+default: dfu frm
