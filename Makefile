@@ -185,6 +185,9 @@ clean-target:
 	rm -rf $(O)/target
 	find $(O) -name ".stamp_target_installed" |xargs rm -rf
 
+clean-images:
+	rm -f $(O)/images/*
+
 ##################################### DFU ######################################
 
 .PHONY: dfu-fw dfu-uboot dfu-all dfu-ram
