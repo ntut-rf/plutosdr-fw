@@ -32,7 +32,7 @@ genimage                           \
 rm -f ${TARGET_DIR}/opt/boot.vfat
 rm -f ${TARGET_DIR}/etc/init.d/S99iiod
 
-${INSTALL} -D -m 0644 ${BOARD_DIR}/../../VERSIONS ${TARGET_DIR}/opt/
+${INSTALL} -D -m 0644 ${O}/../VERSIONS ${TARGET_DIR}/opt/
 
 mkdir -p ${TARGET_DIR}/www/img
 ${INSTALL} -D -m 0644 ${MSD_DIR}/img/* ${TARGET_DIR}/www/img/

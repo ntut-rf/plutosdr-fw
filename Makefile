@@ -60,12 +60,12 @@ configs/msd/LICENSE.html: build/LICENSE.html
 	cp $< $@
 
 .PRECIOUS: build/LICENSE.html
-build/LICENSE.html: configs/VERSIONS
+build/LICENSE.html: build/VERSIONS
 	mkdir -p $(@D)
 	$(MAKE) legal-info
 	scripts/legal_info_html.sh "$(COMPLETE_NAME)" $<
 
-configs/VERSIONS:
+build/VERSIONS:
 	echo device-fw $(VERSION) > $@
 	echo hdl $(shell cd hdl && git describe --abbrev=4 --dirty --always --tags) >> $@
 	echo linux $(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION) >> $@
