@@ -15,7 +15,7 @@ endif
 endif
 
 $(info TARGET: $(TARGET))
-SUPPORTED_TARGETS := pluto sidekiqz2 adrv9364
+SUPPORTED_TARGETS := $(notdir $(wildcard configs/targets/*))
 $(if $(filter $(TARGET),$(SUPPORTED_TARGETS)),,$(error Invalid TARGET variable; valid values are: $(SUPPORTED_TARGETS)))
 
 .PHONY: default
