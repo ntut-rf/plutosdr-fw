@@ -141,7 +141,10 @@ $(O)/images/boot.bin: $(O)/images/boot.bif
 .PHONY: dfu
 dfu: $(O)/images/$(TARGET).dfu $(O)/images/uboot-env.dfu $(O)/images/boot.dfu
 
-$(O)/images/$(TARGET).itb: all hdl
+$(O)/images/rootfs.cpio.xz:
+	$(MAKE) all
+
+$(O)/images/$(TARGET).itb: $(O)/images/rootfs.cpio.xz hdl
 	$(UBOOT_DIR)/tools/mkimage -f configs/targets/$(TARGET)/$(TARGET).its $@
 
 $(O)/images/$(TARGET).dfu: $(O)/images/$(TARGET).itb
@@ -187,15 +190,15 @@ clean-target:
 .PHONY: dfu-fw dfu-uboot dfu-all dfu-ram
 
 dfu-fw: $(O)/images/$(TARGET).dfu
-	dfu-util -D $(O)/$(TARGET).dfu -a firmware.dfu
-	dfu-util -e
+	dfu-util -D $< -a firmware.dfu
 
-dfu-boot: $(O)/images/boot.dfu $(O)/images/uboot-env.dfu
-	dfu-util -D $(O)/boot.dfu -a boot.dfu && \
-	dfu-util -D $(O)/uboot-env.dfu -a uboot-env.dfu
-	dfu-util -e
+dfu-boot: $(O)/images/boot.dfu 
+	dfu-util -D $< -a boot.dfu
 
-dfu-all: dfu-fw dfu-boot
+dfu-boot-env: $(O)/images/uboot-env.dfu
+	dfu-util -D $< -a uboot-env.dfu
+
+dfu-all: dfu-fw dfu-boot dfu-boot-env
 
 dfu-ram: $(O)/images/$(TARGET).dfu
 	sshpass -p analog ssh root@$(TARGET).local '/usr/sbin/device_reboot ram;'
