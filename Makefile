@@ -1,5 +1,4 @@
 export VIVADO_VERSION ?= 2018.2
-PATH := $(PATH):/opt/Xilinx/SDK/$(VIVADO_VERSION)/gnu/aarch32/lin/gcc-arm-linux-gnueabi/bin
 VIVADO_SETTINGS ?= /opt/Xilinx/Vivado/$(VIVADO_VERSION)/settings64.sh
 
 CROSS_COMPILE ?= arm-linux-gnueabihf-
