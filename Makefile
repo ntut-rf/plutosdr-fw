@@ -1,4 +1,4 @@
-export VIVADO_VERSION ?= 2018.2
+export VIVADO_VERSION ?= 2018.3
 VIVADO_SETTINGS ?= /opt/Xilinx/Vivado/$(VIVADO_VERSION)/settings64.sh
 
 CROSS_COMPILE ?= arm-linux-gnueabihf-
