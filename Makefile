@@ -1,7 +1,7 @@
 export VIVADO_VERSION ?= 2018.3
 VIVADO_SETTINGS ?= /opt/Xilinx/Vivado/$(VIVADO_VERSION)/settings64.sh
 
-CROSS_COMPILE ?= arm-linux-gnueabihf-
+CROSS_COMPILE ?= arm-buildroot-linux-gnueabihf-
 
 ifdef TARGET
 $(shell echo $(TARGET) > .target)
