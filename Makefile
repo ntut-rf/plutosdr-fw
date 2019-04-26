@@ -119,10 +119,8 @@ $(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit: $(HDL_PROJECT_DIR)/
 	source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(CURDIR)/scripts/create_fsbl_project.tcl
 
 .PHONY: hdf
-hdf: $(HDL_PROJECT_DIR)/$(HDL_PROJECT).sdk/system_top.hdf
-
-$(HDL_PROJECT_DIR)/$(HDL_PROJECT).sdk/system_top.hdf:
-	source $(VIVADO_SETTINGS) && $(MAKE) -C $(HDL_PROJECT_DIR)
+hdf $(HDL_PROJECT_DIR)/$(HDL_PROJECT).sdk/system_top.hdf:
+	source $(VIVADO_SETTINGS) && $(MAKE) ADI_HDL_DIR=$(CURDIR)/hdl -I $(HDL_PROJECT_DIR) -C $(CURDIR)/targets/$(TARGET)/hdl
 
 #################################### Images ####################################
 

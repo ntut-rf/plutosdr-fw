@@ -1,0 +1,11 @@
+.Xil/
+*.cache/
+*.hw/
+*.ip_user_files/
+*.runs/
+*.srcs/
+*.sdk/
+*.log
+*.jou
+*.xpr
+
