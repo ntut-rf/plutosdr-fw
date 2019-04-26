@@ -65,7 +65,7 @@ build/VERSIONS:
 
 ################################### U-Boot #####################################
 
-export UBOOT_DIR = $(O)/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION)	
+export UBOOT_DIR = $(strip $(O)/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION))
 
 $(O)/images/u-boot.elf:
 	$(MAKE) uboot-reconfigure
@@ -76,7 +76,7 @@ $(O)/images/uboot-env.bin: $(O)/images/uboot-env.txt
 
 $(O)/images/uboot-env.txt:
 	mkdir -p $(@D)
-	PATH=$(CURDIR)/build/host/bin/:$(PATH) CROSS_COMPILE=$(CROSS_COMPILE) scripts/get_default_envs.sh > $@
+	cd $(@D) && PATH=$(CURDIR)/build/host/bin/:$(PATH) CROSS_COMPILE=$(CROSS_COMPILE) $(CURDIR)/scripts/get_default_envs.sh > $@
 	echo attr_name=compatible >> $@
 	echo attr_val=ad9364 >> $@
 	sed -i 's,^\(maxcpus[ ]*=\).*,\1'2',g' $@
@@ -91,7 +91,7 @@ uboot-diffconfig: $(UBOOT_DIR)/.$(BR2_TARGET_UBOOT_BOARD_DEFCONFIG)_defconfig li
 
 #################################### Linux ####################################
 
-export LINUX_DIR = $(O)/build/linux-$(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION)
+export LINUX_DIR = $(strip $(O)/build/linux-$(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION))
 
 ## Generate reference defconfig with missing options set to default as a base for comparison using diffconfig
 $(LINUX_DIR)/.$(BR2_LINUX_KERNEL_DEFCONFIG)_defconfig:
@@ -104,7 +104,7 @@ linux-diffconfig: $(LINUX_DIR)/.$(BR2_LINUX_KERNEL_DEFCONFIG)_defconfig linux-ex
 #################################### Busybox ##################################
 
 BUSYBOX_VERSION = $$(awk '/^BUSYBOX_VERSION/{print $$3}' buildroot/package/busybox/busybox.mk)
-export BUSYBOX_DIR = $(O)/build/busybox-$(BUSYBOX_VERSION)
+export BUSYBOX_DIR = $(strip $(O)/build/busybox-$(BUSYBOX_VERSION))
 
 busybox-diffconfig: $(BR2_PACKAGE_BUSYBOX_CONFIG)
 	$(LINUX_DIR)/scripts/diffconfig -m $< $(BUSYBOX_DIR)/.config > $(BR2_PACKAGE_BUSYBOX_CONFIG_FRAGMENT_FILES)
