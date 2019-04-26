@@ -118,6 +118,9 @@ $(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit: $(HDL_PROJECT_DIR)/
 	mkdir -p $(O)
 	source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(CURDIR)/scripts/create_fsbl_project.tcl
 
+.PHONY: hdf
+hdf: $(HDL_PROJECT_DIR)/$(HDL_PROJECT).sdk/system_top.hdf
+
 $(HDL_PROJECT_DIR)/$(HDL_PROJECT).sdk/system_top.hdf:
 	source $(VIVADO_SETTINGS) && $(MAKE) -C $(HDL_PROJECT_DIR)
 
@@ -146,7 +149,7 @@ dfu: $(O)/images/$(TARGET).dfu $(O)/images/uboot-env.dfu $(O)/images/boot.dfu
 $(O)/images/rootfs.cpio.xz:
 	$(MAKE) all
 
-$(O)/images/$(TARGET).itb: $(O)/images/rootfs.cpio.xz hdl
+$(O)/images/$(TARGET).itb: $(O)/images/rootfs.cpio.xz $(O)/sdk/hw_0/system_top.bit
 	$(UBOOT_DIR)/tools/mkimage -f targets/$(TARGET)/$(TARGET).its $@
 
 $(O)/images/$(TARGET).dfu: $(O)/images/$(TARGET).itb
