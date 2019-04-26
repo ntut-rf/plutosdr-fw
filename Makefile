@@ -67,9 +67,11 @@ build/VERSIONS:
 
 export UBOOT_DIR = $(O)/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION)
 
-$(O)/images/u-boot.elf:
-	$(MAKE) uboot
-	mv $(O)/images/u-boot $@
+$(O)/images/u-boot:
+	$(MAKE) uboot-reconfigure
+
+$(O)/images/u-boot.elf: $(O)/images/u-boot
+	mv $< $@
 
 $(O)/images/uboot-env.bin: $(O)/images/uboot-env.txt
 	$(UBOOT_DIR)/tools/mkenvimage -s 0x20000 -o $@ $<
