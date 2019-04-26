@@ -78,7 +78,7 @@ $(O)/images/uboot-env.bin: $(O)/images/uboot-env.txt
 
 $(O)/images/uboot-env.txt:
 	mkdir -p $(@D)
-	CROSS_COMPILE=$(CROSS_COMPILE) scripts/get_default_envs.sh > $@
+	PATH=$(CURDIR)/build/host/bin/:$(PATH) CROSS_COMPILE=$(CROSS_COMPILE) scripts/get_default_envs.sh > $@
 	echo attr_name=compatible >> $@
 	echo attr_val=ad9364 >> $@
 	sed -i 's,^\(maxcpus[ ]*=\).*,\1'2',g' $@
