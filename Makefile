@@ -114,13 +114,17 @@ busybox-diffconfig: $(BR2_PACKAGE_BUSYBOX_CONFIG)
 .PHONY: hdl
 hdl: $(O)/sdk/hw_0/system_top.bit
 
-$(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit: $(HDL_PROJECT_DIR)/$(HDL_PROJECT).sdk/system_top.hdf
+$(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
 	mkdir -p $(O)
 	source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(CURDIR)/scripts/create_fsbl_project.tcl
 
 .PHONY: hdf
-hdf $(HDL_PROJECT_DIR)/$(HDL_PROJECT).sdk/system_top.hdf:
-	source $(VIVADO_SETTINGS) && $(MAKE) ADI_HDL_DIR=$(CURDIR)/hdl -I $(HDL_PROJECT_DIR) -C $(CURDIR)/targets/$(TARGET)/hdl
+hdf $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf:
+	mkdir -p $(@D)
+	cp $(CURDIR)/targets/$(TARGET)/hdl/*.tcl $(O)/hdl/
+	source $(VIVADO_SETTINGS) && \
+		$(MAKE) ADI_HDL_DIR=$(CURDIR)/hdl VPATH=$(HDL_PROJECT_DIR) -I $(HDL_PROJECT_DIR) \
+		-C $(O)/hdl -f $(CURDIR)/targets/$(TARGET)/hdl/Makefile
 
 #################################### Images ####################################
 
@@ -174,14 +178,17 @@ $(O)/images/boot.frm: $(O)/images/boot.bin $(O)/images/uboot-env.bin scripts/tar
 
 #################################### Clean #####################################
 
-.PHONY: clean-all clean-sdk clean-hdl clean-target
+.PHONY: clean-all clean-sdk clean-hdl clean-hdllib clean-target
 
-clean-all: clean-sdk clean-hdl clean
+clean-all: clean-sdk clean-hdl clean-hdllib clean
 
 clean-sdk:
 	rm -rf $(O)/sdk
 
 clean-hdl:
+	rm -rf $(O)/hdl
+
+clean-hdllib:
 	$(MAKE) -C hdl clean
 
 clean-target:
