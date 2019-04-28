@@ -35,59 +35,10 @@
 
 `timescale 1ns/100ps
 
-module axi_gpreg #(
-
-  parameter   integer ID = 0,
-  parameter   integer NUM_OF_IO = 8,
-  parameter   integer NUM_OF_CLK_MONS = 8,
-  parameter   integer BUF_ENABLE_0 = 1,
-  parameter   integer BUF_ENABLE_1 = 1,
-  parameter   integer BUF_ENABLE_2 = 1,
-  parameter   integer BUF_ENABLE_3 = 1,
-  parameter   integer BUF_ENABLE_4 = 1,
-  parameter   integer BUF_ENABLE_5 = 1,
-  parameter   integer BUF_ENABLE_6 = 1,
-  parameter   integer BUF_ENABLE_7 = 1)
+module axi_simplereg #(
+  parameter   integer ID = 0)
 
  (
-
-  // io
-
-  output  [ 31:0]   up_gp_ioenb_0,
-  output  [ 31:0]   up_gp_out_0,
-  input   [ 31:0]   up_gp_in_0,
-  output  [ 31:0]   up_gp_ioenb_1,
-  output  [ 31:0]   up_gp_out_1,
-  input   [ 31:0]   up_gp_in_1,
-  output  [ 31:0]   up_gp_ioenb_2,
-  output  [ 31:0]   up_gp_out_2,
-  input   [ 31:0]   up_gp_in_2,
-  output  [ 31:0]   up_gp_ioenb_3,
-  output  [ 31:0]   up_gp_out_3,
-  input   [ 31:0]   up_gp_in_3,
-  output  [ 31:0]   up_gp_ioenb_4,
-  output  [ 31:0]   up_gp_out_4,
-  input   [ 31:0]   up_gp_in_4,
-  output  [ 31:0]   up_gp_ioenb_5,
-  output  [ 31:0]   up_gp_out_5,
-  input   [ 31:0]   up_gp_in_5,
-  output  [ 31:0]   up_gp_ioenb_6,
-  output  [ 31:0]   up_gp_out_6,
-  input   [ 31:0]   up_gp_in_6,
-  output  [ 31:0]   up_gp_ioenb_7,
-  output  [ 31:0]   up_gp_out_7,
-  input   [ 31:0]   up_gp_in_7,
-
-  // clock monitors
-
-  input             d_clk_0,
-  input             d_clk_1,
-  input             d_clk_2,
-  input             d_clk_3,
-  input             d_clk_4,
-  input             d_clk_5,
-  input             d_clk_6,
-  input             d_clk_7,
 
   // axi interface
 
@@ -117,8 +68,6 @@ module axi_gpreg #(
   // version
 
   localparam  [31:0]  PCORE_VERSION = 32'h00040063;
-  localparam  integer BUF_ENABLE[7:0] = {BUF_ENABLE_7, BUF_ENABLE_6, BUF_ENABLE_5, BUF_ENABLE_4,
-    BUF_ENABLE_3, BUF_ENABLE_2, BUF_ENABLE_1, BUF_ENABLE_0};
 
   // internal registers
 
@@ -141,10 +90,6 @@ module axi_gpreg #(
   wire    [ 13:0]   up_raddr;
   wire              up_wreq_s;
   wire              up_rreq_s;
-  wire    [ 31:0]   up_gp_ioenb_s[7:0];
-  wire    [ 31:0]   up_gp_out_s[7:0];
-  wire    [ 31:0]   up_gp_in_s[7:0];
-  wire    [  7:0]   d_clk_s;
   wire    [ 16:0]   up_wack_s;
   wire    [ 16:0]   up_rack_s;
   wire    [ 31:0]   up_rdata_s[16:0];
@@ -153,42 +98,6 @@ module axi_gpreg #(
 
   assign up_rstn = s_axi_aresetn;
   assign up_clk = s_axi_aclk;
-
-  // split-up interfaces
-
-  assign up_gp_ioenb_0 = up_gp_ioenb_s[0];
-  assign up_gp_out_0 = up_gp_out_s[0];
-  assign up_gp_in_s[0] = up_gp_in_0;
-  assign up_gp_ioenb_1 = up_gp_ioenb_s[1];
-  assign up_gp_out_1 = up_gp_out_s[1];
-  assign up_gp_in_s[1] = up_gp_in_1;
-  assign up_gp_ioenb_2 = up_gp_ioenb_s[2];
-  assign up_gp_out_2 = up_gp_out_s[2];
-  assign up_gp_in_s[2] = up_gp_in_2;
-  assign up_gp_ioenb_3 = up_gp_ioenb_s[3];
-  assign up_gp_out_3 = up_gp_out_s[3];
-  assign up_gp_in_s[3] = up_gp_in_3;
-  assign up_gp_ioenb_4 = up_gp_ioenb_s[4];
-  assign up_gp_out_4 = up_gp_out_s[4];
-  assign up_gp_in_s[4] = up_gp_in_4;
-  assign up_gp_ioenb_5 = up_gp_ioenb_s[5];
-  assign up_gp_out_5 = up_gp_out_s[5];
-  assign up_gp_in_s[5] = up_gp_in_5;
-  assign up_gp_ioenb_6 = up_gp_ioenb_s[6];
-  assign up_gp_out_6 = up_gp_out_s[6];
-  assign up_gp_in_s[6] = up_gp_in_6;
-  assign up_gp_ioenb_7 = up_gp_ioenb_s[7];
-  assign up_gp_out_7 = up_gp_out_s[7];
-  assign up_gp_in_s[7] = up_gp_in_7;
-
-  assign d_clk_s[0] = d_clk_0;
-  assign d_clk_s[1] = d_clk_1;
-  assign d_clk_s[2] = d_clk_2;
-  assign d_clk_s[3] = d_clk_3;
-  assign d_clk_s[4] = d_clk_4;
-  assign d_clk_s[5] = d_clk_5;
-  assign d_clk_s[6] = d_clk_6;
-  assign d_clk_s[7] = d_clk_7;
 
   // up signals
 
@@ -253,70 +162,6 @@ module axi_gpreg #(
       end
     end
   end
-
-  // instantiations
-
-  genvar n;
-  generate
-
-  // gpio
-
-  if (NUM_OF_IO < 8) begin
-  for (n = NUM_OF_IO; n < 8; n = n + 1) begin: g_unused_io
-  assign up_gp_ioenb_s[n] = 32'd0;
-  assign up_gp_out_s[n] = 32'd0;
-  assign up_wack_s[n] = 1'd0;
-  assign up_rdata_s[n] = 32'd0;
-  assign up_rack_s[n] = 1'd0;
-  end
-  end
-
-  for (n = 0; n < NUM_OF_IO; n = n + 1) begin: g_io
-  axi_gpreg_io #(.ID (16+n)) i_gpreg_io (
-    .up_gp_ioenb (up_gp_ioenb_s[n]),
-    .up_gp_out (up_gp_out_s[n]),
-    .up_gp_in (up_gp_in_s[n]),
-    .up_rstn (up_rstn),
-    .up_clk (up_clk),
-    .up_wreq (up_wreq),
-    .up_waddr (up_waddr),
-    .up_wdata (up_wdata),
-    .up_wack (up_wack_s[n]),
-    .up_rreq (up_rreq),
-    .up_raddr (up_raddr),
-    .up_rdata (up_rdata_s[n]),
-    .up_rack (up_rack_s[n]));
-  end
-
-  // clock monitors
-
-  if (NUM_OF_CLK_MONS < 8) begin
-  for (n = NUM_OF_CLK_MONS; n < 8; n = n + 1) begin: g_unused_clock_mon
-  assign up_wack_s[(8+n)] = 1'd0;
-  assign up_rdata_s[(8+n)] = 32'd0;
-  assign up_rack_s[(8+n)] = 1'd0;
-  end
-  end
-
-  for (n = 0; n < NUM_OF_CLK_MONS; n = n + 1) begin: g_clock_mon
-  axi_gpreg_clock_mon #(
-    .ID (32+n),
-    .BUF_ENABLE (BUF_ENABLE[n]))
-  i_gpreg_clock_mon (
-    .d_clk (d_clk_s[n]),
-    .up_rstn (up_rstn),
-    .up_clk (up_clk),
-    .up_wreq (up_wreq),
-    .up_waddr (up_waddr),
-    .up_wdata (up_wdata),
-    .up_wack (up_wack_s[(8+n)]),
-    .up_rreq (up_rreq),
-    .up_raddr (up_raddr),
-    .up_rdata (up_rdata_s[(8+n)]),
-    .up_rack (up_rack_s[(8+n)]));
-  end
-
-  endgenerate
 
   up_axi i_up_axi (
     .up_rstn (up_rstn),
