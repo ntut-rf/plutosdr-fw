@@ -7,9 +7,7 @@ source $ad_hdl_dir/library/scripts/adi_ip.tcl
 
 adi_ip_create axi_simplereg
 adi_ip_files axi_simplereg [list \
-  "$ad_hdl_dir/library/common/ad_rst.v" \
   "$ad_hdl_dir/library/common/up_axi.v" \
-  "$ad_hdl_dir/library/xilinx/common/ad_rst_constr.xdc" \
   "axi_simplereg.v" ]
 
 adi_ip_properties axi_simplereg
