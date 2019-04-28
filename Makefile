@@ -126,6 +126,14 @@ hdf $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf:
 		$(MAKE) ADI_HDL_DIR=$(CURDIR)/hdl VPATH=$(HDL_PROJECT_DIR) -I $(HDL_PROJECT_DIR) \
 		-C $(O)/hdl -f $(CURDIR)/targets/$(TARGET)/hdl/Makefile
 
+.PHONY: $(wildcard ip/*)
+$(wildcard ip/*):
+	mkdir -p $(O)/$@
+	cp $@/* $(O)/$@
+	source $(VIVADO_SETTINGS) && \
+		$(MAKE) ADI_HDL_DIR=$(CURDIR)/hdl VPATH="$(CURDIR)/$@ $(CURDIR)/hdl" -I $(CURDIR)/hdl \
+		-C $(O)/$@ -f $(CURDIR)/$@/Makefile
+
 #################################### Images ####################################
 
 .PHONY: boot.bin
