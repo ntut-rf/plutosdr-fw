@@ -120,7 +120,7 @@ $(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit: $(O)/hdl/$(HDL_PROJ
 
 .PHONY: hdf
 hdf $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf:
-	mkdir -p $(@D)
+	mkdir -p $(O)/hdl
 	cp $(CURDIR)/targets/$(TARGET)/hdl/*.tcl $(O)/hdl/
 	source $(VIVADO_SETTINGS) && \
 		$(MAKE) ADI_HDL_DIR=$(CURDIR)/hdl VPATH=$(HDL_PROJECT_DIR) -I $(HDL_PROJECT_DIR) \

@@ -5,6 +5,8 @@ source $ad_hdl_dir/projects/scripts/adi_env.tcl
 source $ad_hdl_dir/projects/scripts/adi_project.tcl
 source $ad_hdl_dir/projects/scripts/adi_board.tcl
 
+set lib_dirs "$ad_hdl_dir/../build/pluto/ip"
+
 set p_device "xc7z010clg225-1"
 adi_project_xilinx pluto
 

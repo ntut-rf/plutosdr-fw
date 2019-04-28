@@ -1,0 +1,29 @@
+diff --git a/projects/scripts/adi_project.tcl b/projects/scripts/adi_project.tcl
+index dce199ef..329622e2 100644
+--- a/projects/scripts/adi_project.tcl
++++ b/projects/scripts/adi_project.tcl
+@@ -31,6 +31,7 @@ set ADI_POWER_OPTIMIZATION 0
+ 
+ proc adi_project_xilinx {project_name {mode 0}} {
+ 
++  global lib_dirs
+   global ad_hdl_dir
+   global ad_phdl_dir
+   global p_board
+@@ -120,7 +121,7 @@ proc adi_project_xilinx {project_name {mode 0}} {
+     set_property board_part $p_board [current_project]
+   }
+ 
+-  set lib_dirs $ad_hdl_dir/library
++  lappend lib_dirs $ad_hdl_dir/library
+   if {$ad_hdl_dir ne $ad_phdl_dir} {
+     lappend lib_dirs $ad_phdl_dir/library
+   }
+@@ -133,6 +134,7 @@ proc adi_project_xilinx {project_name {mode 0}} {
+     config_ip_cache -import_from_project -use_cache_location $ad_hdl_dir/ipcache
+   }
+ 
++  puts "$lib_dirs"
+   set_property ip_repo_paths $lib_dirs [current_fileset]
+   update_ip_catalog
+ 
