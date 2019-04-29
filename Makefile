@@ -128,11 +128,11 @@ hdf $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf:
 
 .PHONY: $(wildcard ip/*)
 $(wildcard ip/*):
-	mkdir -p $(O)/$@
-	cp $@/* $(O)/$@
+	mkdir -p $(CURDIR)/build/$@
+	cp $@/* $(CURDIR)/build/$@
 	source $(VIVADO_SETTINGS) && \
 		$(MAKE) ADI_HDL_DIR=$(CURDIR)/hdl VPATH="$(CURDIR)/$@ $(CURDIR)/hdl" -I $(CURDIR)/hdl \
-		-C $(O)/$@ -f $(CURDIR)/$@/Makefile
+		-C $(CURDIR)/build/$@ -f $(CURDIR)/$@/Makefile
 
 #################################### Images ####################################
 
