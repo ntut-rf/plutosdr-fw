@@ -44,3 +44,7 @@ VERSIONS
 
 .target
 .vscode/
+
+*.jou
+*.log
+
