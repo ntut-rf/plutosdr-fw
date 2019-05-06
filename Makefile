@@ -151,6 +151,23 @@ endif
 $(O)/images/boot.bin: $(O)/images/boot.bif
 	source $(VIVADO_SETTINGS) && bootgen -image $< -w -o $@
 
+################################ Programming PL #################################
+
+$(O)/images/system_top.bif: $(O)/sdk/hw_0/system_top.bit
+	echo all:{$<} > $@
+
+$(O)/images/system_top.bit.bin: $(O)/images/system_top.bif
+	source $(VIVADO_SETTINGS) && bootgen -image $< -w -o $@
+
+SSH_KEY = $(CURDIR)/platform/rootfs_overlay/root/.ssh/id_rsa
+
+.PHONY: bit pl
+bit: $(O)/images/system_top.bit.bin
+
+pl: $(O)/images/system_top.bit.bin
+	rsync -avzz -e "ssh -i $(SSH_KEY)" --chown=root:root $< root@$(TARGET).local:/lib/firmware
+	ssh -i $(SSH_KEY) root@$(TARGET).local "echo system_top.bit.bin > /sys/class/fpga_manager/fpga0/firmware"
+
 ########################### DFU update firmware file ###########################
 
 .PHONY: dfu
