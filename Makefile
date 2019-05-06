@@ -153,7 +153,7 @@ $(O)/images/boot.bin: $(O)/images/boot.bif
 
 ################################ Programming PL #################################
 
-$(O)/images/system_top.bif: $(O)/sdk/hw_0/system_top.bit
+$(O)/images/system_top.bif: $(O)/hdl/$(TARGET).runs/impl_1/system_top.bit
 	echo all:{$<} > $@
 
 $(O)/images/system_top.bit.bin: $(O)/images/system_top.bif
