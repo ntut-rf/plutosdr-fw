@@ -26,6 +26,17 @@ $ make patch
 $ make defconfig
 $ make
  ```
+ 
+* Upload firmware
+ ```bash
+ $ make upload
+ ```
+ 
+ * Login
+ ```bash
+ $ ssh root@pluto.local
+ ```
+ Password: `analog`
 
  * Updating your local repository 
  ```bash 
