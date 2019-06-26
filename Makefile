@@ -32,6 +32,10 @@ patch:
 		patch -d buildroot -p1 --forward < $$patch || true; \
 	done
 
+.PHONY: patch-hdl
+patch-hdl:
+	patch -d hdl -p1 --forward < hdl.patch || true
+
 export BR2_EXTERNAL=$(CURDIR)
 export BR2_DEFCONFIG=$(CURDIR)/targets/$(TARGET)/defconfig
 export O=$(CURDIR)/build/$(TARGET)
