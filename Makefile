@@ -211,7 +211,7 @@ $(O)/images/boot.frm: $(O)/images/boot.bin $(O)/images/uboot-env.bin scripts/tar
 
 .PHONY: clean-all clean-sdk clean-hdl clean-hdllib clean-target
 
-clean-all: clean-sdk clean-hdl clean-hdllib clean
+clean-all: clean-sdk clean-hdl clean-hdllib clean clean-ip
 
 clean-sdk:
 	rm -rf $(O)/sdk
@@ -219,8 +219,11 @@ clean-sdk:
 clean-hdl:
 	rm -rf $(O)/hdl
 
+clean-ip:
+	rm -rf build/ip
+
 clean-hdllib:
-	$(MAKE) -C hdl clean
+	$(MAKE) -C hdl clean-all
 
 clean-target:
 	rm -rf $(O)/target
