@@ -8,3 +8,6 @@
 	url = https://github.com/analogdevicesinc/hdl
 	branch = master
 	ignore = all
+[submodule "ip/zynq-axi-tutorial"]
+	path = ip/zynq-axi-tutorial
+	url = https://github.com/krailis/zynq-axi-tutorial
