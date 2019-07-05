@@ -6,7 +6,7 @@ source -notrace $ad_hdl_dir/projects/scripts/adi_project.tcl
 source -notrace $ad_hdl_dir/projects/scripts/adi_board.tcl
 
 set lib_dirs "$ad_hdl_dir/../build/ip"
-lappend lib_dirs "$ad_hdl_dir/ip/zynq-axi-tutorial/hls/add_one.prj/AXI4-Lite"
+lappend lib_dirs "$ad_hdl_dir/../ip/zynq-axi-tutorial/hls/add_one.prj/AXI4-Lite"
 
 set p_device "xc7z010clg225-1"
 adi_project_xilinx pluto
