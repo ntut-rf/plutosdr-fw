@@ -48,3 +48,5 @@ VERSIONS
 *.jou
 *.log
 
+*.prj/
+
