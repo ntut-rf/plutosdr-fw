@@ -1,7 +1,7 @@
-diff --git a/projects/scripts/adi_project.tcl b/projects/scripts/adi_project.tcl
+diff --git a/projects/scripts/adi_project_xilinx.tcl b/projects/scripts/adi_project_xilinx.tcl
 index dce199ef..329622e2 100644
---- a/projects/scripts/adi_project.tcl
-+++ b/projects/scripts/adi_project.tcl
+--- a/projects/scripts/adi_project_xilinx.tcl
++++ b/projects/scripts/adi_project_xilinx.tcl
 @@ -31,6 +31,7 @@ set ADI_POWER_OPTIMIZATION 0
  
  proc adi_project_xilinx {project_name {mode 0}} {
