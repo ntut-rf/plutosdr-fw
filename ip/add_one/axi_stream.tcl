@@ -13,6 +13,8 @@ open_solution AXI4-Stream
 set_part {xc7z020clg484-1}
 create_clock -period 10 -name default
 
+config_rtl -prefix "stream_"
+
 # Set Directives
 set_directive_interface -mode ap_ctrl_none "add_one"
 set_directive_interface -mode axis "add_one" a

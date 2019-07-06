@@ -8,5 +8,5 @@ ad_cpu_interconnect 0x40000000 axi_simplereg
 
 # add_one
 
-ad_ip_instance add_one add_one
-ad_cpu_interconnect 0x41000000 add_one
+ad_ip_instance lite_add_one lite_add_one
+ad_cpu_interconnect 0x41000000 lite_add_one
