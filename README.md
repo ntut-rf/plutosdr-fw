@@ -11,7 +11,7 @@ $ make defconfig
 $ make
  ```
  
-* Upload firmware
+* Upload firmware through MSD
  ```bash
  $ make upload
  ```
@@ -59,9 +59,5 @@ $ make
 ## Programming PL
 
 [Solution Zynq PL Programming With FPGA Manager](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18841645/Solution+Zynq+PL+Programming+With+FPGA+Manager)
-
-## Resources
-
-* [PlutoSDR BSP](https://github.com/PlutoSDR/plutosdr-bsp)
  
 
