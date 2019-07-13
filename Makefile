@@ -309,3 +309,9 @@ update-scripts: upstream
 	git read-tree --prefix=build/scripts -u upstream/master:scripts
 	git rm -rf --cached build/scripts
 	mv build/scripts/{53-adi-plutosdr-usb.rules,create_fsbl_project.tcl,get_default_envs.sh,legal_info_html.sh,run.tcl,target_mtd_info.key} scripts/
+
+##################################### DTS ######################################
+
+.PHONY: dts
+dts:
+	source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(CURDIR)/scripts/generate_dts.tcl
