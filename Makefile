@@ -315,3 +315,8 @@ update-scripts: upstream
 .PHONY: dts
 dts:
 	source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(CURDIR)/scripts/generate_dts.tcl
+	sed -i '/axi_ad9361/,/}/d' $(O)/dts/pl.dtsi
+	sed -i '/misc_clk_0/,/}/d' $(O)/dts/pl.dtsi
+	sed -i '/axi_ad9361_adc_dma/,/}/d' $(O)/dts/pl.dtsi
+	sed -i '/axi_ad9361_dac_dma/,/}/d' $(O)/dts/pl.dtsi
+	sed -i '/axi_iic_main/,/}/d' $(O)/dts/pl.dtsi
