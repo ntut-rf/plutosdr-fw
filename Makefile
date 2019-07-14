@@ -120,7 +120,8 @@ busybox-diffconfig: $(BR2_PACKAGE_BUSYBOX_CONFIG)
 .PHONY: hdl
 hdl: $(O)/sdk/hw_0/system_top.bit
 
-$(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
+.PHONY: fsbl
+fsbl $(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
 	mkdir -p $(O)
 	source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(CURDIR)/scripts/create_fsbl_project.tcl
 
@@ -312,7 +313,7 @@ update-scripts: upstream
 
 ##################################### DTS ######################################
 
-.PHONY: dts
+.PHONY: dts clean-dts
 dts:
 	source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(CURDIR)/scripts/generate_dts.tcl
 	sed -i '/axi_ad9361/,/}/d' $(O)/dts/pl.dtsi
@@ -320,3 +321,6 @@ dts:
 	sed -i '/axi_ad9361_adc_dma/,/}/d' $(O)/dts/pl.dtsi
 	sed -i '/axi_ad9361_dac_dma/,/}/d' $(O)/dts/pl.dtsi
 	sed -i '/axi_iic_main/,/}/d' $(O)/dts/pl.dtsi
+
+clean-dts:
+	rm -rf $(O)/dts
