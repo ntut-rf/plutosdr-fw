@@ -29,14 +29,6 @@ ad_connect sys_cpu_resetn axis_data_fifo_0/s_axis_aresetn
 ad_connect axi_dma_0/S_AXIS_S2MM axis_data_fifo_0/M_AXIS
 ad_connect axi_dma_0/M_AXIS_MM2S axis_data_fifo_0/S_AXIS
 
-# ad_cpu_interrupt ps-0 mb-0 axi_dma_0/mm2s_introut
-# ad_cpu_interrupt ps-1 mb-1 axi_dma_0/s2mm_introut
+ad_cpu_interrupt ps-0 mb-0 axi_dma_0/mm2s_introut
+ad_cpu_interrupt ps-1 mb-1 axi_dma_0/s2mm_introut
 
-ad_ip_instance axi_intc axi_intc_0
-ad_cpu_interconnect 0x43000000 axi_intc_0
-ad_cpu_interrupt ps-14 mb-14 axi_intc_0/irq
-
-ad_ip_instance xlconcat xlconcat_0
-ad_connect xlconcat_0/dout axi_intc_0/intr
-ad_connect axi_dma_0/mm2s_introut xlconcat_0/In0
-ad_connect axi_dma_0/s2mm_introut xlconcat_0/In1
