@@ -327,3 +327,7 @@ dts:
 
 clean-dts:
 	rm -rf $(O)/dts
+
+.PHONY: patch-dtg
+patch-dtg:
+	patch -d device-tree-xlnx -p1 --forward < device-tree-xlnx.patch || true

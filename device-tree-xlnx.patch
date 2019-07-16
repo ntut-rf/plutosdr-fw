@@ -1,0 +1,28 @@
+diff --git a/device_tree/data/common_proc.tcl b/device_tree/data/common_proc.tcl
+index 08f3072..f35e020 100644
+--- a/device_tree/data/common_proc.tcl
++++ b/device_tree/data/common_proc.tcl
+@@ -236,6 +236,11 @@ proc get_intr_id {drv_handle intr_port_name} {
+ 		if { [string match -nocase $proctype "ps7_cortexa9"] }  {
+ 			if {[string match "[get_property IP_NAME $intc]" "ps7_scugic"] } {
+ 				if {$intr_id > 32} {
++					if {84 <= $intr_id && $intr_id <= 91} {
++						set intr_id [expr 61 + 91 - $intr_id]
++					} elseif {61 <= $intr_id && $intr_id <= 68} {
++						set intr_id [expr 91 - ($intr_id - 61)]
++					}
+ 					set intr_id [expr $intr_id - 32]
+ 				}
+ 				set cur_intr_info "0 $intr_id $intr_type"
+@@ -1994,6 +1999,11 @@ proc gen_interrupt_property {drv_handle {intr_port_name ""}} {
+ 
+ 			if { [string match -nocase $proctype "ps7_cortexa9"] }  {
+ 				if {[string match "[get_property IP_NAME $intc]" "ps7_scugic"] } {
++					if {84 <= $intr_id && $intr_id <= 91} {
++						set intr_id [expr 61 + 91 - $intr_id]
++					} elseif {61 <= $intr_id && $intr_id <= 68} {
++						set intr_id [expr 91 - ($intr_id - 61)]
++					}
+ 					if {$intr_id > 32} {
+ 						set intr_id [expr $intr_id - 32]
+ 					}
