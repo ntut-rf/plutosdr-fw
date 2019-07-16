@@ -313,6 +313,8 @@ update-scripts: upstream
 
 ##################################### DTS ######################################
 
+TARGET_DTSI := $(LINUX_DIR)/arch/arm/boot/dts/zynq-pluto-sdr.dtsi
+
 .PHONY: dts clean-dts
 dts:
 	source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(CURDIR)/scripts/generate_dts.tcl
@@ -321,6 +323,7 @@ dts:
 	sed -i '/axi_ad9361_adc_dma/,/}/d' $(O)/dts/pl.dtsi
 	sed -i '/axi_ad9361_dac_dma/,/}/d' $(O)/dts/pl.dtsi
 	sed -i '/axi_iic_main/,/}/d' $(O)/dts/pl.dtsi
+	grep -qxF '/include/ "pl.dtsi"' $(TARGET_DTSI) || printf '\n/include/ "pl.dtsi"\n' >> $(TARGET_DTSI)
 
 clean-dts:
 	rm -rf $(O)/dts
