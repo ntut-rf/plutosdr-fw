@@ -7,7 +7,6 @@
 XILINX_AXIDMA_VERSION := 42ed91e
 XILINX_AXIDMA_SITE := https://github.com/bperez77/xilinx_axidma.git
 XILINX_AXIDMA_SITE_METHOD := git
-XILINX_AXIDMA_DEPENDENCIES +=
 XILINX_AXIDMA_INSTALL_TARGET := YES
 
 define XILINX_AXIDMA_BUILD_CMDS
@@ -21,5 +20,4 @@ define XILINX_AXIDMA_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 755 $(@D)/outputs/{axidma_benchmark,axidma_display_image,axidma_transfer} $(TARGET_DIR)/usr/bin/
 endef
 
-#$(eval $(kernel-module))
 $(eval $(generic-package))
