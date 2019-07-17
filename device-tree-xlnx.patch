@@ -1,3 +1,31 @@
+diff --git a/axi_dma/data/axi_dma.tcl b/axi_dma/data/axi_dma.tcl
+index 0fad506..5799ef5 100644
+--- a/axi_dma/data/axi_dma.tcl
++++ b/axi_dma/data/axi_dma.tcl
+@@ -82,6 +82,7 @@ proc generate {drv_handle} {
+ 		    dtg_warning "ERROR: ${drv_handle}: mm2s_introut port is not connected"
+             }
+             add_dma_coherent_prop $drv_handle "M_AXI_MM2S"
++            incr dma_count
+         }
+         set rx_chan [hsi::utils::get_ip_param_value $dma_ip C_INCLUDE_S2MM]
+         if { $rx_chan ==1 } {
+@@ -96,6 +97,7 @@ proc generate {drv_handle} {
+ 		    dtg_warning "ERROR: ${drv_handle}: s2mm_introut port is not connected"
+             }
+             add_dma_coherent_prop $drv_handle "M_AXI_S2MM"
++            incr dma_count
+         }
+     } else {
+ 	set proc_type [get_sw_proc_prop IP_NAME]
+@@ -106,7 +108,6 @@ proc generate {drv_handle} {
+ 	set ip_prop CONFIG.c_include_mm2s_dre
+ 	add_cross_property $drv_handle $ip_prop $drv_handle "xlnx,include-dre" boolean
+     }
+-    incr dma_count
+     hsi::utils::set_os_parameter_value "dma_count" $dma_count
+     set mainline_ker [get_property CONFIG.mainline_kernel [get_os]]
+     if {[string match -nocase $mainline_ker "none"]} {
 diff --git a/device_tree/data/common_proc.tcl b/device_tree/data/common_proc.tcl
 index 08f3072..f35e020 100644
 --- a/device_tree/data/common_proc.tcl
