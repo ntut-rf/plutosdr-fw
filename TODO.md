@@ -17,4 +17,8 @@
 * Use AXI interrupt controller
 * Add microblaze etc.
 * GNURadio integration
+<<<<<<< HEAD
 * Use https://github.com/bperez77/xilinx_axidma to test vdma
+=======
+* Add a video encoder
+>>>>>>> f339c970803fbbdf0233e0da4594b1e845d23799
