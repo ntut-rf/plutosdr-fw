@@ -2,15 +2,13 @@
 * ADRV9364: LED and GPIO
 * ADRV9364: motd
 * Generate mass storage vfat.img dynamically
-* Generate vdma test client node in dts:
+* Generate axidma_chrdev node in dts:
 ```
-    vdmatest_1: vdmatest@1 {
-               compatible ="xlnx,axi-vdma-test-1.00.a";
-               xlnx,num-fstores = <0x1>;
-               dmas = <&axi_dma_0 0
-                       &axi_dma_0 1>;
-               dma-names = "vdma0", "vdma1";
-        };
+    axidma_chrdev: axidma_chrdev@0 {
+	compatible = "xlnx,axidma-chrdev";
+	dmas = <&axi_dma_0 0 &axi_dma_0 1>;
+	dma-names = "tx_channel", "rx_channel";
+    };
 ```
 Also should fix `xlnx,device-id`:
 ```
