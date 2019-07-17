@@ -14,6 +14,8 @@ ad_cpu_interconnect 0x41000000 lite_add_one_0
 # add_one (stream)
 
 ad_ip_instance axi_dma axi_dma_0
+ad_ip_parameter axi_dma_0 CONFIG.c_sg_include_stscntrl_strm 0
+ad_ip_parameter axi_dma_0 CONFIG.c_sg_length_width 23
 ad_cpu_interconnect 0x42000000 axi_dma_0
 ad_connect sys_cpu_clk axi_dma_0/m_axi_sg_aclk
 ad_connect sys_cpu_clk axi_dma_0/m_axi_mm2s_aclk
