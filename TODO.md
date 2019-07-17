@@ -10,16 +10,6 @@
 	dma-names = "tx_channel", "rx_channel";
     };
 ```
-Also should fix `xlnx,device-id`:
-```
-dma-channel@42000030 {
-				compatible = "xlnx,axi-dma-s2mm-channel";
-				dma-channels = <0x1>;
-				interrupts = <0 30 4>;
-				xlnx,datawidth = <0x20>;
-				xlnx,device-id = <0x1>;
-			};
-```
 * Fix dependency chain in Makefile (ip etc.)
 * Configure IP in system_bd
 * Use AXI interrupt controller

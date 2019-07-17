@@ -324,6 +324,7 @@ dts:
 	sed -i '/axi_ad9361_dac_dma/,/}/d' $(O)/dts/pl.dtsi
 	sed -i '/axi_iic_main/,/}/d' $(O)/dts/pl.dtsi
 	grep -qxF '/include/ "pl.dtsi"' $(TARGET_DTSI) || printf '\n/include/ "pl.dtsi"\n' >> $(TARGET_DTSI)
+	grep -qxF '/include/ "user.dtsi"' $(TARGET_DTSI) || printf '\n/include/ "user.dtsi"\n' >> $(TARGET_DTSI)
 
 clean-dts:
 	rm -rf $(O)/dts
