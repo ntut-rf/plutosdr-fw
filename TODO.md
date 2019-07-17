@@ -17,3 +17,4 @@
 * Use AXI interrupt controller
 * Add microblaze etc.
 * GNURadio integration
+* Use https://github.com/bperez77/xilinx_axidma to test vdma
