@@ -10,8 +10,6 @@ XILINX_AXIDMA_SITE_METHOD := git
 XILINX_AXIDMA_DEPENDENCIES +=
 XILINX_AXIDMA_INSTALL_TARGET := YES
 
-#XILINX_AXIDMA_MODULE_SUBDIRS = driver
-
 define XILINX_AXIDMA_BUILD_CMDS
 	cd $(@D) && $(MAKE) $(TARGET_CONFIGURE_OPTS) CFLAGS+="-Wno-error" CROSS_COMPILE=arm-buildroot-linux-gnueabihf- ARCH=arm KBUILD_DIR=$(LINUX_DIR) driver
 	cd $(@D) && $(MAKE) $(TARGET_CONFIGURE_OPTS) CFLAGS+="-Wno-error" CROSS_COMPILE=arm-buildroot-linux-gnueabihf- ARCH=arm examples library
