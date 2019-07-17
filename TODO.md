@@ -17,3 +17,4 @@
 * Use AXI interrupt controller
 * Add microblaze etc.
 * GNURadio integration
+* Add a video encoder
