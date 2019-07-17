@@ -1,0 +1,5 @@
+config BR2_PACKAGE_XILINX_AXIDMA
+	bool "xilinx_axidma"
+	help
+	  A zero-copy Linux driver and a userspace interface library for Xilinx's AXI DMA and VDMA IP blocks.
+	  
