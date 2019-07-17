@@ -15,3 +15,5 @@
 * Fix dependency chain in Makefile (ip etc.)
 * Configure IP in system_bd
 * Use AXI interrupt controller
+* Add microblaze etc.
+* GNURadio integration
