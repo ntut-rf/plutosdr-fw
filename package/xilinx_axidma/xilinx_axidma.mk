@@ -14,8 +14,12 @@ define XILINX_AXIDMA_BUILD_CMDS
 	cd $(@D) && $(MAKE) $(TARGET_CONFIGURE_OPTS) CFLAGS+="-Wno-error" CROSS_COMPILE=arm-buildroot-linux-gnueabihf- ARCH=arm examples library
 endef
 
+KERNELVERSION := $(shell cd $(LINUX_DIR) && make -s kernelversion)
+MODULES_DEP = $(TARGET_DIR)/usr/lib/modules/$(KERNELVERSION)/modules.dep
+
 define XILINX_AXIDMA_INSTALL_TARGET_CMDS
-	$(INSTALL) -D $(@D)/outputs/*.ko $(TARGET_DIR)/usr/lib/modules/
+	$(INSTALL) -D $(@D)/outputs/*.ko $(TARGET_DIR)/usr/lib/modules/$(KERNELVERSION)/kernel/
+	grep -qxF 'kernel/axidma.ko:' $(MODULES_DEP) || echo 'kernel/axidma.ko:' >> $(MODULES_DEP)
 	$(INSTALL) -D $(@D)/outputs/*.so $(TARGET_DIR)/usr/lib/
 	$(INSTALL) -D -m 755 $(@D)/outputs/{axidma_benchmark,axidma_display_image,axidma_transfer} $(TARGET_DIR)/usr/bin/
 endef
