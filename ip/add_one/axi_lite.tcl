@@ -13,7 +13,7 @@ open_solution AXI4-Lite
 set_part {xc7z020clg484-1}
 create_clock -period 10 -name default
 
-config_rtl -prefix "lite_"
+config_rtl -prefix "axil_"
 
 # Set Directives
 set_directive_interface -mode s_axilite -bundle add_one_io "add_one"
