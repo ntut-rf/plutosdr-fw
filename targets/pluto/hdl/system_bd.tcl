@@ -41,3 +41,6 @@ ad_connect axi_dma_0/S_AXIS_S2MM axis_add_one_0/b
 
 ad_ip_instance xlconstant xlconstant_0
 ad_connect xlconstant_0/dout axis_add_one_0/ap_start
+
+# Passthrough tlast signal from MM2S to S2MM
+ad_connect axi_dma_0/m_axis_mm2s_tlast axi_dma_0/s_axis_s2mm_tlast
