@@ -36,6 +36,10 @@ patch:
 patch-hdl:
 	patch -d hdl -p1 --forward < hdl.patch || true
 
+.PHONY: patch-dtg
+patch-dtg:
+	patch -d device-tree-xlnx -p1 --forward < device-tree-xlnx.patch || true
+
 export BR2_EXTERNAL=$(CURDIR)
 export BR2_DEFCONFIG=$(CURDIR)/targets/$(TARGET)/defconfig
 export O=$(CURDIR)/build/$(TARGET)
@@ -141,6 +145,21 @@ $(wildcard ip/*):
 		$(MAKE) ADI_HDL_DIR=$(CURDIR)/hdl VPATH="$(CURDIR)/$@ $(CURDIR)/hdl" -I $(CURDIR)/hdl \
 		-C $(CURDIR)/build/$@ -f $(CURDIR)/$@/Makefile
 
+##################################### DTS ######################################
+
+TARGET_DTSI := $(LINUX_DIR)/arch/arm/boot/dts/zynq-pluto-sdr.dtsi
+
+.PHONY: dts clean-dts
+dts:
+	source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(CURDIR)/scripts/generate_dts.tcl
+	sed -i '/axi_ad9361/,/}/d' $(O)/dts/pl.dtsi
+	sed -i '/misc_clk_0/,/}/d' $(O)/dts/pl.dtsi
+	sed -i '/axi_ad9361_adc_dma/,/}/d' $(O)/dts/pl.dtsi
+	sed -i '/axi_ad9361_dac_dma/,/}/d' $(O)/dts/pl.dtsi
+	sed -i '/axi_iic_main/,/}/d' $(O)/dts/pl.dtsi
+	grep -qxF '/include/ "pl.dtsi"' $(TARGET_DTSI) || printf '\n/include/ "pl.dtsi"\n' >> $(TARGET_DTSI)
+	grep -qxF '/include/ "user.dtsi"' $(TARGET_DTSI) || printf '\n/include/ "user.dtsi"\n' >> $(TARGET_DTSI)
+
 #################################### Images ####################################
 
 .PHONY: boot.bin
@@ -233,6 +252,9 @@ clean-target:
 clean-images:
 	rm -f $(O)/images/*
 
+clean-dts:
+	rm -rf $(O)/dts
+
 ##################################### DFU ######################################
 
 .PHONY: dfu-fw dfu-uboot dfu-all dfu-ram
@@ -310,25 +332,3 @@ update-scripts: upstream
 	git read-tree --prefix=build/scripts -u upstream/master:scripts
 	git rm -rf --cached build/scripts
 	mv build/scripts/{53-adi-plutosdr-usb.rules,create_fsbl_project.tcl,get_default_envs.sh,legal_info_html.sh,run.tcl,target_mtd_info.key} scripts/
-
-##################################### DTS ######################################
-
-TARGET_DTSI := $(LINUX_DIR)/arch/arm/boot/dts/zynq-pluto-sdr.dtsi
-
-.PHONY: dts clean-dts
-dts:
-	source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(CURDIR)/scripts/generate_dts.tcl
-	sed -i '/axi_ad9361/,/}/d' $(O)/dts/pl.dtsi
-	sed -i '/misc_clk_0/,/}/d' $(O)/dts/pl.dtsi
-	sed -i '/axi_ad9361_adc_dma/,/}/d' $(O)/dts/pl.dtsi
-	sed -i '/axi_ad9361_dac_dma/,/}/d' $(O)/dts/pl.dtsi
-	sed -i '/axi_iic_main/,/}/d' $(O)/dts/pl.dtsi
-	grep -qxF '/include/ "pl.dtsi"' $(TARGET_DTSI) || printf '\n/include/ "pl.dtsi"\n' >> $(TARGET_DTSI)
-	grep -qxF '/include/ "user.dtsi"' $(TARGET_DTSI) || printf '\n/include/ "user.dtsi"\n' >> $(TARGET_DTSI)
-
-clean-dts:
-	rm -rf $(O)/dts
-
-.PHONY: patch-dtg
-patch-dtg:
-	patch -d device-tree-xlnx -p1 --forward < device-tree-xlnx.patch || true
