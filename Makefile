@@ -1,6 +1,6 @@
 SHELL:=/bin/bash
 
-export VIVADO_VERSION ?= 2018.3
+export VIVADO_VERSION ?= 2019.1
 VIVADO_SETTINGS ?= /opt/Xilinx/Vivado/$(VIVADO_VERSION)/settings64.sh
 
 CROSS_COMPILE ?= arm-buildroot-linux-gnueabihf-
@@ -125,12 +125,16 @@ busybox-diffconfig: $(BR2_PACKAGE_BUSYBOX_CONFIG)
 hdl: $(O)/sdk/hw_0/system_top.bit
 
 .PHONY: fsbl
-fsbl $(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
+fsbl: $(O)/sdk/fsbl/Release/fsbl.elf
+
+$(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
 	mkdir -p $(O)
 	source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(CURDIR)/scripts/create_fsbl_project.tcl
 
 .PHONY: hdf
-hdf $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf:
+hdf: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
+
+$(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf:
 	mkdir -p $(O)/hdl
 	cp $(CURDIR)/targets/$(TARGET)/hdl/*.tcl $(O)/hdl/
 	source $(VIVADO_SETTINGS) && \
