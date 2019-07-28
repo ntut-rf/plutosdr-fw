@@ -17,8 +17,8 @@ config_rtl -prefix "axil_"
 
 # Set Directives
 set_directive_interface -mode s_axilite -bundle add_one_io "add_one"
-set_directive_interface -mode s_axilite -bundle add_one_io "add_one" a
-set_directive_interface -mode s_axilite -bundle add_one_io "add_one" b
+set_directive_interface -mode s_axilite -bundle add_one_io "add_one" A
+set_directive_interface -mode s_axilite -bundle add_one_io "add_one" B
 
 csim_design
 csynth_design

@@ -240,7 +240,7 @@ clean-all: clean-sdk clean-hdl clean-hdllib clean clean-ip
 clean-sdk:
 	rm -rf $(O)/sdk
 
-clean-hdl:
+clean-hdl: clean-sdk
 	rm -rf $(O)/hdl
 
 clean-ip:
