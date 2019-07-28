@@ -1,6 +1,6 @@
 SHELL:=/bin/bash
 
-export VIVADO_VERSION ?= 2018.3
+export VIVADO_VERSION ?= 2019.1
 VIVADO_SETTINGS ?= /opt/Xilinx/Vivado/$(VIVADO_VERSION)/settings64.sh
 
 all: axi-lite axi-stream
