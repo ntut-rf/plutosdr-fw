@@ -1,17 +1,17 @@
 
 source -notrace $ad_hdl_dir/projects/pluto/system_bd.tcl
 
-# gpreg
+## gpreg
 
 ad_ip_instance axi_simplereg axi_simplereg_0
 ad_cpu_interconnect 0x40000000 axi_simplereg_0
 
-# add_one (lite)
+## add_one (lite)
 
 # ad_ip_instance axil_add_one axil_add_one_0
 # ad_cpu_interconnect 0x41000000 axil_add_one_0
 
-# add_one (stream)
+## add_one (stream)
 
 ad_ip_instance axi_dma axi_dma_0
 ad_ip_parameter axi_dma_0 CONFIG.c_sg_include_stscntrl_strm 0
@@ -44,5 +44,35 @@ ad_connect axi_dma_0/S_AXIS_S2MM axis_add_one_0/B
 ad_ip_instance xlconstant xlconstant_0
 ad_connect xlconstant_0/dout axis_add_one_0/ap_start
 
-# Passthrough tlast signal from MM2S to S2MM
+## Passthrough tlast signal from MM2S to S2MM
 # ad_connect axi_dma_0/m_axis_mm2s_tlast axi_dma_0/s_axis_s2mm_tlast
+
+## Microblaze
+
+ad_ip_instance microblaze microblaze_0
+apply_bd_automation -rule xilinx.com:bd_rule:microblaze -config { \
+        axi_intc {0} \
+        axi_periph {Enabled} \
+        cache {None} \
+        clk {/sys_ps7/FCLK_CLK0 (100 MHz)} \
+        debug_module {Debug Only} \
+        ecc {None} \
+        local_mem {64KB} \
+        preset {Microcontroller} \
+    }  [get_bd_cells microblaze_0]
+
+# ad_mem_hp0_interconnect sys_ps7/FCLK_CLK0 microblaze_0/M_AXI_DC
+# ad_mem_hp0_interconnect sys_ps7/FCLK_CLK0 microblaze_0/M_AXI_IC
+
+ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_GP0 1
+ad_connect sys_ps7/FCLK_CLK0 sys_ps7/S_AXI_GP0_ACLK
+
+ad_ip_instance smartconnect axi_gp0_interconnect
+ad_ip_parameter axi_gp0_interconnect CONFIG.NUM_SI 1
+ad_connect sys_ps7/FCLK_CLK0 axi_gp0_interconnect/aclk
+ad_connect sys_cpu_resetn axi_gp0_interconnect/aresetn
+
+ad_connect microblaze_0/M_AXI_DP axi_gp0_interconnect/S00_AXI
+ad_connect axi_gp0_interconnect/M00_AXI sys_ps7/S_AXI_GP0
+
+assign_bd_address
