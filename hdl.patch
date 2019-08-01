@@ -1,25 +1,25 @@
 diff --git a/projects/scripts/adi_project_xilinx.tcl b/projects/scripts/adi_project_xilinx.tcl
-index 5393f002..f4279d15 100644
+index dce199ef..329622e2 100644
 --- a/projects/scripts/adi_project_xilinx.tcl
 +++ b/projects/scripts/adi_project_xilinx.tcl
-@@ -47,6 +47,7 @@ set p_prcfg_status ""
- #
- proc adi_project {project_name {mode 0} {parameter_list {}} } {
+@@ -31,6 +31,7 @@ set ADI_POWER_OPTIMIZATION 0
+ 
+ proc adi_project_xilinx {project_name {mode 0}} {
  
 +  global lib_dirs
    global ad_hdl_dir
-   global ad_ghdl_dir
+   global ad_phdl_dir
    global p_board
-@@ -136,7 +137,7 @@ proc adi_project {project_name {mode 0} {parameter_list {}} } {
+@@ -120,7 +121,7 @@ proc adi_project_xilinx {project_name {mode 0}} {
      set_property board_part $p_board [current_project]
    }
  
 -  set lib_dirs $ad_hdl_dir/library
 +  lappend lib_dirs $ad_hdl_dir/library
-   if {$ad_hdl_dir ne $ad_ghdl_dir} {
-     lappend lib_dirs $ad_ghdl_dir/library
+   if {$ad_hdl_dir ne $ad_phdl_dir} {
+     lappend lib_dirs $ad_phdl_dir/library
    }
-@@ -149,6 +150,7 @@ proc adi_project {project_name {mode 0} {parameter_list {}} } {
+@@ -133,6 +134,7 @@ proc adi_project_xilinx {project_name {mode 0}} {
      config_ip_cache -import_from_project -use_cache_location $ad_hdl_dir/ipcache
    }
  
