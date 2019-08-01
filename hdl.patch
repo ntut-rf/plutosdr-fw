@@ -1,3 +1,71 @@
+diff --git a/library/axi_ad9361/axi_ad9361_rx.v b/library/axi_ad9361/axi_ad9361_rx.v
+index eef67817..e641c2b3 100644
+--- a/library/axi_ad9361/axi_ad9361_rx.v
++++ b/library/axi_ad9361/axi_ad9361_rx.v
+@@ -261,6 +261,7 @@ module axi_ad9361_rx #(
+ 
+   // channel 2 (i)
+ 
++  generate if (MODE_1R1T == 0) begin
+   axi_ad9361_rx_channel #(
+     .Q_OR_I_N (0),
+     .CHANNEL_ID (2),
+@@ -295,9 +296,12 @@ module axi_ad9361_rx #(
+     .up_raddr (up_raddr),
+     .up_rdata (up_rdata_s[2]),
+     .up_rack (up_rack_s[2]));
++  end
++  endgenerate
+ 
+   // channel 3 (q)
+ 
++  generate if (MODE_1R1T == 0) begin
+   axi_ad9361_rx_channel #(
+     .Q_OR_I_N (1),
+     .CHANNEL_ID (3),
+@@ -332,6 +336,8 @@ module axi_ad9361_rx #(
+     .up_raddr (up_raddr),
+     .up_rdata (up_rdata_s[3]),
+     .up_rack (up_rack_s[3]));
++  end
++  endgenerate
+ 
+   // common processor control
+ 
+diff --git a/library/axi_ad9361/axi_ad9361_tx.v b/library/axi_ad9361/axi_ad9361_tx.v
+index 434db47f..4dcef8e4 100644
+--- a/library/axi_ad9361/axi_ad9361_tx.v
++++ b/library/axi_ad9361/axi_ad9361_tx.v
+@@ -286,6 +286,7 @@ module axi_ad9361_tx #(
+ 
+   // dac channel
+ 
++  generate if (MODE_1R1T == 0) begin
+   axi_ad9361_tx_channel #(
+     .CHANNEL_ID (2),
+     .Q_OR_I_N (0),
+@@ -318,9 +319,12 @@ module axi_ad9361_tx #(
+     .up_raddr (up_raddr),
+     .up_rdata (up_rdata_s[2]),
+     .up_rack (up_rack_s[2]));
++  end
++  endgenerate
+ 
+   // dac channel
+ 
++  generate if (MODE_1R1T == 0) begin
+   axi_ad9361_tx_channel #(
+     .CHANNEL_ID (3),
+     .Q_OR_I_N (1),
+@@ -353,6 +357,8 @@ module axi_ad9361_tx #(
+     .up_raddr (up_raddr),
+     .up_rdata (up_rdata_s[3]),
+     .up_rack (up_rack_s[3]));
++  end
++  endgenerate
+ 
+   // dac common processor interface
+ 
 diff --git a/projects/scripts/adi_project_xilinx.tcl b/projects/scripts/adi_project_xilinx.tcl
 index 5393f002..f4279d15 100644
 --- a/projects/scripts/adi_project_xilinx.tcl
