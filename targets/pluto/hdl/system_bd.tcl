@@ -52,7 +52,7 @@ ad_connect xlconstant_0/dout axis_add_one_0/ap_start
 ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_GP0 1
 ad_connect sys_ps7/FCLK_CLK0 sys_ps7/S_AXI_GP0_ACLK
 
-ad_ip_instance smartconnect axi_gp0_interconnect
+ad_ip_instance axi_interconnect axi_gp0_interconnect
 ad_ip_parameter axi_gp0_interconnect CONFIG.NUM_SI 1
 ad_connect sys_ps7/FCLK_CLK0 axi_gp0_interconnect/aclk
 ad_connect sys_cpu_resetn axi_gp0_interconnect/aresetn
@@ -78,3 +78,19 @@ apply_bd_automation -rule xilinx.com:bd_rule:microblaze -config { \
 ad_connect microblaze_0/M_AXI_DP axi_gp0_interconnect/S00_AXI
 
 assign_bd_address
+
+ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/S00_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/M00_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/S01_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/S02_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_gp0_interconnect/S00_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_gp0_interconnect/M00_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_gp0_interconnect/M01_ACLK
+
+ad_connect sys_cpu_resetn axi_hp0_interconnect/S00_ARESETN
+ad_connect sys_cpu_resetn axi_hp0_interconnect/M00_ARESETN
+ad_connect sys_cpu_resetn axi_hp0_interconnect/S01_ARESETN
+ad_connect sys_cpu_resetn axi_hp0_interconnect/S02_ARESETN
+ad_connect sys_cpu_resetn axi_gp0_interconnect/S00_ARESETN
+ad_connect sys_cpu_resetn axi_gp0_interconnect/M00_ARESETN
+ad_connect sys_cpu_resetn axi_gp0_interconnect/M01_ARESETN
