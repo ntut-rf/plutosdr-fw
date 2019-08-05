@@ -24,6 +24,14 @@ ad_mem_hp0_interconnect sys_cpu_clk axi_dma_0/M_AXI_SG
 ad_mem_hp0_interconnect sys_cpu_clk axi_dma_0/M_AXI_SG
 ad_mem_hp0_interconnect sys_cpu_clk axi_dma_0/M_AXI_MM2S
 ad_mem_hp0_interconnect sys_cpu_clk axi_dma_0/M_AXI_S2MM
+ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/S00_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/M00_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/S01_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/S02_ACLK
+ad_connect sys_cpu_resetn axi_hp0_interconnect/S00_ARESETN
+ad_connect sys_cpu_resetn axi_hp0_interconnect/M00_ARESETN
+ad_connect sys_cpu_resetn axi_hp0_interconnect/S01_ARESETN
+ad_connect sys_cpu_resetn axi_hp0_interconnect/S02_ARESETN
 ad_cpu_interrupt ps-0 mb-0 axi_dma_0/mm2s_introut
 ad_cpu_interrupt ps-1 mb-1 axi_dma_0/s2mm_introut
 
@@ -44,10 +52,13 @@ ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_GP0 1
 ad_connect sys_ps7/FCLK_CLK0 sys_ps7/S_AXI_GP0_ACLK
 
 ad_ip_instance axi_interconnect axi_gp0_interconnect
+ad_ip_parameter axi_gp0_interconnect CONFIG.NUM_MI 1
 ad_ip_parameter axi_gp0_interconnect CONFIG.NUM_SI 1
 ad_connect sys_ps7/FCLK_CLK0 axi_gp0_interconnect/aclk
-ad_connect sys_cpu_resetn axi_gp0_interconnect/aresetn
-ad_connect axi_gp0_interconnect/M00_AXI sys_ps7/S_AXI_GP0
+ad_connect sys_cpu_resetn    axi_gp0_interconnect/aresetn
+ad_connect sys_ps7/S_AXI_GP0 axi_gp0_interconnect/M00_AXI
+ad_connect sys_ps7/FCLK_CLK0 axi_gp0_interconnect/M00_ACLK
+ad_connect sys_cpu_resetn    axi_gp0_interconnect/M00_ARESETN
 
 ## Microblaze
 
@@ -64,21 +75,7 @@ apply_bd_automation -rule xilinx.com:bd_rule:microblaze -config { \
     }  [get_bd_cells microblaze_0]
 
 ad_connect microblaze_0/M_AXI_DP axi_gp0_interconnect/S00_AXI
+ad_connect sys_ps7/FCLK_CLK0     axi_gp0_interconnect/S00_ACLK
+ad_connect sys_cpu_resetn        axi_gp0_interconnect/S00_ARESETN
 
 assign_bd_address
-
-ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/S00_ACLK
-ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/M00_ACLK
-ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/S01_ACLK
-ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/S02_ACLK
-ad_connect sys_ps7/FCLK_CLK0 axi_gp0_interconnect/S00_ACLK
-ad_connect sys_ps7/FCLK_CLK0 axi_gp0_interconnect/M00_ACLK
-ad_connect sys_ps7/FCLK_CLK0 axi_gp0_interconnect/M01_ACLK
-
-ad_connect sys_cpu_resetn axi_hp0_interconnect/S00_ARESETN
-ad_connect sys_cpu_resetn axi_hp0_interconnect/M00_ARESETN
-ad_connect sys_cpu_resetn axi_hp0_interconnect/S01_ARESETN
-ad_connect sys_cpu_resetn axi_hp0_interconnect/S02_ARESETN
-ad_connect sys_cpu_resetn axi_gp0_interconnect/S00_ARESETN
-ad_connect sys_cpu_resetn axi_gp0_interconnect/M00_ARESETN
-ad_connect sys_cpu_resetn axi_gp0_interconnect/M01_ARESETN
