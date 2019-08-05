@@ -29,12 +29,6 @@ ad_cpu_interrupt ps-1 mb-1 axi_dma_0/s2mm_introut
 
 ad_ip_parameter axi_dma_0 CONFIG.c_m_axis_mm2s_tdata_width 8
 
-# ad_ip_instance axis_data_fifo axis_data_fifo_0
-# ad_connect sys_cpu_clk axis_data_fifo_0/s_axis_aclk
-# ad_connect sys_cpu_resetn axis_data_fifo_0/s_axis_aresetn
-# ad_connect axi_dma_0/M_AXIS_MM2S axis_data_fifo_0/S_AXIS
-# ad_connect axi_dma_0/S_AXIS_S2MM axis_data_fifo_0/M_AXIS
-
 ad_ip_instance axis_add_one axis_add_one_0
 ad_connect sys_cpu_clk axis_add_one_0/ap_clk
 ad_connect sys_cpu_resetn axis_add_one_0/ap_rst_n
@@ -43,9 +37,6 @@ ad_connect axi_dma_0/S_AXIS_S2MM axis_add_one_0/B
 
 ad_ip_instance xlconstant xlconstant_0
 ad_connect xlconstant_0/dout axis_add_one_0/ap_start
-
-## Passthrough tlast signal from MM2S to S2MM
-# ad_connect axi_dma_0/m_axis_mm2s_tlast axi_dma_0/s_axis_s2mm_tlast
 
 ## Peripheral data interface
 
@@ -71,9 +62,6 @@ apply_bd_automation -rule xilinx.com:bd_rule:microblaze -config { \
         local_mem {8KB} \
         preset {Microcontroller} \
     }  [get_bd_cells microblaze_0]
-
-# ad_mem_hp0_interconnect sys_ps7/FCLK_CLK0 microblaze_0/M_AXI_DC
-# ad_mem_hp0_interconnect sys_ps7/FCLK_CLK0 microblaze_0/M_AXI_IC
 
 ad_connect microblaze_0/M_AXI_DP axi_gp0_interconnect/S00_AXI
 
