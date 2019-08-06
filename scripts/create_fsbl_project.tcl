@@ -1,7 +1,8 @@
 set hdl_project $::env(HDL_PROJECT)
 
 hsi open_hw_design ./hdl/$hdl_project.sdk/system_top.hdf
-set cpu_name [lindex [hsi get_cells -filter {IP_TYPE==PROCESSOR}] 0]
+#set cpu_name [lindex [hsi get_cells -filter {IP_TYPE==PROCESSOR}] 0]
+set cpu_name ps7_cortexa9_0
 
 sdk setws ./sdk
 sdk createhw -name hw_0 -hwspec ./hdl/$hdl_project.sdk/system_top.hdf
