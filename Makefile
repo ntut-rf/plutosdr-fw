@@ -57,6 +57,8 @@ $(O)/.config:
 ## Import BR2_* definitions
 include $(BR2_DEFCONFIG)
 
+all: xilinx_axidma-reinstall
+
 ################################### Metadata ###################################
 
 all: build/LICENSE.html
