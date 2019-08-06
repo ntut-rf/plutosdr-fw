@@ -4,7 +4,8 @@
 * Generate mass storage vfat.img dynamically
 * Fix dependency chain in Makefile (ip etc.)
 * Use AXI interrupt controller
-* Add microblaze etc.
+* Microblaze dts and AMP
+* Partial reconfiguration
+
 * GNURadio integration
 * Add a video encoder
-* Strip unused channel in ad9361 ip
