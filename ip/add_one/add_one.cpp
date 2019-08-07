@@ -1,19 +1,17 @@
-#include <stdio.h>
-#include <ap_axi_sdata.h>
-#include <hls_stream.h>
+#include "add_one.h"
 
-typedef ap_axiu<8,1,1,1> data_element;
-
-void add_one (hls::stream<data_element> &A, hls::stream<data_element> &B)
+void add_one (axis_uint8_t* A, axis_uint8_t* B)
 {
 #pragma HLS INTERFACE axis port=A
 #pragma HLS INTERFACE axis port=B
 
     while (1)
     {
-		data_element d = A.read();
-		d.data += 1;
-		B.write(d);
-		if (d.last) break;
+		axis_uint8_t a = *A; // each A only read once
+		a.data += 1;
+		*B = a; // each B only written once
+		if (a.last) break;
+		A++;
+		B++;
 	}
 }
