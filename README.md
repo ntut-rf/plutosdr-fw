@@ -54,10 +54,6 @@ $ make
 * Use xz compression to save space
 * Updated versions of buildroot packages
 
- The resulting firmware boots noticeably slower than the stock firmware.     
-   
-## Programming PL
-
-[Solution Zynq PL Programming With FPGA Manager](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18841645/Solution+Zynq+PL+Programming+With+FPGA+Manager)
+ The resulting firmware boots noticeably slower than the stock firmware.
  
 
