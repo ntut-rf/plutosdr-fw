@@ -1,0 +1,5 @@
+config BR2_PACKAGE_MB_REMOTEPROC
+    bool "mb_remoteproc"
+    help
+      Support Microblaze remoteproc
+
