@@ -70,12 +70,41 @@ apply_bd_automation -rule xilinx.com:bd_rule:microblaze -config { \
         clk {/sys_ps7/FCLK_CLK0 (100 MHz)} \
         debug_module {Debug Only} \
         ecc {None} \
-        local_mem {8KB} \
+        local_mem {None} \
         preset {Microcontroller} \
     }  [get_bd_cells microblaze_0]
+ad_ip_parameter microblaze_0 CONFIG.C_I_LMB 1
+ad_ip_parameter microblaze_0 CONFIG.C_D_LMB 1
 
 ad_connect microblaze_0/M_AXI_DP axi_gp0_interconnect/S00_AXI
 ad_connect sys_ps7/FCLK_CLK0     axi_gp0_interconnect/S00_ACLK
 ad_connect sys_cpu_resetn        axi_gp0_interconnect/S00_ARESETN
+
+ad_ip_instance lmb_v10 ilmb_v10_0
+ad_connect sys_ps7/FCLK_CLK0            ilmb_v10_0/LMB_Clk
+ad_connect sys_rstgen/bus_struct_reset  ilmb_v10_0/SYS_Rst
+ad_connect microblaze_0/ILMB            ilmb_v10_0/LMB_M
+
+ad_ip_instance lmb_v10 dlmb_v10_0
+ad_connect sys_ps7/FCLK_CLK0            dlmb_v10_0/LMB_Clk
+ad_connect sys_rstgen/bus_struct_reset  dlmb_v10_0/SYS_Rst
+ad_connect microblaze_0/DLMB            dlmb_v10_0/LMB_M
+
+ad_ip_instance lmb_bram_if_cntlr lmb_bram_if_cntlr_0
+ad_ip_parameter lmb_bram_if_cntlr_0 CONFIG.C_NUM_LMB 2
+ad_connect sys_ps7/FCLK_CLK0            lmb_bram_if_cntlr_0/LMB_Clk
+ad_connect sys_rstgen/bus_struct_reset  lmb_bram_if_cntlr_0/LMB_Rst
+ad_connect ilmb_v10_0/LMB_Sl_0          lmb_bram_if_cntlr_0/SLMB
+ad_connect dlmb_v10_0/LMB_Sl_0          lmb_bram_if_cntlr_0/SLMB1
+
+ad_ip_instance axi_bram_ctrl     axi_bram_ctrl_0
+ad_ip_parameter axi_bram_ctrl_0 CONFIG.SINGLE_PORT_BRAM 1
+ad_cpu_interconnect 0x44000000          axi_bram_ctrl_0
+ad_connect sys_ps7/FCLK_CLK0            axi_bram_ctrl_0/s_axi_aclk
+
+ad_ip_instance blk_mem_gen lmb_bram_0
+ad_ip_parameter lmb_bram_0 CONFIG.Memory_Type True_Dual_Port_RAM
+ad_connect lmb_bram_if_cntlr_0/BRAM_PORT    lmb_bram_0/BRAM_PORTA
+ad_connect axi_bram_ctrl_0/BRAM_PORTA       lmb_bram_0/BRAM_PORTB
 
 assign_bd_address
