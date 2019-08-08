@@ -107,4 +107,7 @@ ad_ip_parameter lmb_bram_0 CONFIG.Memory_Type True_Dual_Port_RAM
 ad_connect lmb_bram_if_cntlr_0/BRAM_PORT    lmb_bram_0/BRAM_PORTA
 ad_connect axi_bram_ctrl_0/BRAM_PORTA       lmb_bram_0/BRAM_PORTB
 
+# set_property offset 0x10000000 [get_bd_addr_segs {microblaze_0/Data/SEG_sys_ps7_GP0_DDR_LOWOCM}]
+# set_property range 256M [get_bd_addr_segs {microblaze_0/Data/SEG_sys_ps7_GP0_DDR_LOWOCM}]
+
 assign_bd_address
