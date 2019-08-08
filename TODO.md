@@ -6,6 +6,7 @@
 * Use AXI interrupt controller
 * Microblaze dts and AMP
 * Partial reconfiguration
+* Fix broken packages
 
 * GNURadio integration
 * Add a video encoder
