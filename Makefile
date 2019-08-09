@@ -159,7 +159,9 @@ export
 .PHONY: ettus
 ettus:
 	source $(VIVADO_SETTINGS) && \
-		$(MAKE) -C ettus-fpga/usrp3/top/e300 GUI=1 HLS=1 E310_RFNOC
+		cd ettus-fpga/usrp3/top/e31x && \
+		source setupenv.sh && \
+		$(MAKE) GUI=1 HLS=1
 
 ##################################### DTS ######################################
 
