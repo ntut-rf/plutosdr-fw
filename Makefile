@@ -40,6 +40,10 @@ patch-hdl:
 patch-dtg:
 	patch -d device-tree-xlnx -p1 --forward < device-tree-xlnx.patch || true
 
+.PHONY: patch-ettus
+patch-ettus:
+	patch -d ettus-fpga -p1 --forward < ettus-fpga.patch || true
+
 export BR2_EXTERNAL=$(CURDIR)
 export BR2_DEFCONFIG=$(CURDIR)/targets/$(TARGET)/defconfig
 export O=$(CURDIR)/build/$(TARGET)
@@ -150,6 +154,12 @@ $(wildcard ip/*):
 	source $(VIVADO_SETTINGS) && \
 		$(MAKE) ADI_HDL_DIR=$(CURDIR)/hdl VPATH="$(CURDIR)/$@ $(CURDIR)/hdl" -I $(CURDIR)/hdl \
 		-C $(CURDIR)/build/$@ -f $(CURDIR)/$@/Makefile
+
+export
+.PHONY: ettus
+ettus:
+	source $(VIVADO_SETTINGS) && \
+		$(MAKE) -C ettus-fpga/usrp3/top/e300 GUI=1 HLS=1 E310_RFNOC
 
 ##################################### DTS ######################################
 
