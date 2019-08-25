@@ -27,7 +27,10 @@ include targets/$(TARGET)/$(TARGET).mk
 ################################## Buildroot ###################################
 
 .PHONY: patch
-patch:
+patch: patch-br patch-hdl patch-dtg patch-ettus
+
+.PHONY: patch-br
+patch-br:
 	for patch in patches/*.patch; do \
 		patch -d buildroot -p1 --forward < $$patch || true; \
 	done
