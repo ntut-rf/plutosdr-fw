@@ -11,15 +11,4 @@ index 8fe76933..30768ea1 100644
  reset_target all [get_files $xci_file]
  puts "BUILDER: Generating IP Target..."
  generate_target all [get_files $xci_file]
-diff --git a/usrp3/top/e300/setupenv.sh b/usrp3/top/e300/setupenv.sh
-index 4fd982a9..6e05f3d3 100644
---- a/usrp3/top/e300/setupenv.sh
-+++ b/usrp3/top/e300/setupenv.sh
-@@ -1,6 +1,6 @@
- #!/bin/bash
- 
--VIVADO_VER=2017.4
-+VIVADO_VER=2018.3
- DISPLAY_NAME="USRP-E3x0"
- REPO_BASE_PATH=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
  
