@@ -24,10 +24,7 @@ $(if $(filter $(TARGET),$(SUPPORTED_TARGETS)),,$(error Invalid TARGET variable; 
 # Include target specific settings
 include targets/$(TARGET)/$(TARGET).mk
 
-################################## Buildroot ###################################
-
-.PHONY: patch
-patch: patch-br patch-hdl patch-dtg patch-ettus
+################################### Patches ####################################
 
 .PHONY: patch-br
 patch-br:
@@ -46,6 +43,8 @@ patch-dtg:
 .PHONY: patch-ettus
 patch-ettus:
 	patch -d ettus-fpga -p1 --forward < ettus-fpga.patch || true
+
+################################## Buildroot ###################################
 
 export BR2_EXTERNAL=$(CURDIR)
 export BR2_DEFCONFIG=$(CURDIR)/targets/$(TARGET)/defconfig
