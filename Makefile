@@ -173,8 +173,10 @@ ettus:
 
 TARGET_DTSI := $(LINUX_DIR)/arch/arm/boot/dts/zynq-pluto-sdr.dtsi
 
+#linux: dts
+
 .PHONY: dts clean-dts
-dts:
+dts: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
 	source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(CURDIR)/scripts/generate_dts.tcl
 	sed -i '/axi_ad9361/,/}/d' $(O)/dts/pl.dtsi
 	sed -i '/misc_clk_0/,/}/d' $(O)/dts/pl.dtsi
