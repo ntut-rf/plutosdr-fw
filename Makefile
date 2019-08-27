@@ -1,4 +1,4 @@
-SHELL:=/bin/bash
+export SHELL:=/bin/bash
 
 export VIVADO_VERSION ?= 2019.1
 VIVADO_SETTINGS ?= /opt/Xilinx/Vivado/$(VIVADO_VERSION)/settings64.sh
@@ -55,7 +55,8 @@ export O=$(CURDIR)/build/$(TARGET)
 
 ## Pass targets to buildroot
 %:
-	$(MAKE) BR2_EXTERNAL=$(BR2_EXTERNAL) BR2_DEFCONFIG=$(BR2_DEFCONFIG) O=$(O) -C buildroot $*
+	env - PATH=$(PATH) USER=$(USER) HOME=$(HOME) TERM=$(TERM) \
+		$(MAKE) BR2_EXTERNAL=$(BR2_EXTERNAL) BR2_DEFCONFIG=$(BR2_DEFCONFIG) O=$(O) -C buildroot $*
 
 all menuconfig: $(O)/.config
 
