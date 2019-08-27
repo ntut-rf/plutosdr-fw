@@ -66,6 +66,91 @@ index 434db47f..4dcef8e4 100644
  
    // dac common processor interface
  
+diff --git a/projects/scripts/adi_board.tcl b/projects/scripts/adi_board.tcl
+index 2c541bc3..1f4cca96 100644
+--- a/projects/scripts/adi_board.tcl
++++ b/projects/scripts/adi_board.tcl
+@@ -420,7 +420,7 @@ proc ad_mem_hpx_interconnect {p_sel p_clk p_name} {
+ 
+   if {$p_sel eq "MEM"} {
+     if {$sys_mem_interconnect_index < 0} {
+-      ad_ip_instance smartconnect axi_mem_interconnect
++      ad_ip_instance axi_interconnect axi_mem_interconnect
+     }
+     set m_interconnect_index $sys_mem_interconnect_index
+     set m_interconnect_cell [get_bd_cells axi_mem_interconnect]
+@@ -431,7 +431,7 @@ proc ad_mem_hpx_interconnect {p_sel p_clk p_name} {
+     if {$sys_hp0_interconnect_index < 0} {
+       set p_name_int sys_ps7/S_AXI_HP0
+       set_property CONFIG.PCW_USE_S_AXI_HP0 {1} [get_bd_cells sys_ps7]
+-      ad_ip_instance smartconnect axi_hp0_interconnect
++      ad_ip_instance axi_interconnect axi_hp0_interconnect
+     }
+     set m_interconnect_index $sys_hp0_interconnect_index
+     set m_interconnect_cell [get_bd_cells axi_hp0_interconnect]
+@@ -442,7 +442,7 @@ proc ad_mem_hpx_interconnect {p_sel p_clk p_name} {
+     if {$sys_hp1_interconnect_index < 0} {
+       set p_name_int sys_ps7/S_AXI_HP1
+       set_property CONFIG.PCW_USE_S_AXI_HP1 {1} [get_bd_cells sys_ps7]
+-      ad_ip_instance smartconnect axi_hp1_interconnect
++      ad_ip_instance axi_interconnect axi_hp1_interconnect
+     }
+     set m_interconnect_index $sys_hp1_interconnect_index
+     set m_interconnect_cell [get_bd_cells axi_hp1_interconnect]
+@@ -453,7 +453,7 @@ proc ad_mem_hpx_interconnect {p_sel p_clk p_name} {
+     if {$sys_hp2_interconnect_index < 0} {
+       set p_name_int sys_ps7/S_AXI_HP2
+       set_property CONFIG.PCW_USE_S_AXI_HP2 {1} [get_bd_cells sys_ps7]
+-      ad_ip_instance smartconnect axi_hp2_interconnect
++      ad_ip_instance axi_interconnect axi_hp2_interconnect
+     }
+     set m_interconnect_index $sys_hp2_interconnect_index
+     set m_interconnect_cell [get_bd_cells axi_hp2_interconnect]
+@@ -464,7 +464,7 @@ proc ad_mem_hpx_interconnect {p_sel p_clk p_name} {
+     if {$sys_hp3_interconnect_index < 0} {
+       set p_name_int sys_ps7/S_AXI_HP3
+       set_property CONFIG.PCW_USE_S_AXI_HP3 {1} [get_bd_cells sys_ps7]
+-      ad_ip_instance smartconnect axi_hp3_interconnect
++      ad_ip_instance axi_interconnect axi_hp3_interconnect
+     }
+     set m_interconnect_index $sys_hp3_interconnect_index
+     set m_interconnect_cell [get_bd_cells axi_hp3_interconnect]
+@@ -475,7 +475,7 @@ proc ad_mem_hpx_interconnect {p_sel p_clk p_name} {
+     if {$sys_hp0_interconnect_index < 0} {
+       set p_name_int sys_ps8/S_AXI_HP0_FPD
+       set_property CONFIG.PSU__USE__S_AXI_GP2 {1} [get_bd_cells sys_ps8]
+-      ad_ip_instance smartconnect axi_hp0_interconnect
++      ad_ip_instance axi_interconnect axi_hp0_interconnect
+     }
+     set m_interconnect_index $sys_hp0_interconnect_index
+     set m_interconnect_cell [get_bd_cells axi_hp0_interconnect]
+@@ -486,7 +486,7 @@ proc ad_mem_hpx_interconnect {p_sel p_clk p_name} {
+     if {$sys_hp1_interconnect_index < 0} {
+       set p_name_int sys_ps8/S_AXI_HP1_FPD
+       set_property CONFIG.PSU__USE__S_AXI_GP3 {1} [get_bd_cells sys_ps8]
+-      ad_ip_instance smartconnect axi_hp1_interconnect
++      ad_ip_instance axi_interconnect axi_hp1_interconnect
+     }
+     set m_interconnect_index $sys_hp1_interconnect_index
+     set m_interconnect_cell [get_bd_cells axi_hp1_interconnect]
+@@ -497,7 +497,7 @@ proc ad_mem_hpx_interconnect {p_sel p_clk p_name} {
+     if {$sys_hp2_interconnect_index < 0} {
+       set p_name_int sys_ps8/S_AXI_HP2_FPD
+       set_property CONFIG.PSU__USE__S_AXI_GP4 {1} [get_bd_cells sys_ps8]
+-      ad_ip_instance smartconnect axi_hp2_interconnect
++      ad_ip_instance axi_interconnect axi_hp2_interconnect
+     }
+     set m_interconnect_index $sys_hp2_interconnect_index
+     set m_interconnect_cell [get_bd_cells axi_hp2_interconnect]
+@@ -508,7 +508,7 @@ proc ad_mem_hpx_interconnect {p_sel p_clk p_name} {
+     if {$sys_hp3_interconnect_index < 0} {
+       set p_name_int sys_ps8/S_AXI_HP3_FPD
+       set_property CONFIG.PSU__USE__S_AXI_GP5 {1} [get_bd_cells sys_ps8]
+-      ad_ip_instance smartconnect axi_hp3_interconnect
++      ad_ip_instance axi_interconnect axi_hp3_interconnect
+     }
+     set m_interconnect_index $sys_hp3_interconnect_index
+     set m_interconnect_cell [get_bd_cells axi_hp3_interconnect]
 diff --git a/projects/scripts/adi_project_xilinx.tcl b/projects/scripts/adi_project_xilinx.tcl
 index 5393f002..f4279d15 100644
 --- a/projects/scripts/adi_project_xilinx.tcl
