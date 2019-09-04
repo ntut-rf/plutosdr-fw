@@ -20,8 +20,7 @@
 #include <stdio.h>
 #include <ap_int.h>
 #include <ap_axi_sdata.h>
-
-typedef ap_axiu<8,1,1,1> axis_uint8_t;
+#include "dvbt_energy_dispersal.h"
 
 const int D_NPACKS = 8;
 const int D_PSIZE = 188;
@@ -58,33 +57,42 @@ void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT)
 
     // Search for SYNC byte
     for (int i = 0; i < D_PSIZE; i++) {
-        axis_uint8_t in = *IN++;
+        axis_uint8_t in = *IN;
+        if (in.last) return;
         if (in.data == D_SYNC) {
+            printf("SYNC\n");
             is_sync = 1;
             break;
         }
+        IN++;
     }
 
     // If we found a SYNC byte
     if (is_sync) {
         for (int i = 0; i < d_nblocks; i++) {
             init_prbs();
+            printf("init_prbs()\n");
 
             for (int j = 0; j < D_NPACKS; j++) {
 
                 axis_uint8_t in = *IN++;
-                if (in.data != D_SYNC) {
-                    printf("Malformed MPEG-TS!");
-                }
+                if (in.last) return;
+                if (in.data != D_SYNC)
+                    printf("Malformed MPEG-TS!\n");
 
-                axis_uint8_t out = in;
+                axis_uint8_t out;
                 out.data = D_NSYNC;
+                out.user = 1;
                 *OUT++ = out;
 
                 for (int k = 1; k < D_PSIZE; k++) {
+
                     axis_uint8_t in = *IN++;
-                    axis_uint8_t out = in;
+                    if (in.last) return;
+
+                    axis_uint8_t out;
                     out.data = in.data ^ clock_prbs(D_NPACKS);
+                    out.user = 0;
                     *OUT++ = out;
                 }
 

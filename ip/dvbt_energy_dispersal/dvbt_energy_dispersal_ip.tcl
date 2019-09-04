@@ -8,7 +8,7 @@ set_top ${ip_name}
 add_files ${ip_name}.cpp
 
 ## Add Test Bench Files
-#add_files -tb ${ip_name}_tb.cpp
+add_files -tb ${ip_name}_tb.cpp
 
 ## Solutions : AXI4-Stream
 open_solution AXI4-Stream
@@ -17,7 +17,7 @@ create_clock -period 10 -name default
 
 config_rtl -prefix "axis_"
 
-#csim_design
+csim_design
 csynth_design
 export_design -format ip_catalog
 close_solution
