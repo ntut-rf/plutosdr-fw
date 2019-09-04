@@ -10,12 +10,10 @@ add_files ${ip_name}.cpp
 ## Add Test Bench Files
 add_files -tb ${ip_name}_tb.cpp
 
-## Solutions : AXI4-Stream
-open_solution AXI4-Stream
+## Solution
+open_solution ${ip_name}
 set_part {xc7z020clg484-1}
 create_clock -period 10 -name default
-
-config_rtl -prefix "axis_"
 
 csim_design
 csynth_design
