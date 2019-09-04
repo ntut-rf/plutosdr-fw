@@ -79,6 +79,8 @@ void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT)
                 if (in.last) return;
                 if (in.data != D_SYNC)
                     printf("Malformed MPEG-TS!\n");
+                else
+                    printf("Sync ok\n");
 
                 axis_uint8_t out;
                 out.data = D_NSYNC;
