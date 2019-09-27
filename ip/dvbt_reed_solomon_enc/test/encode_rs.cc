@@ -4,7 +4,9 @@
  */
 #include <string.h>
 
+#ifdef __cplusplus
 extern "C" {
+#endif
 
 #ifdef FIXED
 #include "fixed.h"
@@ -64,4 +66,6 @@ void ENCODE_RS(
     }
 }
 
+#ifdef __cplusplus
 }
+#endif

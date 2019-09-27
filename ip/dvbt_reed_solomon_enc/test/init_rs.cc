@@ -5,7 +5,9 @@
  */
 #include <stdlib.h>
 
+#ifdef __cplusplus
 extern "C" {
+#endif
 
 #ifdef CCSDS
 #include "ccsds.h"
@@ -162,4 +164,6 @@ void* INIT_RS(unsigned int symsize,
     return rs;
 }
 
+#ifdef __cplusplus
 }
+#endif

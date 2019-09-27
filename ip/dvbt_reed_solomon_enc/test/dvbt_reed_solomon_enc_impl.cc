@@ -54,7 +54,7 @@ dvbt_reed_solomon_enc_impl::dvbt_reed_solomon_enc_impl(
     d_rs = init_rs_char(rs_init_symsize, gfpoly, rs_init_fcr, rs_init_prim, (n - k));
     if (d_rs == NULL) {
         GR_LOG_FATAL(d_logger, "Reed-Solomon Encoder, cannot allocate memory for d_rs.");
-        throw std::bad_alloc();
+        //throw std::bad_alloc();
     }
     // The full input frame size (d_k) (no need to add in d_s, as the block input is the
     // pre-shortedned K)
@@ -63,7 +63,7 @@ dvbt_reed_solomon_enc_impl::dvbt_reed_solomon_enc_impl(
         GR_LOG_FATAL(d_logger,
                      "Reed-Solomon Encoder, cannot allocate memory for d_data.");
         free_rs_char(d_rs);
-        throw std::bad_alloc();
+        //throw std::bad_alloc();
     }
 }
 
@@ -73,7 +73,7 @@ dvbt_reed_solomon_enc_impl::dvbt_reed_solomon_enc_impl(
 dvbt_reed_solomon_enc_impl::~dvbt_reed_solomon_enc_impl()
 {
     free(d_data);
-    //free_rs_char(d_rs);
+    free_rs_char(d_rs);
 }
 
 void dvbt_reed_solomon_enc_impl::forecast(int noutput_items,
@@ -121,3 +121,13 @@ int dvbt_reed_solomon_enc_impl::general_work(int noutput_items,
 
 } /* namespace dtv */
 } /* namespace gr */
+
+#include <ap_int.h>
+#include <ap_axi_sdata.h>
+
+typedef ap_axiu<8,1,1,1> axis_uint8_t;
+
+void dvbt_reed_solomon_enc (axis_uint8_t* IN, axis_uint8_t* OUT)
+{
+    
+}
