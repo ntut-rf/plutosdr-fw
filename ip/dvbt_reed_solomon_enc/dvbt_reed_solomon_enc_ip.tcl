@@ -5,10 +5,11 @@ open_project ${ip_name}.prj
 set_top ${ip_name}
 
 ## Add Files
-add_files ${ip_name}.cpp
+add_files "encode_rs.cc init_rs.cc" -cflags "-I."
+add_files "${ip_name}_impl.cc" -cflags "-I. -std=gnu++0x"
 
 ## Add Test Bench Files
-#add_files -tb ${ip_name}_tb.cpp
+add_files -tb ${ip_name}_tb.cpp
 
 ## Solution
 open_solution ${ip_name}
