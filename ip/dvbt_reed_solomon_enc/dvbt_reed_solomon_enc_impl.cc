@@ -65,6 +65,7 @@ dvbt_reed_solomon_enc_impl::dvbt_reed_solomon_enc_impl(
         free_rs_char(d_rs);
         //throw std::bad_alloc();
     }
+    GR_LOG_INFO(d_logger, "dvbt_reed_solomon_enc_impl init OK.\n");
 }
 
 /*
@@ -121,13 +122,3 @@ int dvbt_reed_solomon_enc_impl::general_work(int noutput_items,
 
 } /* namespace dtv */
 } /* namespace gr */
-
-#include <ap_int.h>
-#include <ap_axi_sdata.h>
-
-typedef ap_axiu<8,1,1,1> axis_uint8_t;
-
-void dvbt_reed_solomon_enc (axis_uint8_t* IN, axis_uint8_t* OUT)
-{
-    
-}

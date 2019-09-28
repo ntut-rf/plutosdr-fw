@@ -22,7 +22,6 @@
 #define INCLUDED_DTV_DVBT_REED_SOLOMON_ENC_IMPL_H
 
 #include <gnuradio/dtv/dvbt_reed_solomon_enc.h>
-//#include <gnuradio/types.h>
 
 extern "C" {
 #include <gnuradio/fec/rs.h>
