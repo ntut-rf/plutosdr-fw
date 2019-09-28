@@ -1,12 +1,11 @@
 #include <stdio.h>
-#include <gnuradio/types.h>
 
 #include "dvbt_reed_solomon_enc_impl.h"
 
+gr::dtv::dvbt_reed_solomon_enc_impl rs_enc(2,8,285,255,239,8,51,8);
+
 int main (void)
 {
-    gr::dtv::dvbt_reed_solomon_enc_impl rs_enc(2,8,285,255,239,8,51,8);
-
     int input_signature = rs_enc.input_signature()->sizeof_stream_item(0);
     int output_signature = rs_enc.output_signature()->sizeof_stream_item(0);
     printf("input signature: %d\n", input_signature);
