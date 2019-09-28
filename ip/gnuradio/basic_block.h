@@ -31,13 +31,55 @@
 
 namespace gr {
 
-class GR_RUNTIME_API basic_block 
+/*!
+ * \brief The abstract base class for all signal processing blocks.
+ * \ingroup internal
+ *
+ * Basic blocks are the bare abstraction of an entity that has a
+ * name, a set of inputs and outputs, and a message queue.  These
+ * are never instantiated directly; rather, this is the abstract
+ * parent class of both gr_hier_block, which is a recursive
+ * container, and block, which implements actual signal
+ * processing functions.
+ */
+class GR_RUNTIME_API basic_block
 {
-public:
-    basic_block(void) {}
+protected:
+
+    std::string d_name;
+    gr::io_signature::sptr d_input_signature;
+    gr::io_signature::sptr d_output_signature;
+
+    basic_block(void) {} // allows pure virtual interface sub-classes
+
+    //! Protected constructor prevents instantiation by non-derived classes
     basic_block(const std::string& name,
-                gr::io_signature::sptr input_signature,
-                gr::io_signature::sptr output_signature);
+                io_signature::sptr input_signature,
+                io_signature::sptr output_signature)
+    : d_name(name),
+      d_input_signature(input_signature),
+      d_output_signature(output_signature)
+    {}
+
+    //! may only be called during constructor
+    void set_input_signature(gr::io_signature::sptr iosig)
+    { 
+        d_input_signature = iosig;
+    }
+
+    //! may only be called during constructor
+    void set_output_signature(gr::io_signature::sptr iosig)
+    {
+        d_output_signature = iosig;
+    }
+
+public:
+    virtual ~basic_block() {}
+
+    /*! The name of the block */
+    std::string name() const { return d_name; }
+    gr::io_signature::sptr input_signature() const { return d_input_signature; }
+    gr::io_signature::sptr output_signature() const { return d_output_signature; }
 };
 
 } /* namespace gr */
