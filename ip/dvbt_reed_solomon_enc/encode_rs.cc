@@ -4,9 +4,9 @@
  */
 #include <string.h>
 
-#ifdef __cplusplus
 extern "C" {
-#endif
+#include <gnuradio/fec/rs.h>
+}
 
 #ifdef FIXED
 #include "fixed.h"
@@ -65,7 +65,3 @@ void ENCODE_RS(
             bb[NROOTS - 1] = 0;
     }
 }
-
-#ifdef __cplusplus
-}
-#endif
