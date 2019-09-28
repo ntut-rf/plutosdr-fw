@@ -21,20 +21,11 @@ extern "C" {
 #define NULL ((void*)0)
 #endif
 
-void FREE_RS(void* p)
-{
-    struct rs* rs = (struct rs*)p;
+static struct rs _rs;
+static DTYPE index_of[sizeof(DTYPE) * (1 << 8)];
+static DTYPE alpha_to[sizeof(DTYPE) * (1 << 8)];
 
-    free(rs->alpha_to);
-    free(rs->index_of);
-    free(rs->genpoly);
-#ifdef FIXED
-#elif defined(BIGSYM)
-#else
-    free(rs->modnn_table);
-#endif
-    free(rs);
-}
+void FREE_RS(void* p) {}
 
 /* Initialize a Reed-Solomon codec
  * symsize = symbol size, bits (1-8)
@@ -63,21 +54,13 @@ void* INIT_RS(unsigned int symsize,
     if (nroots >= (1u << symsize))
         return NULL; /* Can't have more roots than symbol values! */
 
-    rs = (struct rs*)calloc(1, sizeof(struct rs));
+    _rs = (struct rs){};
+    rs = &_rs;
     rs->mm = symsize;
     rs->nn = (1 << symsize) - 1;
 
-    rs->alpha_to = (DTYPE*)malloc(sizeof(DTYPE) * (rs->nn + 1));
-    if (rs->alpha_to == NULL) {
-        free(rs);
-        return NULL;
-    }
-    rs->index_of = (DTYPE*)malloc(sizeof(DTYPE) * (rs->nn + 1));
-    if (rs->index_of == NULL) {
-        free(rs->alpha_to);
-        free(rs);
-        return NULL;
-    }
+    rs->alpha_to = alpha_to;
+    rs->index_of = index_of;
 
     /* Generate Galois field lookup tables */
     rs->index_of[0] = A0; /* log(zero) = -inf */
@@ -93,18 +76,12 @@ void* INIT_RS(unsigned int symsize,
     }
     if (sr != 1) {
         /* field generator polynomial is not primitive! */
-        free(rs->alpha_to);
-        free(rs->index_of);
-        free(rs);
         return NULL;
     }
 
     /* Form RS code generator polynomial from its roots */
     rs->genpoly = (DTYPE*)malloc(sizeof(DTYPE) * (nroots + 1));
     if (rs->genpoly == NULL) {
-        free(rs->alpha_to);
-        free(rs->index_of);
-        free(rs);
         return NULL;
     }
     rs->fcr = fcr;
@@ -142,10 +119,7 @@ void* INIT_RS(unsigned int symsize,
     /* Form modnn lookup table */
     rs->modnn_table = (int*)malloc(sizeof(int) * (2 << ((sizeof(unsigned char)) * 8)));
     if (rs->modnn_table == NULL) {
-        free(rs->genpoly);
-        free(rs->alpha_to);
-        free(rs->index_of);
-        free(rs);
+        //free(rs->genpoly);
         return NULL;
     }
     for (i = 0; i < (2 << ((sizeof(unsigned char)) * 8)); i++) {

@@ -77,15 +77,15 @@ io_signature::io_signature(int min_streams,
                            const std::vector<int>& sizeof_stream_items)
 {
     if (min_streams < 0 || (max_streams != IO_INFINITE && max_streams < min_streams))
-        throw std::invalid_argument("gr::io_signature(1)");
+        ;//throw std::invalid_argument("gr::io_signature(1)");
 
     if (sizeof_stream_items.empty()) {
-        throw std::invalid_argument("gr::io_signature(2)");
+        ;//throw std::invalid_argument("gr::io_signature(2)");
     }
 
     for (size_t i = 0; i < sizeof_stream_items.size(); i++) {
         if (max_streams != 0 && sizeof_stream_items[i] < 1)
-            throw std::invalid_argument("gr::io_signature(3)");
+            ;//throw std::invalid_argument("gr::io_signature(3)");
     }
 
     d_min_streams = min_streams;
@@ -98,7 +98,7 @@ io_signature::~io_signature() {}
 int io_signature::sizeof_stream_item(int _index) const
 {
     if (_index < 0)
-        throw std::invalid_argument("gr::io_signature::sizeof_stream_item");
+        ;//throw std::invalid_argument("gr::io_signature::sizeof_stream_item");
 
     size_t index = _index;
     return d_sizeof_stream_item[std::min(index, d_sizeof_stream_item.size() - 1)];

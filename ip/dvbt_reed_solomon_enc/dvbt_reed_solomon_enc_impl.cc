@@ -63,7 +63,7 @@ dvbt_reed_solomon_enc_impl::dvbt_reed_solomon_enc_impl(
         GR_LOG_FATAL(d_logger,
                      "Reed-Solomon Encoder, cannot allocate memory for d_data.");
         free_rs_char(d_rs);
-        //throw std::bad_alloc();
+       // throw std::bad_alloc();
     }
 }
 

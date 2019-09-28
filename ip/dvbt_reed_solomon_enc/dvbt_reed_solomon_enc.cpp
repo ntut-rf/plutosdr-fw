@@ -5,5 +5,6 @@ typedef ap_axiu<8,1,1,1> axis_uint8_t;
 
 void dvbt_reed_solomon_enc (axis_uint8_t* IN, axis_uint8_t* OUT)
 {
-    
+#pragma HLS INTERFACE axis port=IN
+#pragma HLS INTERFACE axis port=OUT
 }
