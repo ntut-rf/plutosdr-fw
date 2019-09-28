@@ -26,6 +26,7 @@
 #include <gnuradio/api.h>
 #include <stddef.h> // size_t
 #include <memory>
+#define boost std
 #include <vector>
 
 #include <gnuradio/gr_complex.h>
