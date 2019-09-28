@@ -24,6 +24,8 @@ extern "C" {
 static struct rs _rs;
 static DTYPE index_of[sizeof(DTYPE) * (1 << 8)];
 static DTYPE alpha_to[sizeof(DTYPE) * (1 << 8)];
+static DTYPE genpoly[sizeof(DTYPE) * ( 256/*nroots*/ + 1)];
+static int modnn_table[sizeof(int) * (2 << ((sizeof(unsigned char)) * 8))];
 
 void FREE_RS(void* p) {}
 
@@ -80,10 +82,7 @@ void* INIT_RS(unsigned int symsize,
     }
 
     /* Form RS code generator polynomial from its roots */
-    rs->genpoly = (DTYPE*)malloc(sizeof(DTYPE) * (nroots + 1));
-    if (rs->genpoly == NULL) {
-        return NULL;
-    }
+    rs->genpoly = genpoly;
     rs->fcr = fcr;
     rs->prim = prim;
     rs->nroots = nroots;
@@ -117,11 +116,7 @@ void* INIT_RS(unsigned int symsize,
 #elif defined(BIGSYM)
 #else
     /* Form modnn lookup table */
-    rs->modnn_table = (int*)malloc(sizeof(int) * (2 << ((sizeof(unsigned char)) * 8)));
-    if (rs->modnn_table == NULL) {
-        //free(rs->genpoly);
-        return NULL;
-    }
+    rs->modnn_table = modnn_table;
     for (i = 0; i < (2 << ((sizeof(unsigned char)) * 8)); i++) {
         j = i;
         rs->modnn_table[i] = modnn(rs, j);

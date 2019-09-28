@@ -38,7 +38,9 @@ private:
     int d_s;
     int d_blocks;
 
-    unsigned char* d_data;
+    // The full input frame size (d_k) (no need to add in d_s, as the block input is the
+    // pre-shortedned K)
+    unsigned char d_data[sizeof(unsigned char) * 256/*(d_k)*/];
 
     void* d_rs; /* Reed-Solomon characteristics structure */
     void encode(const unsigned char* in, unsigned char* out);
