@@ -1,4 +1,4 @@
-bin/test: main.cpp dvbt_reed_solomon_enc_impl.cc encode_rs.cc init_rs.cc
+bin/test: main.cpp dvbt_reed_solomon_enc_impl.cc encode_rs.cc init_rs.cc io_signature.cc
 	mkdir -p $(@D)
 	$(CXX) -I.. $^ -o $@
 

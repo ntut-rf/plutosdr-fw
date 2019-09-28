@@ -1,6 +1,5 @@
-/* -*- c++ -*- */
 /*
- * Copyright 2004,2013 Free Software Foundation, Inc.
+ * Copyright 2010-2011 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,23 +19,17 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_TYPES_H
-#define INCLUDED_GR_TYPES_H
+#ifndef INCLUDED_GR_RUNTIME_RUNTIME_API_H
+#define INCLUDED_GR_RUNTIME_RUNTIME_API_H
 
-#include <gnuradio/api.h>
-#include <stddef.h> // size_t
-#include <memory>
-#include <vector>
+#include <gnuradio/attributes.h>
 
-#include <gnuradio/gr_complex.h>
+#ifdef gnuradio_runtime_EXPORTS
+#define GR_RUNTIME_API __GR_ATTR_EXPORT
+#else
+#define GR_RUNTIME_API __GR_ATTR_IMPORT
+#endif
 
-#include <stdint.h>
+#define boost std
 
-typedef std::vector<int> gr_vector_int;
-typedef std::vector<unsigned int> gr_vector_uint;
-typedef std::vector<float> gr_vector_float;
-typedef std::vector<double> gr_vector_double;
-typedef std::vector<void*> gr_vector_void_star;
-typedef std::vector<const void*> gr_vector_const_void_star;
-
-#endif /* INCLUDED_GR_TYPES_H */
+#endif /* INCLUDED_GR_RUNTIME_RUNTIME_API_H */

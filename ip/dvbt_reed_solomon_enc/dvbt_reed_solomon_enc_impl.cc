@@ -65,6 +65,10 @@ dvbt_reed_solomon_enc_impl::dvbt_reed_solomon_enc_impl(
         free_rs_char(d_rs);
         //throw std::bad_alloc();
     }
+
+    printf("in: %d\n", sizeof(unsigned char) * blocks * (k - s));
+    printf("out: %d\n", sizeof(unsigned char) * blocks * (n - s));
+
     GR_LOG_INFO(d_logger, "dvbt_reed_solomon_enc_impl init OK.\n");
 }
 

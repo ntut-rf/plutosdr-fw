@@ -25,27 +25,7 @@
 #include <gnuradio/api.h>
 #include <memory>
 
-namespace gr {
-class basic_block;
-class hier_block2;
-} // namespace gr
-
 namespace gnuradio {
-namespace detail {
-
-class GR_RUNTIME_API sptr_magic
-{
-public:
-    static std::shared_ptr<gr::basic_block> fetch_initial_sptr(gr::basic_block* p);
-    static void create_and_stash_initial_sptr(gr::hier_block2* p);
-    static void cancel_initial_sptr(gr::hier_block2* p);
-};
-} // namespace detail
-
-/*
- * \brief New!  Improved!  Standard method to get/create the
- * boost::shared_ptr for a block.
- */
 template <class T>
 std::shared_ptr<T> get_initial_sptr(T* p)
 {

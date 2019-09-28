@@ -27,28 +27,23 @@
 #include <gnuradio/basic_block.h>
 #include <gnuradio/logger.h>
 
+#include <stdio.h>
+
 namespace gr {
 
 class GR_RUNTIME_API block : public basic_block
 {
 public:
-    // void set_processor_affinity(const std::vector<int>& mask) {}
-    // void unset_processor_affinity() {}
-    // std::vector<int> processor_affinity() { return std::vector<int>(); }
-    
-    // void set_log_level(std::string level) {}
-    // std::string log_level() { return NULL; }
-
     block(void) {}
     block(const std::string& name,
           gr::io_signature::sptr input_signature,
           gr::io_signature::sptr output_signature) {}
 
-    void consume_each(int how_many_items) {}
+    void consume_each(int how_many_items)
+    {
+        printf("consume_each: Consumed %d items.\n", how_many_items);
+    }
 };
-
-typedef std::vector<block_sptr> block_vector_t;
-typedef std::vector<block_sptr>::iterator block_viter_t;
 
 } /* namespace gr */
 
