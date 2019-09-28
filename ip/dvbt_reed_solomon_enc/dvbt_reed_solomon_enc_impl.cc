@@ -31,13 +31,6 @@ static const int rs_init_symsize = 8;
 static const int rs_init_fcr = 0;  // first consecutive root
 static const int rs_init_prim = 1; // primitive is 1 (alpha)
 
-dvbt_reed_solomon_enc::sptr dvbt_reed_solomon_enc::make(
-    int p, int m, int gfpoly, int n, int k, int t, int s, int blocks)
-{
-    return gnuradio::get_initial_sptr(
-        new dvbt_reed_solomon_enc_impl(p, m, gfpoly, n, k, t, s, blocks));
-}
-
 /*
  * The private constructor
  */
@@ -57,15 +50,7 @@ dvbt_reed_solomon_enc_impl::dvbt_reed_solomon_enc_impl(
 /*
  * Our virtual destructor.
  */
-dvbt_reed_solomon_enc_impl::~dvbt_reed_solomon_enc_impl()
-{
-}
-
-void dvbt_reed_solomon_enc_impl::forecast(int noutput_items,
-                                          gr_vector_int& ninput_items_required)
-{
-    ninput_items_required[0] = noutput_items;
-}
+dvbt_reed_solomon_enc_impl::~dvbt_reed_solomon_enc_impl() {}
 
 void dvbt_reed_solomon_enc_impl::encode(const unsigned char* in, unsigned char* out)
 {
