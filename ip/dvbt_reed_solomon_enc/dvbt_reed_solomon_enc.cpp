@@ -9,6 +9,9 @@ void dvbt_reed_solomon_enc (axis_uint8_t* IN, axis_uint8_t* OUT)
 #pragma HLS INTERFACE axis port=OUT
     int input_signature = rs_enc.input_signature()->sizeof_stream_item(0);
     int output_signature = rs_enc.output_signature()->sizeof_stream_item(0);
+
+    rs_enc.general_work();
+
     printf("input signature: %d\n", input_signature);
     printf("output signature: %d\n", output_signature);
 }

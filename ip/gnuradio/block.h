@@ -117,6 +117,30 @@ public:
     }
 
     /*!
+     * \brief Set the approximate output rate / input rate
+     *
+     * Provide a hint to the buffer allocator and scheduler.
+     * The default relative_rate is 1.0
+     *
+     * decimators have relative_rates < 1.0
+     * interpolators have relative_rates > 1.0
+     */
+    void set_relative_rate(double relative_rate)
+    {}
+
+    /*!
+     * \brief Set the approximate output rate / input rate as an integer ratio
+     *
+     * Provide a hint to the buffer allocator and scheduler.
+     * The default relative_rate is interpolation / decimation = 1 / 1
+     *
+     * decimators have relative_rates < 1.0
+     * interpolators have relative_rates > 1.0
+     */
+    void set_relative_rate(uint64_t interpolation, uint64_t decimation)
+    {}
+
+    /*!
      * \brief Tell the scheduler \p how_many_items were consumed on
      * each input stream.
      *
