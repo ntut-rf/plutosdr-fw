@@ -7,6 +7,12 @@
 
 gr::dtv::dvbt_energy_dispersal_impl impl(1);
 
+int input_signature = impl.input_signature()->sizeof_stream_item(0);
+int output_signature = impl.output_signature()->sizeof_stream_item(0);
+
+int noutput_items = NOUTPUT_ITEMS;
+gr_vector_int ninput_items = {0};
+
 int prepare_test_data (unsigned char* buffer, size_t size)
 {
     const char *cmd = "ffmpeg -re -f lavfi -i testsrc=size=1280x720:rate=30 "
@@ -31,15 +37,11 @@ int prepare_test_data (unsigned char* buffer, size_t size)
 
 int main (void)
 {
-    // Get I/O signature
-    int input_signature = impl.input_signature()->sizeof_stream_item(0);
-    int output_signature = impl.output_signature()->sizeof_stream_item(0);
+    // Print I/O signature
     printf("input signature: %d\n", input_signature);
     printf("output signature: %d\n", output_signature);
 
     // Forecast number of input items required
-    int noutput_items = NOUTPUT_ITEMS;
-    gr_vector_int ninput_items = {0};
     impl.forecast(noutput_items, ninput_items);
     printf("number of input items: %d\n", ninput_items[0]);
     printf("number of output items: %d\n", noutput_items);
