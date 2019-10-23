@@ -1,4 +1,4 @@
-bin/test: main.cpp dvbt_reed_solomon_enc_impl.cc encode_rs.cc init_rs.cc ../io_signature.cc
+bin/test: main.cpp dvbt_reed_solomon_enc_impl.cc encode_rs.cc init_rs.cc ../gnuradio/io_signature.cc
 	mkdir -p $(@D)
 	$(CXX) -I.. $^ -o $@
 
