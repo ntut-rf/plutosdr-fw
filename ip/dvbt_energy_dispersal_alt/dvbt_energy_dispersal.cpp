@@ -23,8 +23,8 @@ void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT)
     printf("number of output items: %d\n", noutput_items);
 
     // Allocate I/O buffer
-    unsigned char in[input_signature*ninput_items[0]] = {0};
-    unsigned char out[output_signature*noutput_items] = {0};
-    gr_vector_const_void_star   input_items     {in};
-    gr_vector_void_star         output_items    {out};
+    // unsigned char in[input_signature*ninput_items[0]] = {0};
+    // unsigned char out[output_signature*noutput_items] = {0};
+    // gr_vector_const_void_star   input_items     {in};
+    // gr_vector_void_star         output_items    {out};
 }

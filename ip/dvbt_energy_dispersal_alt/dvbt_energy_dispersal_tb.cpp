@@ -1,11 +1,8 @@
 #include <stdio.h>
-
-#include "axis_uint8_t.h"
+#include "dvbt_energy_dispersal.h"
 
 // Number of output blocks to test
 #define NOUTPUT_ITEMS 5
-
-#include "dvbt_energy_dispersal_impl.h"
 
 int prepare_test_data (axis_uint8_t* signal, size_t size)
 {
@@ -21,7 +18,7 @@ int prepare_test_data (axis_uint8_t* signal, size_t size)
     for (int i = 0; i < size; i++) {
 		signal[i].data = fgetc(fp);
 		signal[i].user = 0x00;
-		signal[i].last = (i == INPUT_SIZE-1)? 1:0;
+		signal[i].last = (i == size-1)? 1:0;
     }
 
     pclose(fp);
@@ -30,8 +27,12 @@ int prepare_test_data (axis_uint8_t* signal, size_t size)
 
 int main (void)
 {
+    #define INPUT_SIZE 1880
+    axis_uint8_t signal_in[INPUT_SIZE];
+    axis_uint8_t signal_out[INPUT_SIZE];
+
 	// Perform top function:
-	// dvbt_energy_dispersal(signal_in, signal_out);
+	dvbt_energy_dispersal(signal_in, signal_out);
 
 	// // Check results...
 	// for (int i=0; i<INPUT_SIZE; i++)
