@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 // Number of output blocks to test
-#define NOUTPUT_ITEMS 5
+#define NOUTPUT_ITEMS 1
 
 #include "dvbt_energy_dispersal_impl.h"
 
@@ -35,6 +35,10 @@ int prepare_test_data (unsigned char* buffer, size_t size)
     return 0;
 }
 
+// Allocate I/O buffer
+unsigned char in[input_signature*impl.forecast(noutput_items)] = {0};
+unsigned char out[output_signature*noutput_items] = {0};
+
 int main (void)
 {
     // Print I/O signature
@@ -42,13 +46,10 @@ int main (void)
     printf("output signature: %d\n", output_signature);
 
     // Forecast number of input items required
-    impl.forecast(noutput_items, ninput_items);
     printf("number of input items: %d\n", ninput_items[0]);
     printf("number of output items: %d\n", noutput_items);
 
-    // Allocate I/O buffer
-    unsigned char in[input_signature*ninput_items[0]] = {0};
-    unsigned char out[output_signature*noutput_items] = {0};
+
     gr_vector_const_void_star   input_items     {in};
     gr_vector_void_star         output_items    {out};
 
