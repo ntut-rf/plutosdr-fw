@@ -27,4 +27,20 @@ void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT)
     unsigned char out[output_signature*noutput_items];
     gr_vector_const_void_star   input_items     {in};
     gr_vector_void_star         output_items    {out};
+
+    for (int i = 0; i < sizeof(in); i++)
+    {
+        axis_uint8_t axis_in = *IN++;
+        in[i] = axis_in.data;
+    }
+
+    impl.general_work(noutput_items, ninput_items, input_items, output_items);
+
+    for (int i = 0; i < sizeof(out); i++)
+    {
+        axis_uint8_t axis_out;
+        axis_out.data = out[i];
+        axis_out.user = 0;
+        *OUT++ = axis_out;
+    }
 }

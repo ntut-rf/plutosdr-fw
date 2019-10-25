@@ -35,11 +35,11 @@ int main (void)
 	dvbt_energy_dispersal(signal_in, signal_out);
 
 	// // Check results...
-	// for (int i=0; i<INPUT_SIZE; i++)
-	// {
-	// 	//printf("user: %x\n", signal_out[i].user);
-	// 	printf("%02x ", (uint8_t)signal_out[i].data);
-	// }
+	for (int i=0; i<INPUT_SIZE; i++)
+	{
+		//printf("user: %x\n", signal_out[i].user);
+		printf("%02x ", (uint8_t)signal_out[i].data);
+	}
 
 	return 0;
 }
