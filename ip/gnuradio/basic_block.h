@@ -46,17 +46,17 @@ class GR_RUNTIME_API basic_block
 {
 protected:
 
-    std::string d_name;
+    //std::string d_name;
     gr::io_signature::sptr d_input_signature;
     gr::io_signature::sptr d_output_signature;
 
     basic_block(void) {} // allows pure virtual interface sub-classes
 
     //! Protected constructor prevents instantiation by non-derived classes
-    basic_block(const std::string& name,
+    basic_block(//const std::string& name,
                 io_signature::sptr input_signature,
                 io_signature::sptr output_signature)
-    : d_name(name),
+    : //d_name(name),
       d_input_signature(input_signature),
       d_output_signature(output_signature)
     {}
@@ -77,7 +77,7 @@ public:
     virtual ~basic_block() {}
 
     /*! The name of the block */
-    std::string name() const { return d_name; }
+    //std::string name() const { return d_name; }
     gr::io_signature::sptr input_signature() const { return d_input_signature; }
     gr::io_signature::sptr output_signature() const { return d_output_signature; }
 };

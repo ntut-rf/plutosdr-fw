@@ -61,13 +61,13 @@ namespace gr {
  * general_work is called to perform the signal processing in the
  * block.  It reads the input items and writes the output items.
  */
-class GR_RUNTIME_API block : public basic_block
+class GR_RUNTIME_API block //: public basic_block
 {
 public:
     //! Magic return values from general_work
     enum { WORK_CALLED_PRODUCE = -2, WORK_DONE = -1 };
 
-    virtual ~block() {}
+    ~block() {}
 
     // ----------------------------------------------------------------
     //		override these to define your behavior
@@ -83,7 +83,7 @@ public:
      * number of data items required on each input stream.  The
      * estimate doesn't have to be exact, but should be close.
      */
-    virtual void forecast(int noutput_items, gr_vector_int& ninput_items_required) {}
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) {}
 
     /*!
      * \brief compute output items from input items
@@ -108,7 +108,7 @@ public:
      * general_work must call consume or consume_each to indicate how
      * many items were consumed on each input stream.
      */
-    virtual int general_work(int noutput_items,
+    int general_work(int noutput_items,
                              gr_vector_int& ninput_items,
                              gr_vector_const_void_star& input_items,
                              gr_vector_void_star& output_items)
@@ -153,10 +153,10 @@ public:
 
 protected:
     block(void) {} // allows pure virtual interface sub-classes
-    block(const std::string& name,
-          gr::io_signature::sptr input_signature,
-          gr::io_signature::sptr output_signature)
-          : basic_block(name, input_signature, output_signature) {}
+    //block(//const std::string& name,
+          //gr::io_signature::sptr input_signature,
+          //gr::io_signature::sptr output_signature)
+          //: basic_block(/*name,*/ input_signature, output_signature) {}
 };
 
 } /* namespace gr */

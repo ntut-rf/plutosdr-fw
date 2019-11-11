@@ -57,10 +57,11 @@ dvbt_energy_dispersal::sptr dvbt_energy_dispersal::make(int nblocks)
  * The private constructor
  */
 dvbt_energy_dispersal_impl::dvbt_energy_dispersal_impl(int nblocks)
-    : gr::block("dvbt_energy_dispersal",
-                gr::io_signature::make(1, 1, sizeof(unsigned char)),
-                gr::io_signature::make(
-                    1, 1, sizeof(unsigned char) * nblocks * d_npacks * d_psize)),
+    : gr::block(//"dvbt_energy_dispersal",
+                //gr::io_signature::make(1, 1, sizeof(unsigned char)),
+                //gr::io_signature::make(
+                //    1, 1, sizeof(unsigned char) * nblocks * d_npacks * d_psize)
+                ),
       d_nblocks(nblocks),
       d_reg(0xa9)
 {
