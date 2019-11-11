@@ -61,7 +61,8 @@ namespace gr {
  * general_work is called to perform the signal processing in the
  * block.  It reads the input items and writes the output items.
  */
-class GR_RUNTIME_API block //: public basic_block
+template <int d_sizeof_input_stream_item, int d_sizeof_output_stream_item>
+class GR_RUNTIME_API block : public basic_block<d_sizeof_input_stream_item,d_sizeof_output_stream_item>
 {
 public:
     //! Magic return values from general_work
@@ -153,10 +154,10 @@ public:
 
 protected:
     block(void) {} // allows pure virtual interface sub-classes
-    //block(//const std::string& name,
-          //gr::io_signature::sptr input_signature,
-          //gr::io_signature::sptr output_signature)
-          //: basic_block(/*name,*/ input_signature, output_signature) {}
+    // block(//const std::string& name,
+    //       gr::io_signature input_signature,
+    //       gr::io_signature output_signature)
+    //       : basic_block(/*name,*/ input_signature, output_signature) {}
 };
 
 } /* namespace gr */

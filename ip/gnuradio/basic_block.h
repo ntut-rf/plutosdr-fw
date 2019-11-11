@@ -26,7 +26,6 @@
 #include <gnuradio/api.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/runtime_types.h>
-#include <gnuradio/sptr_magic.h>
 #include <string>
 
 namespace gr {
@@ -42,44 +41,51 @@ namespace gr {
  * container, and block, which implements actual signal
  * processing functions.
  */
+
+template <int d_sizeof_input_stream_item, int d_sizeof_output_stream_item>
 class GR_RUNTIME_API basic_block
 {
+public:
+
+    static const int sizeof_input_stream_item = d_sizeof_input_stream_item;
+    static const int sizeof_output_stream_item = d_sizeof_output_stream_item;
+
 protected:
 
     //std::string d_name;
-    gr::io_signature::sptr d_input_signature;
-    gr::io_signature::sptr d_output_signature;
+    // gr::io_signature<min_streams,max_streams> d_input_signature;
+    // gr::io_signature<min_streams,max_streams> d_output_signature;
 
     basic_block(void) {} // allows pure virtual interface sub-classes
 
     //! Protected constructor prevents instantiation by non-derived classes
-    basic_block(//const std::string& name,
-                io_signature::sptr input_signature,
-                io_signature::sptr output_signature)
-    : //d_name(name),
-      d_input_signature(input_signature),
-      d_output_signature(output_signature)
-    {}
+    // basic_block(//const std::string& name,
+    //             io_signature<min_streams,max_streams> input_signature,
+    //             io_signature<min_streams,max_streams> output_signature)
+    // : //d_name(name),
+    //   d_input_signature(input_signature),
+    //   d_output_signature(output_signature)
+    // {}
 
     //! may only be called during constructor
-    void set_input_signature(gr::io_signature::sptr iosig)
-    { 
-        d_input_signature = iosig;
-    }
+    // void set_input_signature(gr::io_signature::sptr iosig)
+    // { 
+    //     d_input_signature = iosig;
+    // }
 
-    //! may only be called during constructor
-    void set_output_signature(gr::io_signature::sptr iosig)
-    {
-        d_output_signature = iosig;
-    }
+    // //! may only be called during constructor
+    // void set_output_signature(gr::io_signature::sptr iosig)
+    // {
+    //     d_output_signature = iosig;
+    // }
 
 public:
-    virtual ~basic_block() {}
+    ~basic_block() {}
 
     /*! The name of the block */
     //std::string name() const { return d_name; }
-    gr::io_signature::sptr input_signature() const { return d_input_signature; }
-    gr::io_signature::sptr output_signature() const { return d_output_signature; }
+    //int min_streams() const { return _min_streams; }
+    //int max_streams() const { return _max_streams; }
 };
 
 } /* namespace gr */
