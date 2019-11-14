@@ -76,19 +76,6 @@ public:
     int d_zeros_on_right;
     int d_cp_length;
 
-    void set_frame_number(int fn);
-    int get_frame_mumber();
-    void set_constellation(dvb_constellation_t constellation);
-    dvb_constellation_t get_constellation();
-    void set_hierarchical(dvbt_hierarchy_t hierarchy);
-    dvbt_hierarchy_t get_hierarchical();
-    void set_code_rate_HP(dvb_code_rate_t coderate);
-    dvb_code_rate_t get_code_rate_HP();
-    void set_code_rate_LP(dvb_code_rate_t coderate);
-    dvb_code_rate_t get_code_rate_LP();
-    void set_transmission_mode(dvbt_transmission_mode_t transmission_mode);
-    dvbt_transmission_mode_t get_transmission_mode();
-
     dvbt_configure(dvb_constellation_t constellation = gr::dtv::MOD_16QAM,
                    dvbt_hierarchy_t hierarchy = gr::dtv::NH,
                    dvb_code_rate_t code_rate_HP = gr::dtv::C1_2,
@@ -97,7 +84,6 @@ public:
                    dvbt_transmission_mode_t transmission_mode = gr::dtv::T2k,
                    int include_cell_id = 0,
                    int cell_id = 0);
-    ~dvbt_configure();
 };
 
 } // namespace dtv

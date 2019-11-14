@@ -19,10 +19,48 @@
  */
 
 #include "dvbt_inner_coder_impl.h"
-#include <gnuradio/io_signature.h>
 
-inline void dvbt_inner_coder_impl::generate_codeword(unsigned char in, int& x, int& y)
+// Code rate k/n
+#define d_k config.d_cr_k
+#define d_n config.d_cr_n
+// Constellation with m
+#define d_m config.d_m
+
+// input block size in bytes
+#define d_in_bs  ((d_k * d_m) / 2)
+// output block size in bytes
+#define d_out_bs (4 * d_n)
+
+// bit input buffer
+static uint8_t d_in_buff[8 * d_in_bs];
+// bit output buffer
+static uint8_t d_out_buff[8 * d_in_bs * d_n / d_k];
+
+static const int d_lookup_171[128];
+static const int d_lookup_133[128];
+
+// In order to accommodate all constalations (m=2,4,6)
+// and rates (1/2, 2/3, 3/4, 5/6, 7/8)
+// We need the following things to happen:
+// - output item size multiple of 1512bytes
+// - noutput_items multiple of 4
+// - in block size 4*(k*m/8)
+// - out block size 4*n
+//
+// Rate calculation follows:
+// We process km input bits(km/8 Bytes)
+// We output nm bits
+// We output one byte for a symbol of m bits
+// The out/in rate in bytes is: 8n/km (Bytes)
+
+//assert(d_noutput % 1512 == 0);
+
+// Set output items multiple of 4
+//set_output_multiple(4);
+
+inline void generate_codeword(unsigned char in, int& x, int& y)
 {
+    static int d_reg = 0;
     // insert input bit
     d_reg |= ((in & 0x1) << 7);
 
@@ -40,9 +78,7 @@ inline void dvbt_inner_coder_impl::generate_codeword(unsigned char in, int& x, i
  * 00000c0c1c2
  */
 
-inline void dvbt_inner_coder_impl::generate_punctured_code(dvb_code_rate_t coderate,
-                                                           unsigned char* in,
-                                                           unsigned char* out)
+inline void generate_punctured_code(dvb_code_rate_t coderate, unsigned char* in, unsigned char* out)
 {
     int x, y;
 
@@ -111,8 +147,7 @@ inline void dvbt_inner_coder_impl::generate_punctured_code(dvb_code_rate_t coder
     }
 }
 
-dvbt_inner_coder_impl::dvbt_inner_coder_impl(int ninput,
-                                             int noutput,
+dvbt_inner_coder_impl(int ninput, int noutput,
                                              dvb_constellation_t constellation,
                                              dvbt_hierarchy_t hierarchy,
                                              dvb_code_rate_t coderate)
@@ -121,52 +156,8 @@ dvbt_inner_coder_impl::dvbt_inner_coder_impl(int ninput,
             io_signature::make(1, 1, sizeof(unsigned char) * noutput)),
       config(constellation, hierarchy, coderate, coderate),
       d_ninput(ninput),
-      d_noutput(noutput),
-      d_reg(0)
+      d_noutput(noutput)
 {
-    // Determine k - input of encoder
-    d_k = config.d_cr_k;
-    // Determine n - output of encoder
-    d_n = config.d_cr_n;
-    // Determine m - constellation symbol size
-    d_m = config.d_m;
-
-    // In order to accommodate all constalations (m=2,4,6)
-    // and rates (1/2, 2/3, 3/4, 5/6, 7/8)
-    // We need the following things to happen:
-    // - output item size multiple of 1512bytes
-    // - noutput_items multiple of 4
-    // - in block size 4*(k*m/8)
-    // - out block size 4*n
-    //
-    // Rate calculation follows:
-    // We process km input bits(km/8 Bytes)
-    // We output nm bits
-    // We output one byte for a symbol of m bits
-    // The out/in rate in bytes is: 8n/km (Bytes)
-
-    assert(d_noutput % 1512 == 0);
-
-    // Set output items multiple of 4
-    set_output_multiple(4);
-
-    // calculate in and out block sizes
-    d_in_bs = (d_k * d_m) / 2;
-    d_out_bs = 4 * d_n;
-
-    // allocate bit buffers
-    d_in_buff = new (std::nothrow) unsigned char[8 * d_in_bs];
-    if (d_in_buff == NULL) {
-        GR_LOG_FATAL(d_logger, "Inner Coder, cannot allocate memory for d_in_buff.");
-        throw std::bad_alloc();
-    }
-
-    d_out_buff = new (std::nothrow) unsigned char[8 * d_in_bs * d_n / d_k];
-    if (d_out_buff == NULL) {
-        GR_LOG_FATAL(d_logger, "Inner Coder, cannot allocate memory for d_out_buff.");
-        delete[] d_in_buff;
-        throw std::bad_alloc();
-    }
 }
 
 void forecast(int noutput_items, gr_vector_int& ninput_items_required)
@@ -181,9 +172,6 @@ void forecast(int noutput_items, gr_vector_int& ninput_items_required)
 
 int general_work(int noutput_items, uint8_t* in, uint8_t* out)
 {
-    const unsigned char* in = (const unsigned char*)input_items[0];
-    unsigned char* out = (unsigned char*)output_items[0];
-
     for (int k = 0; k < (noutput_items * d_noutput / d_out_bs); k++) {
         // Unpack input to bits
         for (int i = 0; i < d_in_bs; i++) {
@@ -219,7 +207,7 @@ int general_work(int noutput_items, uint8_t* in, uint8_t* out)
     return noutput_items;
 }
 
-const int dvbt_inner_coder_impl::d_lookup_171[128] = {
+static const int d_lookup_171[128] = {
     0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1,
     0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
     0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1,
@@ -227,7 +215,7 @@ const int dvbt_inner_coder_impl::d_lookup_171[128] = {
     1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1
 };
 
-const int dvbt_inner_coder_impl::d_lookup_133[128] = {
+static const int d_lookup_133[128] = {
     0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1,
     1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1,
     1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1,
