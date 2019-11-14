@@ -21,22 +21,8 @@
 #ifndef INCLUDED_DTV_DVBT_CONVOLUTIONAL_INTERLEAVER_IMPL_H
 #define INCLUDED_DTV_DVBT_CONVOLUTIONAL_INTERLEAVER_IMPL_H
 
-#include <deque>
-#include <vector>
+#include <stdint.h>
 
-class dvbt_convolutional_interleaver
-{
-private:
-    int d_I;
-    int d_M;
-    std::vector<std::deque<unsigned char>*> d_shift;
-
-public:
-    dvbt_convolutional_interleaver_impl(int nsize, int I, int M);
-
-    int work(int noutput_items,
-             gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
-};
+int dvbt_convolutional_interleaver(int noutput_items, uint8_t* out, uint8_t* in);
 
 #endif /* INCLUDED_DTV_DVBT_CONVOLUTIONAL_INTERLEAVER_IMPL_H */

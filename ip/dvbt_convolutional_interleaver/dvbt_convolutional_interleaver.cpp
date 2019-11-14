@@ -18,41 +18,34 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <ap_int.h>
-#include <ap_axi_sdata.h>
+#include <stdint.h>
 #include "dvbt_convolutional_interleaver.h"
-#include <deque>
 
-/*
- * The private constructor
- */
-dvbt_convolutional_interleaver_impl(int blocks,
-int I,
-sizeof(unsigned char) * I * blocks),
-sizeof(unsigned char)),
-I * blocks),
-      d_I(I),
-      d_M(M)
+// Number of shift registers
+const int d_I = 12;
+// Depth of shift registers
+const int d_M = 12;
+
+// shift registers
+static uint8_t d_shift[d_I][d_M * d_I + 1] = {0};
+// length of shift register i
+static int len(int i) { return d_M * i; }
+// index of shift register i
+static int idx[d_I] = {0};
+
+int dvbt_convolutional_interleaver(int noutput_items, uint8_t* out, uint8_t* in)
 {
-    // Positions are shift registers (FIFOs)
-    // of length i*M
-    for (int i = 0; i < d_I; i++) {
-        d_shift.push_back(new std::deque<unsigned char>(d_M * i, 0));
-    }
-}
-
-void dvbt_convolutional_interleaver (axis_uint8_t* IN, axis_uint8_t* OUT)
-{
-#pragma HLS INTERFACE axis port=IN
-#pragma HLS INTERFACE axis port=OUT
-
     for (int i = 0; i < (noutput_items / d_I); i++) {
-        // Process one block of I symbols
-        for (unsigned int j = 0; j < d_shift.size(); j++) {
-            d_shift[j]->push_front(in[(d_I * i) + j]);
-            out[(d_I * i) + j] = d_shift[j]->back();
-            d_shift[j]->pop_back();
+            for (int j = 0; j < d_I; j++) {
+                if (len(j) == 0) out[(d_I * i) + j] = in[(d_I * i) + j];
+                else {
+                    out[(d_I * i) + j] = d_shift[j][idx[j]];
+                    d_shift[j][idx[j]] = in[(d_I * i) + j];
+                    idx[j] = (idx[j]+1) % len(j);
+                }
+            }
         }
-    }
+
+    // Tell runtime system how many output items we produced.
+    return noutput_items;
 }

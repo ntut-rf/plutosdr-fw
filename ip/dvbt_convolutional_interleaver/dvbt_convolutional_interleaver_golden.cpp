@@ -23,9 +23,12 @@
 #include <vector>
 #include <deque>
 
+#include "dvbt_convolutional_interleaver.h"
+
 #define INPUT_SIZE 12000
 uint8_t signal_in[INPUT_SIZE];
 uint8_t signal_out[INPUT_SIZE];
+uint8_t signal_out_golden[INPUT_SIZE];
 
 const int d_M = 12;
 const int d_I = 12;
@@ -59,16 +62,19 @@ int main()
 {
     for (int i=0; i<INPUT_SIZE; i++) {
         signal_in[i] = i;
-        printf("%02x ", (uint8_t)signal_in[i]);
     }		
-    printf("\n\n");
 	
     init();
-    int o = work(INPUT_SIZE, signal_out, signal_in);
+    work(INPUT_SIZE, signal_out_golden, signal_in);
+    dvbt_convolutional_interleaver(INPUT_SIZE, signal_out, signal_in);
 
-    for (int i=0; i<INPUT_SIZE; i++)
-		printf("%02x ", (uint8_t)signal_out[i]);
-    printf("\n\n");
-
-    printf("o: %d\n", o);
+    for (int i=0; i<INPUT_SIZE; i++) {
+        if (signal_out[i] != signal_out_golden[i])
+        printf("Mismatch in %d: %02x %02x\n",
+            i,
+            (uint8_t)signal_out_golden[i],
+            (uint8_t)signal_out[i]
+        );
+    }
+    printf("done\n");
 }
