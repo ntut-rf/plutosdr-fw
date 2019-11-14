@@ -23,16 +23,18 @@
 
 #include "dvbt_configure.h"
 
+// io_signature::make(1, 1, sizeof(unsigned char)),
+// io_signature::make(1, 1, sizeof(unsigned char) * noutput)),
+// config(constellation, hierarchy, coderate, coderate),
+// d_ninput(ninput),
+// d_noutput(noutput)
+
 const dvbt_configure config;
 
 int d_ninput;
 int d_noutput;
 
-void forecast(int noutput_items, gr_vector_int& ninput_items_required);
-
-int general_work(int noutput_items,
-                    gr_vector_int& ninput_items,
-                    gr_vector_const_void_star& input_items,
-                    gr_vector_void_star& output_items);
+int forecast(int noutput_items);
+int work(int noutput_items, uint8_t* in, uint8_t* out);
 
 #endif /* INCLUDED_DTV_DVBT_INNER_CODER_IMPL_H */

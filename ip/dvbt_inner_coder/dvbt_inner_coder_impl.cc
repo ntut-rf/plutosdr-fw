@@ -147,30 +147,12 @@ inline void generate_punctured_code(dvb_code_rate_t coderate, unsigned char* in,
     }
 }
 
-dvbt_inner_coder_impl(int ninput, int noutput,
-                                             dvb_constellation_t constellation,
-                                             dvbt_hierarchy_t hierarchy,
-                                             dvb_code_rate_t coderate)
-    : block("dvbt_inner_coder",
-            io_signature::make(1, 1, sizeof(unsigned char)),
-            io_signature::make(1, 1, sizeof(unsigned char) * noutput)),
-      config(constellation, hierarchy, coderate, coderate),
-      d_ninput(ninput),
-      d_noutput(noutput)
+int forecast(int noutput_items)
 {
+    return noutput_items * d_noutput * d_k * d_m / (d_ninput * 8 * d_n);
 }
 
-void forecast(int noutput_items, gr_vector_int& ninput_items_required)
-{
-    int input_required = noutput_items * d_noutput * d_k * d_m / (d_ninput * 8 * d_n);
-
-    unsigned ninputs = ninput_items_required.size();
-    for (unsigned int i = 0; i < ninputs; i++) {
-        ninput_items_required[i] = input_required;
-    }
-}
-
-int general_work(int noutput_items, uint8_t* in, uint8_t* out)
+int work(int noutput_items, uint8_t* in, uint8_t* out)
 {
     for (int k = 0; k < (noutput_items * d_noutput / d_out_bs); k++) {
         // Unpack input to bits
