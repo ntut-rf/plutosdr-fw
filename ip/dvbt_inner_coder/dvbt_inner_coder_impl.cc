@@ -147,10 +147,10 @@ inline void generate_punctured_code(dvb_code_rate_t coderate, unsigned char* in,
     }
 }
 
-int forecast(int noutput_items)
-{
-    return noutput_items * d_noutput * d_k * d_m / (d_ninput * 8 * d_n);
-}
+// int forecast(int noutput_items)
+// {
+//     return noutput_items * d_noutput * d_k * d_m / (d_ninput * 8 * d_n);
+// }
 
 int work(int noutput_items, uint8_t* in, uint8_t* out)
 {

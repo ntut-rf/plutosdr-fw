@@ -18,13 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "dvbt_configure.h"
-#include <gnuradio/io_signature.h>
-#include <iostream>
 
 dvbt_configure::dvbt_configure(dvb_constellation_t constellation,
                                dvbt_hierarchy_t hierarchy,

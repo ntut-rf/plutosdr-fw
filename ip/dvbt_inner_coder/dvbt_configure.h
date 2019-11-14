@@ -24,9 +24,6 @@
 #include <gnuradio/dtv/dvb_config.h>
 #include <gnuradio/dtv/dvbt_config.h>
 
-namespace gr {
-namespace dtv {
-
 class dvbt_configure
 {
 public:
@@ -76,17 +73,14 @@ public:
     int d_zeros_on_right;
     int d_cp_length;
 
-    dvbt_configure(dvb_constellation_t constellation = gr::dtv::MOD_16QAM,
-                   dvbt_hierarchy_t hierarchy = gr::dtv::NH,
-                   dvb_code_rate_t code_rate_HP = gr::dtv::C1_2,
-                   dvb_code_rate_t code_rate_LP = gr::dtv::C1_2,
-                   dvb_guardinterval_t guard_interval = gr::dtv::GI_1_32,
-                   dvbt_transmission_mode_t transmission_mode = gr::dtv::T2k,
+    dvbt_configure(dvb_constellation_t constellation = MOD_16QAM,
+                   dvbt_hierarchy_t hierarchy = NH,
+                   dvb_code_rate_t code_rate_HP = C1_2,
+                   dvb_code_rate_t code_rate_LP = C1_2,
+                   dvb_guardinterval_t guard_interval = GI_1_32,
+                   dvbt_transmission_mode_t transmission_mode = T2k,
                    int include_cell_id = 0,
                    int cell_id = 0);
 };
-
-} // namespace dtv
-} // namespace gr
 
 #endif /* INCLUDED_DTV_DVBT_CONFIGURE_H */

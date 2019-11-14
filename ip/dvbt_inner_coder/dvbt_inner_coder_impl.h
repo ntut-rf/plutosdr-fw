@@ -30,11 +30,9 @@
 // d_noutput(noutput)
 
 const dvbt_configure config;
-
 int d_ninput;
 int d_noutput;
 
-int forecast(int noutput_items);
 int work(int noutput_items, uint8_t* in, uint8_t* out);
 
 #endif /* INCLUDED_DTV_DVBT_INNER_CODER_IMPL_H */
