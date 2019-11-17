@@ -37,12 +37,7 @@ int main (void)
     pclose(fp);
 
 	// Perform top function:
-    int offset = 0;
-    while (offset + forecast() < INPUT_SIZE) {
-        int consume_each = dvbt_energy_dispersal(signal_in + offset, signal_out + offset);
-        offset += (consume_each);
-        printf("consume_each: %d\n", consume_each);
-    }
+    dvbt_energy_dispersal(signal_in, signal_out);
 
 	// Check results...
 	for (int i=0; i<OUTPUT_SIZE; i++)
