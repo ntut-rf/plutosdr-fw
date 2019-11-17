@@ -45,19 +45,21 @@ int clock_prbs(int clocks)
 // signature in:  1
 // signature out: nblocks * d_npacks * d_psize
 
-void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT)
+int dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT)
 {
 #pragma HLS INTERFACE axis port=IN
 #pragma HLS INTERFACE axis port=OUT
 
     int is_sync = 0;
+    int index = 0;
 
     // Search for SYNC byte
     for (int i = 0; i < D_PSIZE; i++) {
         axis_uint8_t in = *IN;
-        if (in.last) return;
+        index++;
+        if (in.last) return index;
         if (in.data == D_SYNC) {
-            printf("SYNC\n");
+            printf("SYNC index %d\n", index);
             is_sync = 1;
             break;
         }
@@ -73,7 +75,7 @@ void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT)
             for (int j = 0; j < D_NPACKS; j++) {
 
                 axis_uint8_t in = *IN++;
-                if (in.last) return;
+                if (in.last) return index;
                 if (in.data != D_SYNC)
                     printf("Malformed MPEG-TS!\n");
                 else
@@ -81,22 +83,26 @@ void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT)
 
                 axis_uint8_t out;
                 out.data = D_NSYNC;
-                out.user = (i == 0 && j == 0) ? USER_BLOCK_BEGIN : 0;
+                out.user = (i == 0 && j == 0) ? (printf("*Block begin\n"),USER_BLOCK_BEGIN) : 0;
                 *OUT++ = out;
 
                 for (int k = 1; k < D_PSIZE; k++) {
 
                     axis_uint8_t in = *IN++;
-                    if (in.last) return;
+                    index++;
 
                     axis_uint8_t out;
                     out.data = in.data ^ clock_prbs(D_NPACKS);
-                    out.user = (i == D_NBLOCKS-1 && j == D_NPACKS-1 && k == D_PSIZE-1) ? USER_BLOCK_END : 0;
+                    out.user = (i == D_NBLOCKS-1 && j == D_NPACKS-1 && k == D_PSIZE-1) ? (printf("*Block end\n"),USER_BLOCK_END) : 0;
                     *OUT++ = out;
+
+                    if (in.last) return index;
                 }
 
                 clock_prbs(D_NPACKS);
             }
         }
+        return index;
     }
+    return index;
 }

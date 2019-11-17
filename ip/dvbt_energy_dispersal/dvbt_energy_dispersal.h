@@ -14,6 +14,6 @@ typedef ap_axiu<8,2,1,1> axis_uint8_t; // data,user,id,last
 #define D_NSYNC 0xB8
 #define D_NBLOCKS 1
 
-void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT);
+int dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT);
 
 #endif
