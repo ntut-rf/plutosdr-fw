@@ -3,9 +3,11 @@
 #include <iostream>
 #include "dvbt_energy_dispersal.h"
 
-#define INPUT_SIZE 1880
+#define NOUTPUT_ITEMS 2
+#define INPUT_SIZE (D_NPACKS * (D_PSIZE + 1) * D_NBLOCKS * NOUTPUT_ITEMS)
+#define OUTPUT_SIZE INPUT_SIZE
 axis_uint8_t signal_in[INPUT_SIZE];
-axis_uint8_t signal_out[INPUT_SIZE];
+axis_uint8_t signal_out[OUTPUT_SIZE];
 
 int main (void)
 {
@@ -17,6 +19,8 @@ int main (void)
         printf("Error opening pipe!\n");
         return -1;
     }
+
+    printf("Input size: %d\n", INPUT_SIZE);
 
     for (int i = 0; i < INPUT_SIZE; i++) {
 		signal_in[i].data = fgetc(fp);
@@ -30,7 +34,7 @@ int main (void)
 	dvbt_energy_dispersal(signal_in, signal_out);
 
 	// Check results...
-	for (int i=0; i<INPUT_SIZE; i++)
+	for (int i=0; i<OUTPUT_SIZE; i++)
 	{
         if (signal_out[i].user == USER_BLOCK_BEGIN)
             printf("\nBlock begin\n");

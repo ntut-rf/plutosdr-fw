@@ -22,13 +22,7 @@
 #include <ap_axi_sdata.h>
 #include "dvbt_energy_dispersal.h"
 
-const int D_NPACKS = 8;
-const int D_PSIZE = 188;
-const int D_SYNC = 0x47;
-const int D_NSYNC = 0xB8;
-
 int d_reg = 0xa9;
-int d_nblocks = 1;
 
 void init_prbs()
 {
@@ -72,7 +66,7 @@ void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT)
 
     // If we found a SYNC byte
     if (is_sync) {
-        for (int i = 0; i < d_nblocks; i++) {
+        for (int i = 0; i < D_NBLOCKS; i++) {
             init_prbs();
             printf("init_prbs()\n");
 
@@ -97,7 +91,7 @@ void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT)
 
                     axis_uint8_t out;
                     out.data = in.data ^ clock_prbs(D_NPACKS);
-                    out.user = (i == d_nblocks-1 && j == D_NPACKS-1 && k == D_PSIZE-1) ? USER_BLOCK_END : 0;
+                    out.user = (i == D_NBLOCKS-1 && j == D_NPACKS-1 && k == D_PSIZE-1) ? USER_BLOCK_END : 0;
                     *OUT++ = out;
                 }
 
