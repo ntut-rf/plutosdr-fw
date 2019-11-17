@@ -48,6 +48,9 @@ int clock_prbs(int clocks)
     return res;
 }
 
+// signature in:  1
+// signature out: nblocks * d_npacks * d_psize
+
 void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT)
 {
 #pragma HLS INTERFACE axis port=IN
@@ -84,7 +87,7 @@ void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT)
 
                 axis_uint8_t out;
                 out.data = D_NSYNC;
-                out.user = 1;
+                out.user = (i == 0 && j == 0) ? USER_BLOCK_BEGIN : 0;
                 *OUT++ = out;
 
                 for (int k = 1; k < D_PSIZE; k++) {
@@ -94,7 +97,7 @@ void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT)
 
                     axis_uint8_t out;
                     out.data = in.data ^ clock_prbs(D_NPACKS);
-                    out.user = 0;
+                    out.user = (i == d_nblocks-1 && j == D_NPACKS-1 && k == D_PSIZE-1) ? USER_BLOCK_END : 0;
                     *OUT++ = out;
                 }
 

@@ -32,8 +32,13 @@ int main (void)
 	// Check results...
 	for (int i=0; i<INPUT_SIZE; i++)
 	{
-		//printf("user: %x\n", signal_out[i].user);
-		printf("%02x ", (uint8_t)signal_out[i].data);
+        if (signal_out[i].user == USER_BLOCK_BEGIN)
+            printf("\nBlock begin\n");
+
+        printf("%02x ", (uint8_t)signal_out[i].data);
+
+        if (signal_out[i].user == USER_BLOCK_END)
+            printf("\nBlock end\n");		
 	}
 
 	return 0;
