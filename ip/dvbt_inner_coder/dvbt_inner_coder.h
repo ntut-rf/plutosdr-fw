@@ -21,6 +21,7 @@
 #ifndef INCLUDED_DTV_DVBT_INNER_CODER_IMPL_H
 #define INCLUDED_DTV_DVBT_INNER_CODER_IMPL_H
 
+#include <stdint.h>
 #include "dvbt_configure.h"
 
 // io_signature::make(1, 1, sizeof(unsigned char)),
@@ -29,7 +30,7 @@
 // d_ninput(ninput),
 // d_noutput(noutput)
 
-const dvbt_configure config;
+const dvbt_configure config(MOD_QPSK, NH, C1_2, C1_2);
 int d_ninput;
 int d_noutput;
 

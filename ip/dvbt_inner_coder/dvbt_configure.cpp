@@ -20,6 +20,7 @@
 
 
 #include "dvbt_configure.h"
+#include <math.h>
 
 dvbt_configure::dvbt_configure(dvb_constellation_t constellation,
                                dvbt_hierarchy_t hierarchy,
