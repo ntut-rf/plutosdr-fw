@@ -1,7 +1,7 @@
 #include "dvbt_reed_solomon_enc_impl.h"
 #include "dvbt_reed_solomon_enc.h"
 
-gr::dtv::dvbt_reed_solomon_enc_impl rs_enc(2,8,285,255,239,8,51,8);
+dvbt_reed_solomon_enc_impl rs_enc(2,8,285,255,239,8,51,8);
 
 void dvbt_reed_solomon_enc (axis_uint8_t* IN, axis_uint8_t* OUT)
 {

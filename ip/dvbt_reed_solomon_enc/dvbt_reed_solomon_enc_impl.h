@@ -21,16 +21,12 @@
 #ifndef INCLUDED_DTV_DVBT_REED_SOLOMON_ENC_IMPL_H
 #define INCLUDED_DTV_DVBT_REED_SOLOMON_ENC_IMPL_H
 
-#include <gnuradio/dtv/dvbt_reed_solomon_enc.h>
-
 extern "C" {
 #include <gnuradio/fec/rs.h>
 }
+#include <stdint.h>
 
-namespace gr {
-namespace dtv {
-
-class dvbt_reed_solomon_enc_impl : public dvbt_reed_solomon_enc
+class dvbt_reed_solomon_enc_impl 
 {
 private:
     int d_n;
@@ -40,23 +36,15 @@ private:
 
     // The full input frame size (d_k) (no need to add in d_s, as the block input is the
     // pre-shortedned K)
-    unsigned char d_data[sizeof(unsigned char) * 256/*(d_k)*/];
+    uint8_t d_data[sizeof(uint8_t) * 256/*(d_k)*/];
 
     void* d_rs; /* Reed-Solomon characteristics structure */
-    void encode(const unsigned char* in, unsigned char* out);
+    void encode(const uint8_t* in, uint8_t* out);
 
 public:
-    dvbt_reed_solomon_enc_impl(
-        int p, int m, int gfpoly, int n, int k, int t, int s, int blocks);
-    ~dvbt_reed_solomon_enc_impl();
+    dvbt_reed_solomon_enc_impl(int p, int m, int gfpoly, int n, int k, int t, int s, int blocks);
 
-    int general_work(int noutput_items,
-                     gr_vector_int& ninput_items,
-                     gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+    void general_work(uint8_t* in, uint8_t* out);
 };
-
-} // namespace dtv
-} // namespace gr
 
 #endif /* INCLUDED_DTV_DVBT_REED_SOLOMON_ENC_IMPL_H */
