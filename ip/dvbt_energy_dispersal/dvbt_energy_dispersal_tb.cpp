@@ -26,30 +26,43 @@ int main (void)
     }
 
     printf("Input block size: %d\n", D_NPACKS * D_PSIZE * D_NBLOCKS);
-    printf("Input size: %d\n", INPUT_SIZE);
+    //printf("Input size: %d\n", INPUT_SIZE);
 
-    for (int i = 0; i < INPUT_SIZE; i++) {
-		signal_in[i].data = fgetc(fp);
-		signal_in[i].user = 0x00;
-		signal_in[i].last = (i == INPUT_SIZE-1)? 1:0;
+    while (1)
+    {
+        //printf("\nIN\n");
+        for (int i = 0; i < forecast(); i++) {
+            signal_in[i].data = fgetc(fp);
+            signal_in[i].user = (i == 0) ? USER_BLOCK_BEGIN : ((i == forecast()-1) ? USER_BLOCK_END : 0);
+            signal_in[i].last = 0x00;
+            //printf("%02x ", (uint8_t)signal_in[i].data);
+        }
+
+        // Perform top function:
+        printf("\nWORK\n");
+        dvbt_energy_dispersal(signal_in, signal_out);
+
+        // Check results...
+        printf("\nOUT:\n");
+        //int i = 0;
+        for (int i = 0; i < OUTPUT_SIZE; i++)
+        {
+            if (signal_out[i].user == USER_BLOCK_BEGIN)
+                printf("\nBlock begin\n");
+
+            printf("%02x ", (uint8_t)signal_out[i].data);
+
+            if (signal_out[i].user == USER_BLOCK_END) {
+                printf("\nBlock end\n");	
+                break;
+            }
+
+            //i++;
+            if (i >= OUTPUT_SIZE) break;
+        }
     }
 
     pclose(fp);
-
-	// Perform top function:
-    dvbt_energy_dispersal(signal_in, signal_out);
-
-	// Check results...
-	for (int i=0; i<OUTPUT_SIZE; i++)
-	{
-        if (signal_out[i].user == USER_BLOCK_BEGIN)
-            printf("\nBlock begin\n");
-
-        printf("%02x ", (uint8_t)signal_out[i].data);
-
-        if (signal_out[i].user == USER_BLOCK_END)
-            printf("\nBlock end\n");		
-	}
 
 	return 0;
 }

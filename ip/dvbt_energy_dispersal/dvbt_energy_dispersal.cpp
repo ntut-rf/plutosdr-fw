@@ -50,6 +50,7 @@ void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT)
 #pragma HLS INTERFACE axis port=IN
 #pragma HLS INTERFACE axis port=OUT
 
+    //printf("Work start\n");
     while (1)
     {
         int is_sync = 0;
@@ -107,5 +108,6 @@ void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT)
                 }
             }
         }
+        else printf("NO SYNC\n");
     }
 }
