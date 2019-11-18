@@ -5,7 +5,7 @@ open_project ${ip_name}.prj
 set_top ${ip_name}
 
 ## Add Files
-add_files "${ip_name}.cpp ${ip_name}_impl.cc encode_rs.cc init_rs.cc ../gnuradio/io_signature.cc" -cflags "-I.. -std=gnu++0x"
+add_files "${ip_name}.cpp ${ip_name}_impl.cc encode_rs.cc init_rs.cc" -cflags "-I.. -std=gnu++0x"
 
 ## Add Test Bench Files
 add_files -tb ${ip_name}_tb.cpp
@@ -16,8 +16,8 @@ set_part {xc7z020clg484-1}
 create_clock -period 10 -name default
 
 csim_design
-csynth_design
-export_design -format ip_catalog
+#csynth_design
+#export_design -format ip_catalog
 close_solution
 
 exit
