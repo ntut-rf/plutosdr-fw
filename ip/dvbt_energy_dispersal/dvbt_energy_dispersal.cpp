@@ -45,27 +45,32 @@ int clock_prbs(int clocks)
 // signature in:  1
 // signature out: nblocks * d_npacks * d_psize
 
+int n_in = 0;
+int n_out = 0;
+
 void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT)
 {
 #pragma HLS INTERFACE axis port=IN
 #pragma HLS INTERFACE axis port=OUT
 
-    //printf("Work start\n");
-    while (1)
+    axis_uint8_t in;
+
+    //while (1)
     {
         int is_sync = 0;
 
         // Search for SYNC byte
         for (int i = 0; i < D_PSIZE; i++) {
-            axis_uint8_t in = *IN;
+            in = *IN++;
+            n_in++;
             if (in.last)
                 return;
             if (in.data == D_SYNC) {
                 printf("SYNC\n");
+                printf("n_in: %d\n", n_in);
                 is_sync = 1;
                 break;
             }
-            IN++;
         }
 
         // If we found a SYNC byte
@@ -76,8 +81,13 @@ void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT)
 
                 for (int j = 0; j < D_NPACKS; j++) {
 
-                    axis_uint8_t in = *IN++;
-                    
+                    if (is_sync)
+                        is_sync = 0;
+                    else {
+                        in = *IN++;
+                        n_in++;
+                    }
+                        
                     if (in.data != D_SYNC)
                         printf("Malformed MPEG-TS!\n");
                     else
@@ -87,18 +97,21 @@ void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT)
                     out.data = D_NSYNC;
                     out.user = (i == 0 && j == 0) ? (printf("*Block begin\n"),USER_BLOCK_BEGIN) : 0;
                     *OUT++ = out;
+                    n_out++;
 
                     if (in.last)
                         return;
 
                     for (int k = 1; k < D_PSIZE; k++) {
 
-                        axis_uint8_t in = *IN++;
+                        in = *IN++;
+                        n_in++;
 
                         axis_uint8_t out;
                         out.data = in.data ^ clock_prbs(D_NPACKS);
                         out.user = (i == D_NBLOCKS-1 && j == D_NPACKS-1 && k == D_PSIZE-1) ? (printf("*Block end\n"),USER_BLOCK_END) : 0;
                         *OUT++ = out;
+                        n_out++;
 
                         if (in.last)
                             return;

@@ -16,4 +16,7 @@ typedef ap_axiu<8,2,1,1> axis_uint8_t; // data,user,id,last
 
 void dvbt_energy_dispersal (axis_uint8_t* IN, axis_uint8_t* OUT);
 
+extern int n_in;
+extern int n_out;
+
 #endif
