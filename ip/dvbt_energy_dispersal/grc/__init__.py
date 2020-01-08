@@ -19,8 +19,6 @@
 # The presence of this file turns this directory into a Python package
 
 '''
-This is the GNU Radio HOWTO module. Place your Python package
-description here (python/__init__.py).
 '''
 from __future__ import unicode_literals
 
