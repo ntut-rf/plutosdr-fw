@@ -48,17 +48,17 @@ ad_connect xlconstant_0/dout axis_add_one_0/ap_start
 
 ## Peripheral data interface
 
-ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_GP0 1
-ad_connect sys_ps7/FCLK_CLK0 sys_ps7/S_AXI_GP0_ACLK
+# ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_GP0 1
+# ad_connect sys_ps7/FCLK_CLK0 sys_ps7/S_AXI_GP0_ACLK
 
-ad_ip_instance axi_interconnect axi_gp0_interconnect
-ad_ip_parameter axi_gp0_interconnect CONFIG.NUM_MI 1
-ad_ip_parameter axi_gp0_interconnect CONFIG.NUM_SI 1
-ad_connect sys_ps7/FCLK_CLK0 axi_gp0_interconnect/aclk
-ad_connect sys_cpu_resetn    axi_gp0_interconnect/aresetn
-ad_connect sys_ps7/S_AXI_GP0 axi_gp0_interconnect/M00_AXI
-ad_connect sys_ps7/FCLK_CLK0 axi_gp0_interconnect/M00_ACLK
-ad_connect sys_cpu_resetn    axi_gp0_interconnect/M00_ARESETN
+# ad_ip_instance axi_interconnect axi_gp0_interconnect
+# ad_ip_parameter axi_gp0_interconnect CONFIG.NUM_MI 1
+# ad_ip_parameter axi_gp0_interconnect CONFIG.NUM_SI 1
+# ad_connect sys_ps7/FCLK_CLK0 axi_gp0_interconnect/aclk
+# ad_connect sys_cpu_resetn    axi_gp0_interconnect/aresetn
+# ad_connect sys_ps7/S_AXI_GP0 axi_gp0_interconnect/M00_AXI
+# ad_connect sys_ps7/FCLK_CLK0 axi_gp0_interconnect/M00_ACLK
+# ad_connect sys_cpu_resetn    axi_gp0_interconnect/M00_ARESETN
 
 ## Microblaze
 
