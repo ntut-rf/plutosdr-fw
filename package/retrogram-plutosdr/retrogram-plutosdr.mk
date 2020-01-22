@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-RETROGRAM_PLUTOSDR_VERSION := 25b4fcf
+RETROGRAM_PLUTOSDR_VERSION := 9b7ce63
 RETROGRAM_PLUTOSDR_SITE := https://github.com/r4d10n/retrogram-plutosdr.git
 RETROGRAM_PLUTOSDR_SITE_METHOD := git
 RETROGRAM_PLUTOSDR_DEPENDENCIES += libad9361-iio boost ncurses

@@ -3,7 +3,7 @@
 # libad9361-iio
 #
 ################################################################################
-LIBAD9361_IIO_VERSION = e7e0011
+LIBAD9361_IIO_VERSION = 11293f8
 LIBAD9361_IIO_SITE = https://github.com/analogdevicesinc/libad9361-iio.git
 LIBAD9361_IIO_SITE_METHOD = git
 

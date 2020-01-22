@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-XILINX_AXIDMA_VERSION := 42ed91e
+XILINX_AXIDMA_VERSION := aec1c51
 XILINX_AXIDMA_SITE := https://github.com/bperez77/xilinx_axidma.git
 XILINX_AXIDMA_SITE_METHOD := git
 XILINX_AXIDMA_INSTALL_TARGET := YES
