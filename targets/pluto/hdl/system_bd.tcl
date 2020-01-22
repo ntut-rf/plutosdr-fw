@@ -62,23 +62,23 @@ ad_connect sys_cpu_resetn    axi_gp0_interconnect/M00_ARESETN
 
 ## Microblaze
 
-ad_ip_instance microblaze microblaze_0
-apply_bd_automation -rule xilinx.com:bd_rule:microblaze -config { \
-        axi_intc {0} \
-        axi_periph {Enabled} \
-        cache {None} \
-        clk {/sys_ps7/FCLK_CLK0 (100 MHz)} \
-        debug_module {Debug Only} \
-        ecc {None} \
-        local_mem {None} \
-        preset {Microcontroller} \
-    }  [get_bd_cells microblaze_0]
-ad_ip_parameter microblaze_0 CONFIG.C_I_LMB 1
-ad_ip_parameter microblaze_0 CONFIG.C_D_LMB 1
+# ad_ip_instance microblaze microblaze_0
+# apply_bd_automation -rule xilinx.com:bd_rule:microblaze -config { \
+#         axi_intc {0} \
+#         axi_periph {Enabled} \
+#         cache {None} \
+#         clk {/sys_ps7/FCLK_CLK0 (100 MHz)} \
+#         debug_module {Debug Only} \
+#         ecc {None} \
+#         local_mem {None} \
+#         preset {Microcontroller} \
+#     }  [get_bd_cells microblaze_0]
+# ad_ip_parameter microblaze_0 CONFIG.C_I_LMB 1
+# ad_ip_parameter microblaze_0 CONFIG.C_D_LMB 1
 
-ad_connect microblaze_0/M_AXI_DP axi_gp0_interconnect/S00_AXI
-ad_connect sys_ps7/FCLK_CLK0     axi_gp0_interconnect/S00_ACLK
-ad_connect sys_cpu_resetn        axi_gp0_interconnect/S00_ARESETN
+# ad_connect microblaze_0/M_AXI_DP axi_gp0_interconnect/S00_AXI
+# ad_connect sys_ps7/FCLK_CLK0     axi_gp0_interconnect/S00_ACLK
+# ad_connect sys_cpu_resetn        axi_gp0_interconnect/S00_ARESETN
 
 # ad_ip_instance lmb_v10 ilmb_v10_0
 # ad_connect sys_ps7/FCLK_CLK0            ilmb_v10_0/LMB_Clk
