@@ -1,0 +1,33 @@
+id: video_src
+label: video_src
+category: '[plutosdr]'
+
+templates:
+  imports: import plutosdr
+  make: plutosdr.video_src()
+
+#  Make one 'parameters' list entry for every Parameter you want settable from the GUI.
+#     Sub-entries of dictionary:
+#     * id (makes the value accessible as \$keyname, e.g. in the make entry)
+#     * label
+#     * dtype 
+parameters:
+
+#  Make one 'inputs' list entry per input. Sub-entries of dictionary:
+#      * label (an identifier for the GUI)
+#      * domain
+#      * dtype
+#      * vlen
+#      * optional (set to 1 for optional inputs) 
+#inputs:
+
+#  Make one 'outputs' list entry per output. Sub-entries of dictionary:
+#      * label (an identifier for the GUI)
+#      * dtype
+#      * vlen
+#      * optional (set to 1 for optional inputs) 
+outputs:
+- label: out
+  dtype: byte #!-- e.g. int, float, complex, byte, short, xxx_vector, ...--
+
+file_format: 1
