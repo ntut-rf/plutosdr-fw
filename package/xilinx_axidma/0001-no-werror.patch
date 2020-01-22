@@ -12,15 +12,12 @@ index 14beb67..9cb8000 100644
  # The location where the compiled executables and driver will be stored
  OUTPUT_DIR ?= outputs
 diff --git a/driver/Kbuild b/driver/Kbuild
-index 2043faf..75aa86a 100644
+index 0f89744..0aca1cb 100644
 --- a/driver/Kbuild
 +++ b/driver/Kbuild
-@@ -15,7 +15,7 @@ obj-m += $(AXIDMA_MODULE_NAME).o
- # Set the CFLAGS for compiling the module, adding the include flags. Note that
- # the src variable points to the module's directory.
- INC_FLAGS = $(addprefix -I ,$(AXIDMA_INC_DIRS))
--ccflags-y = $(INC_FLAGS) -Werror -ggdb
-+ccflags-y = $(INC_FLAGS) -ggdb
+@@ -20,4 +20,4 @@ obj-m += $(DRIVER_MODULE_NAME).o
  
- # If specified, define the macro to fixup the path for the Xilinx DMA include.
- # In some 4.x Xilinx kernels, the file is still in the old path from 3.x.
+ # Set the CFLAGS for compiling the module, adding the include flags and changing the default warning behavior.
+ INC_FLAGS = $(addprefix -I ,$(DRIVER_INC_DIRS))
+-ccflags-y = $(INC_FLAGS) -Werror -ggdb -std=gnu11
++ccflags-y = $(INC_FLAGS) -ggdb -std=gnu11
