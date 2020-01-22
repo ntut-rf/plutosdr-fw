@@ -32,8 +32,10 @@ class video_src(gr.basic_block):
 
     def general_work(self, input_items, output_items):
         out = output_items[0]
-        b = int.from_bytes(self.video.stdout.read(1), byteorder='big')
-        #print(b)
-        out[:] = b
+        b = self.video.stdout.read(1024)
+        #print(type(b))
+        out = b
+        #print(out)
+        #print(len(out))
         return len(out)
 

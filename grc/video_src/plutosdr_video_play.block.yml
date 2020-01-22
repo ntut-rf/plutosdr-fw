@@ -1,10 +1,10 @@
-id: video_src
-label: Video Test Source
+id: video_play
+label: Video Play
 category: '[plutosdr]'
 
 templates:
   imports: import plutosdr
-  make: plutosdr.video_src()
+  make: plutosdr.video_play()
 
 #  Make one 'parameters' list entry for every Parameter you want settable from the GUI.
 #     Sub-entries of dictionary:
@@ -19,15 +19,15 @@ parameters:
 #      * dtype
 #      * vlen
 #      * optional (set to 1 for optional inputs) 
-#inputs:
+inputs:
+- label: in
+  dtype: byte
 
 #  Make one 'outputs' list entry per output. Sub-entries of dictionary:
 #      * label (an identifier for the GUI)
 #      * dtype
 #      * vlen
 #      * optional (set to 1 for optional inputs) 
-outputs:
-- label: out
-  dtype: byte #!-- e.g. int, float, complex, byte, short, xxx_vector, ...--
+#outputs:
 
 file_format: 1

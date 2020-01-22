@@ -24,4 +24,5 @@ from __future__ import unicode_literals
 
 # import any pure python here
 from .video_src import video_src
+from .video_play import video_play
 #
