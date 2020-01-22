@@ -33,7 +33,6 @@ BR2_LINUX_KERNEL_INTREE_DTS_NAME="zynq-pluto-sdr zynq-pluto-sdr-revb zynq-pluto-
 BR2_LINUX_KERNEL_CUSTOM_DTS_PATH="$(BASE_DIR)/dts/*.dtsi $(BR2_EXTERNAL)/targets/pluto/*.dtsi"
 BR2_PACKAGE_BUSYBOX_CONFIG="$(BR2_EXTERNAL)/platform/busybox-1.25.0.config"
 BR2_PACKAGE_BUSYBOX_CONFIG_FRAGMENT_FILES="$(BR2_EXTERNAL)/platform/busybox-extras.config"
-BR2_PACKAGE_STRACE=y
 BR2_PACKAGE_MTD=y
 # BR2_PACKAGE_MTD_NANDDUMP is not set
 # BR2_PACKAGE_MTD_NANDTEST is not set
