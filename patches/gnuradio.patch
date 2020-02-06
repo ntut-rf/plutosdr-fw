@@ -31,19 +31,3 @@ index ed537e3934..567a27b465 100644
  ifeq ($(BR2_PACKAGE_GNURADIO_ZEROMQ),y)
  GNURADIO_DEPENDENCIES += cppzmq
  ifeq ($(BR2_PACKAGE_GNURADIO_PYTHON),y)
-diff --git a/package/gnuradio/gnuradio.mk b/package/gnuradio/gnuradio.mk
-index 41d4619f72..74a4a32295 100644
---- a/package/gnuradio/gnuradio.mk
-+++ b/package/gnuradio/gnuradio.mk
-@@ -4,8 +4,9 @@
- #
- ################################################################################
- 
--GNURADIO_VERSION = 3.8.0.0
--GNURADIO_SITE = https://gnuradio.org/releases/gnuradio
-+GNURADIO_VERSION = 90c8e30
-+GNURADIO_SITE_METHOD = git
-+GNURADIO_SITE = https://github.com/gnuradio/gnuradio.git
- GNURADIO_LICENSE = GPL-3.0+
- GNURADIO_LICENSE_FILES = COPYING
- 
