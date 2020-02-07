@@ -14,7 +14,7 @@ index eb4123e3f6..0000000000
 -sha256	badf51c7e3e7de9c7630bd069780f5c197b846ef7660b342a1e58d5553592d8e	tools/npy_tempita/license.txt
 -sha256	d37526b4a34c0aa859afe6f9b7e64ca7c306b7430df8113dd5ac6fcb246bd2d4	numpy/core/src/multiarray/dragon4.c
 diff --git a/package/python-numpy/python-numpy.mk b/package/python-numpy/python-numpy.mk
-index 3b474efa6e..141808277c 100644
+index 3b474efa6e..e7c564dbfa 100644
 --- a/package/python-numpy/python-numpy.mk
 +++ b/package/python-numpy/python-numpy.mk
 @@ -4,7 +4,7 @@
@@ -26,12 +26,11 @@ index 3b474efa6e..141808277c 100644
  PYTHON_NUMPY_SOURCE = numpy-$(PYTHON_NUMPY_VERSION).tar.gz
  PYTHON_NUMPY_SITE = https://github.com/numpy/numpy/releases/download/v$(PYTHON_NUMPY_VERSION)
  PYTHON_NUMPY_LICENSE = BSD-3-Clause, BSD-2-Clause, PSF, Apache-2.0, MIT, Zlib
-@@ -16,7 +16,7 @@ PYTHON_NUMPY_LICENSE_FILES = LICENSE.txt doc/sphinxext/LICENSE.txt \
+@@ -14,6 +14,7 @@ PYTHON_NUMPY_LICENSE_FILES = LICENSE.txt doc/sphinxext/LICENSE.txt \
+ 			tools/npy_tempita/license.txt \
+ 			numpy/core/src/multiarray/dragon4.c
  PYTHON_NUMPY_SETUP_TYPE = setuptools
++PYTHON_NUMPY_DEPENDENCIES += host-python-cython
  
  ifeq ($(BR2_PACKAGE_CLAPACK),y)
--PYTHON_NUMPY_DEPENDENCIES += clapack
-+PYTHON_NUMPY_DEPENDENCIES += clapack host-python-cython
- else
- PYTHON_NUMPY_ENV += BLAS=None LAPACK=None
- endif
+ PYTHON_NUMPY_DEPENDENCIES += clapack
