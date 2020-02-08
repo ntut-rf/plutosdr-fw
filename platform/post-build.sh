@@ -43,5 +43,5 @@ ${INSTALL} -D -m 0644 ${MSD_DIR}/index.html ${TARGET_DIR}/www/
 ln -sf device_reboot ${TARGET_DIR}/sbin/pluto_reboot
 
 rm -rf ${TARGET_DIR}/usr/include/
-rm -rf ${TARGET_DIR}/usr/lib/python2.7/site-packages/numpy/core/include/
-rm -rf ${TARGET_DIR}/usr/lib/python2.7/distutils/command/*.exe
+rm -rf ${TARGET_DIR}/usr/lib/python3.8/site-packages/numpy/core/include/
+rm -rf ${TARGET_DIR}/usr/lib/python3.8/distutils/command/*.exe
