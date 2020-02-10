@@ -11,3 +11,5 @@
 * GNURadio integration
 * Add a video encoder
 * Use ADI AXI DMA
+
+* Root filesystem overlay
