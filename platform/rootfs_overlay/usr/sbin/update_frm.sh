@@ -30,6 +30,7 @@ handle_frimware_frm () {
 		flash_indication_off
 		rm -f /opt/firmware.frm
 		sync
+        format_user_partition
 		exit 0
 	else
 		rm -f /opt/firmware.frm
@@ -38,7 +39,14 @@ handle_frimware_frm () {
 	fi
 }
 
-
+format_user_partition () {
+    mkfs.vfat /dev/mtdblock4
+    mount /dev/mtdblock4 /mnt
+    cp -r /root/.ssh /mnt
+    cp -r /root/.gnuradio /mnt
+    sync
+    umount /mnt
+}
 
 if [[ -f ${FRM_FILE} ]] && [[ ${FRM_FILE: -4} == ".frm" ]] && [[ -s ${FRM_FILE} ]]
 then
