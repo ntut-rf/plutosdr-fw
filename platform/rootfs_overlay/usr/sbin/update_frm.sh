@@ -44,7 +44,7 @@ format_user_partition () {
     umount /dev/mtdblock4
     mkfs.vfat /dev/mtdblock4
     mount /dev/mtdblock4 /root
-    cp -r /tmp/root/* /root/
+    cp -r /tmp/root/. /root
     sync
 }
 
