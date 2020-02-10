@@ -57,4 +57,7 @@ $ make
 
  The resulting firmware boots noticeably slower than the stock firmware.
  
+ ## Additional References
+ 
+ https://ez.analog.com/adieducation/university-program/f/q-a/105941/adalm-pluto---firmware-dfu-flashing-fails-at-22-23mb
 
