@@ -45,3 +45,5 @@ ln -sf device_reboot ${TARGET_DIR}/sbin/pluto_reboot
 rm -rf ${TARGET_DIR}/usr/include/
 rm -rf ${TARGET_DIR}/usr/lib/python3.8/site-packages/numpy/core/include/
 rm -rf ${TARGET_DIR}/usr/lib/python3.8/distutils/command/*.exe
+find ${TARGET_DIR}/usr/lib/python3.*/ -name 'tests' -exec rm -r '{}' +
+find ${TARGET_DIR}/usr/lib/python3.*/ -name '*.pyo' -exec rm -r '{}' +
