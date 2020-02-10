@@ -196,7 +196,7 @@ handle_frimware_frm () {
 
 	rm -f ${FILE} /opt/firmware.frm
 	sync
-    format_user_partition
+    #format_user_partition
 }
 
 while [ 1 ]

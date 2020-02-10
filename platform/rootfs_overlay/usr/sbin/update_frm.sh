@@ -30,7 +30,7 @@ handle_frimware_frm () {
 		flash_indication_off
 		rm -f /opt/firmware.frm
 		sync
-        format_user_partition
+        #format_user_partition
 		exit 0
 	else
 		rm -f /opt/firmware.frm
