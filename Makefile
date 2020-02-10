@@ -173,7 +173,7 @@ ettus:
 
 TARGET_DTSI := $(LINUX_DIR)/arch/arm/boot/dts/zynq-pluto-sdr.dtsi
 
-#linux: dts
+linux: dts
 
 .PHONY: dts clean-dts
 dts: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
