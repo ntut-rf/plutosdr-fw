@@ -3,8 +3,6 @@ export SHELL:=/bin/bash
 export VIVADO_VERSION ?= 2019.1
 VIVADO_SETTINGS ?= /opt/Xilinx/Vivado/$(VIVADO_VERSION)/settings64.sh
 
-CROSS_COMPILE ?= arm-buildroot-linux-gnueabihf-
-
 ifdef TARGET
 $(shell echo $(TARGET) > .target)
 else
@@ -52,6 +50,9 @@ patch-ettus:
 export BR2_EXTERNAL=$(CURDIR)
 export BR2_DEFCONFIG=$(CURDIR)/targets/$(TARGET)/defconfig
 export O=$(CURDIR)/build/$(TARGET)
+
+CROSS_COMPILE ?= arm-buildroot-linux-gnueabihf-
+export PATH := $(PATH):$(O)/host/bin/
 
 ## Pass targets to buildroot
 %:
