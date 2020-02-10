@@ -40,12 +40,12 @@ handle_frimware_frm () {
 }
 
 format_user_partition () {
+    cp -r /root /tmp/
+    umount /dev/mtdblock4
     mkfs.vfat /dev/mtdblock4
-    mount /dev/mtdblock4 /mnt
-    cp -r /root/.ssh /mnt
-    cp -r /root/.gnuradio /mnt
+    mount /dev/mtdblock4 /root
+    cp -r /tmp/root/* /root/
     sync
-    umount /mnt
 }
 
 if [[ -f ${FRM_FILE} ]] && [[ ${FRM_FILE: -4} == ".frm" ]] && [[ -s ${FRM_FILE} ]]

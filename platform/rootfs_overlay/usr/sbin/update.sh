@@ -167,7 +167,14 @@ handle_boot_frm () {
 	rm -f ${FILE} /opt/boot_and_env_and_mtdinfo.bin /opt/mtd-info.txt /opt/boot_and_env.bin /opt/u-boot-env.bin /opt/boot.bin /opt/mtd
 }
 
-
+format_user_partition () {
+    cp -r /root /tmp/
+    umount /dev/mtdblock4
+    mkfs.vfat /dev/mtdblock4
+    mount /dev/mtdblock4 /root
+    cp -r /tmp/root/* /root/
+    sync
+}
 
 handle_frimware_frm () {
 	FILE="$1"
@@ -189,6 +196,7 @@ handle_frimware_frm () {
 
 	rm -f ${FILE} /opt/firmware.frm
 	sync
+    format_user_partition
 }
 
 while [ 1 ]
