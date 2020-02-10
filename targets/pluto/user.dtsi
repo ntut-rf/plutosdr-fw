@@ -5,3 +5,10 @@
         dma-names = "tx_channel", "rx_channel";
     };
 };
+
+&primary_flash {
+		partition@qspi-linux {
+			label = "qspi-linux";
+			reg = <0x200000 0x1800000>; /* 24M */
+		};
+	};
