@@ -11,4 +11,8 @@
 			label = "qspi-linux";
 			reg = <0x200000 0x1800000>; /* 24M */
 		};
+        partition@qspi-user {
+			label = "qspi-user";
+			reg = <0x1a00000 0x600000>; /* 6M */
+		};
 	};
