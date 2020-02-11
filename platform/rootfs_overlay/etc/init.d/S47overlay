@@ -2,3 +2,8 @@
 mount /dev/mtdblock4 /mnt
 mkdir -p /mnt/.work /mnt/upper /overlay
 mount -t overlay overlay -olowerdir=/,upperdir=/mnt/upper,workdir=/mnt/.work /overlay
+mount --bind /dev /overlay/dev
+mount --bind /proc /overlay/proc
+mount --bind /tmp /overlay/tmp
+mount --bind /run /overlay/run
+mount --bind /sys /overlay/sys
