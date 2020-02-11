@@ -1,0 +1,4 @@
+#!/bin/sh
+mount /dev/mtdblock4 /mnt
+mkdir -p /mnt/.work /mnt/upper /overlay
+mount -t overlay overlay -olowerdir=/,upperdir=/mnt/upper,workdir=/mnt/.work /overlay
