@@ -1,1 +1,1 @@
-#exec chroot /overlay
+exec chroot /overlay/merged/ sh -c "cd ~ && exec sh"
