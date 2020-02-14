@@ -3,8 +3,8 @@
 case "$1" in
 	start)
 		mount /dev/mtdblock4 /mnt
-        mkdir -p /mnt/.work /mnt/upper /overlay
-        mount -t overlay overlay -olowerdir=/,upperdir=/mnt/upper,workdir=/mnt/.work /overlay
+        mkdir -p /mnt/work /mnt/upper /overlay
+        mount -t overlay overlay -olowerdir=/,upperdir=/mnt/upper,workdir=/mnt/work /overlay
         mount --bind /dev /overlay/dev
         mount --bind /proc /overlay/proc
         mount --bind /dev/pts /overlay/dev/pts
