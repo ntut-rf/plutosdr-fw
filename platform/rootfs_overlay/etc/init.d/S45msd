@@ -5,7 +5,7 @@ source /etc/device_config
 
 CONF=/opt/config.txt
 file=/sys/kernel/config/usb_gadget/composite_gadget/functions/mass_storage.0/lun.0/file
-img=/opt/vfat.img
+img=/tmp/vfat.img
 
 patch_html_page() {
 	LINUX=`uname -a | tr / - | tr '\n' ';' ; echo -n $(nproc) "core(s)"`
@@ -29,6 +29,8 @@ case "$1" in
 	start)
 		echo -n "Starting MSD Daemon: "
 		patch_html_page "/www/index.html /www/img/index_*.html" /www/img/version.js
+        dd if=/dev/zero of=$img bs=1M seek=30 count=0
+        mkfs.vfat $img
 		losetup /dev/loop7 $img -o 512
 		mount /dev/loop7 /mnt
 
