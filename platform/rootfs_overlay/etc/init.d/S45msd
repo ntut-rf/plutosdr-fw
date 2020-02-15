@@ -30,7 +30,7 @@ case "$1" in
 		echo -n "Starting MSD Daemon: "
 		patch_html_page "/www/index.html /www/img/index_*.html" /www/img/version.js
         dd if=/dev/zero of=$img bs=1M seek=30 count=0
-        mkfs.vfat $img
+        mkfs.vfat -n PlutoSDR $img
 		losetup /dev/loop7 $img -o 512
 		mount /dev/loop7 /mnt
 
