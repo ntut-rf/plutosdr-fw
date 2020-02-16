@@ -5,7 +5,7 @@ source /etc/device_config
 file=/sys/kernel/config/usb_gadget/composite_gadget/functions/mass_storage.0/lun.0/file
 bootimage=/mnt/boot.frm
 conf=/mnt/config.txt
-img=/opt/vfat.img
+img=/tmp/vfat.img
 
 ini_parser() {
  FILE=$1
