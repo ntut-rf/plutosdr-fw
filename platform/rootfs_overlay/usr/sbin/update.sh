@@ -207,8 +207,7 @@ do
     if [ ${#lun} -eq 0 ]
     then
 	do_reset=0
-	losetup /dev/loop7 $img -o 512
-	mount /dev/loop7 /mnt
+	mount $img /mnt
 
 	if [[ -s /mnt/$TARGET-fw-*.zip ]]
 	then

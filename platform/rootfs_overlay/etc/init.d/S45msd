@@ -31,8 +31,7 @@ case "$1" in
 		patch_html_page "/www/index.html /www/img/index_*.html" /www/img/version.js
         dd if=/dev/zero of=$img bs=1M seek=30 count=0
         mkfs.vfat -n PlutoSDR $img
-		losetup /dev/loop7 $img -o 512
-		mount /dev/loop7 /mnt
+		mount $img /mnt
 
 		if [ "$TARGET" == "m2k" ]; then
 			cp /opt/${CALIBFILENAME} /mnt
