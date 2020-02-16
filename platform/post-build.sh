@@ -17,19 +17,10 @@ sed -i '/hostname/a\
 sed -i -e '/::sysinit:\/bin\/hostname -F \/etc\/hostname/d' ${TARGET_DIR}/etc/inittab
 
 BOARD_DIR="$(dirname $0)"
-GENIMAGE_TMP="${BUILD_DIR}/genimage.tmp"
 
 MSD_DIR="${BOARD_DIR}/msd"
 
 cp ${O}/../LICENSE.html ${MSD_DIR}
-
-rm -rf "${GENIMAGE_TMP}"
-genimage                           \
-	--rootpath "${TARGET_DIR}"     \
-	--tmppath "${GENIMAGE_TMP}"    \
-	--inputpath "${MSD_DIR}"  \
-	--outputpath "${TARGET_DIR}/opt/" \
-	--config "${BOARD_DIR}/genimage-msd.cfg"
 
 rm -f ${TARGET_DIR}/opt/boot.vfat
 rm -f ${TARGET_DIR}/etc/init.d/S99iiod
