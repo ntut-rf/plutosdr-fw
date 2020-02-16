@@ -4,9 +4,9 @@
 /bin/mount -t devtmpfs devtmpfs /dev
 
 /bin/mkdir -p /overlay /overlay/mnt /overlay/merged
-if ! /bin/mount /dev/mtdblock4 /overlay/mnt; then
-    /sbin/mke2fs /dev/mtdblock4
-    /bin/mount /dev/mtdblock4 /overlay/mnt
+if ! /bin/mount -t jffs2 /dev/mtdblock4 /overlay/mnt; then
+    flash_erase -j /dev/mtd4
+    /bin/mount -t jffs2 /dev/mtdblock4 /overlay/mnt
 fi
 
 exec 0</dev/console
