@@ -88,19 +88,19 @@ process_ini() {
 	fw_printenv qspiboot
 	if [ $? -eq 0 ]; then
 		flash_indication_on
-		echo "hostname $hostname" > /opt/fw_set.tmp
-		echo "ipaddr $ipaddr" >> /opt/fw_set.tmp
-		echo "ipaddr_host $ipaddr_host" >> /opt/fw_set.tmp
-		echo "netmask $netmask" >> /opt/fw_set.tmp
-		echo "ssid_wlan $ssid_wlan" >> /opt/fw_set.tmp
-		echo "ipaddr_wlan $ipaddr_wlan" >> /opt/fw_set.tmp
-		echo "pwd_wlan $pwd_wlan" >> /opt/fw_set.tmp
-		echo "xo_correction $xo_correction" >> /opt/fw_set.tmp
-		echo "udc_handle_suspend $udc_handle_suspend" >> /opt/fw_set.tmp
-		echo "ipaddr_eth $ipaddr_eth" >> /opt/fw_set.tmp
-		echo "netmask_eth $netmask_eth" >> /opt/fw_set.tmp
-		fw_setenv -s /opt/fw_set.tmp
-		rm /opt/fw_set.tmp
+		echo "hostname $hostname" > /tmp/fw_set.tmp
+		echo "ipaddr $ipaddr" >> /tmp/fw_set.tmp
+		echo "ipaddr_host $ipaddr_host" >> /tmp/fw_set.tmp
+		echo "netmask $netmask" >> /tmp/fw_set.tmp
+		echo "ssid_wlan $ssid_wlan" >> /tmp/fw_set.tmp
+		echo "ipaddr_wlan $ipaddr_wlan" >> /tmp/fw_set.tmp
+		echo "pwd_wlan $pwd_wlan" >> /tmp/fw_set.tmp
+		echo "xo_correction $xo_correction" >> /tmp/fw_set.tmp
+		echo "udc_handle_suspend $udc_handle_suspend" >> /tmp/fw_set.tmp
+		echo "ipaddr_eth $ipaddr_eth" >> /tmp/fw_set.tmp
+		echo "netmask_eth $netmask_eth" >> /tmp/fw_set.tmp
+		fw_setenv -s /tmp/fw_set.tmp
+		rm /tmp/fw_set.tmp
 		flash_indication_off
 		touch /mnt/SUCCESS_ENV_UPDATE
 	else
@@ -129,34 +129,34 @@ process_ini() {
 		calibrate $calibrate > /mnt/CAL_STATUS
 	fi
 
-	md5sum $FILE > /opt/config.md5
+	md5sum $FILE > /tmp/config.md5
 }
 
 handle_boot_frm () {
 	FILE="$1"
 	rm -f /mnt/BOOT_SUCCESS /mnt/BOOT_FAILED /mnt/FAILED_MTD_PARTITION_ERROR /mnt/FAILED_BOOT_CHSUM_ERROR
-	head -3 /proc/mtd | sed 's/00010000/00001000/g' > /opt/mtd
+	head -3 /proc/mtd | sed 's/00010000/00001000/g' > /tmp/mtd
 
 	md5=`tail -c 33 ${FILE}`
-	head -c -33 ${FILE} > /opt/boot_and_env_and_mtdinfo.bin
+	head -c -33 ${FILE} > /tmp/boot_and_env_and_mtdinfo.bin
 
-	tail -c 1024 /opt/boot_and_env_and_mtdinfo.bin | head -3 > /opt/mtd-info.txt
-	head -c -1024 /opt/boot_and_env_and_mtdinfo.bin > /opt/boot_and_env.bin
+	tail -c 1024 /tmp/boot_and_env_and_mtdinfo.bin | head -3 > /tmp/mtd-info.txt
+	head -c -1024 /tmp/boot_and_env_and_mtdinfo.bin > /tmp/boot_and_env.bin
 
-	tail -c 131072 /opt/boot_and_env.bin > /opt/u-boot-env.bin
-	head -c -131072 /opt/boot_and_env.bin > /opt/boot.bin
+	tail -c 131072 /tmp/boot_and_env.bin > /tmp/u-boot-env.bin
+	head -c -131072 /tmp/boot_and_env.bin > /tmp/boot.bin
 
-	frm=`md5sum /opt/boot_and_env_and_mtdinfo.bin | cut -d ' ' -f 1`
+	frm=`md5sum /tmp/boot_and_env_and_mtdinfo.bin | cut -d ' ' -f 1`
 
 	if [ "$frm" = "$md5" ]
 	then
-		diff -w /opt/mtd /opt/mtd-info.txt
+		diff -w /tmp/mtd /tmp/mtd-info.txt
 		if [ $? -eq 0 ]; then
 			flash_indication_on
-			dd if=/opt/boot.bin of=/dev/mtdblock0 bs=64k && dd if=/opt/u-boot-env.bin of=/dev/mtdblock1 bs=64k && do_reset=1 && touch /mnt/BOOT_SUCCESS || touch /mnt/BOOT_FAILED
+			dd if=/tmp/boot.bin of=/dev/mtdblock0 bs=64k && dd if=/tmp/u-boot-env.bin of=/dev/mtdblock1 bs=64k && do_reset=1 && touch /mnt/BOOT_SUCCESS || touch /mnt/BOOT_FAILED
 			flash_indication_off
 		else
-			cat /opt/mtd /opt/mtd-info.txt > /mnt/FAILED_MTD_PARTITION_ERROR
+			cat /tmp/mtd /tmp/mtd-info.txt > /mnt/FAILED_MTD_PARTITION_ERROR
 			do_reset=0
 		fi
 	else
@@ -164,7 +164,7 @@ handle_boot_frm () {
 		do_reset=0
 	fi
 
-	rm -f ${FILE} /opt/boot_and_env_and_mtdinfo.bin /opt/mtd-info.txt /opt/boot_and_env.bin /opt/u-boot-env.bin /opt/boot.bin /opt/mtd
+	rm -f ${FILE} /tmp/boot_and_env_and_mtdinfo.bin /tmp/mtd-info.txt /tmp/boot_and_env.bin /tmp/u-boot-env.bin /tmp/boot.bin /tmp/mtd
 }
 
 format_user_partition () {
@@ -181,20 +181,20 @@ handle_frimware_frm () {
 	MAGIC="$2"
 	rm -f /mnt/SUCCESS /mnt/FAILED /mnt/FAILED_FIRMWARE_CHSUM_ERROR
 	md5=`tail -c 33 ${FILE}`
-	head -c -33 ${FILE} > /opt/firmware.frm
-	FRM_SIZE=`cat /opt/firmware.frm | wc -c | xargs printf "%X\n"`
-	frm=`md5sum /opt/firmware.frm | cut -d ' ' -f 1`
+	head -c -33 ${FILE} > /tmp/firmware.frm
+	FRM_SIZE=`cat /tmp/firmware.frm | wc -c | xargs printf "%X\n"`
+	frm=`md5sum /tmp/firmware.frm | cut -d ' ' -f 1`
 	if [ "$frm" = "$md5" ]
 	then
 		flash_indication_on
-		grep -q "${MAGIC}"  /opt/firmware.frm && dd if=/opt/firmware.frm of=/dev/mtdblock3 bs=64k && fw_setenv fit_size ${FRM_SIZE} && do_reset=1 && touch /mnt/SUCCESS || touch /mnt/FAILED
+		grep -q "${MAGIC}"  /tmp/firmware.frm && dd if=/tmp/firmware.frm of=/dev/mtdblock3 bs=64k && fw_setenv fit_size ${FRM_SIZE} && do_reset=1 && touch /mnt/SUCCESS || touch /mnt/FAILED
 		flash_indication_off
 	else
 		echo $frm $md5 > /mnt/FAILED_FIRMWARE_CHSUM_ERROR
 		do_reset=0
 	fi
 
-	rm -f ${FILE} /opt/firmware.frm
+	rm -f ${FILE} /tmp/firmware.frm
 	sync
     #format_user_partition
 }
@@ -211,9 +211,9 @@ do
 
 	if [[ -s /mnt/$TARGET-fw-*.zip ]]
 	then
-		mv /mnt/$TARGET-fw-*.zip /opt/
-		unzip -o /opt/$TARGET-fw-*.zip *.frm -d /mnt
-		rm /opt/$TARGET-fw-*.zip
+		mv /mnt/$TARGET-fw-*.zip /tmp/
+		unzip -o /tmp/$TARGET-fw-*.zip *.frm -d /mnt
+		rm /tmp/$TARGET-fw-*.zip
 	fi
 
 	if [[ -s ${FIRMWARE} ]]
@@ -226,11 +226,11 @@ do
 		handle_boot_frm "${bootimage}"
 	fi
 
-	md5sum -c /opt/config.md5 || process_ini $conf
+	md5sum -c /tmp/config.md5 || process_ini $conf
 
 	if [ "$TARGET" == "m2k" ]; then
 		if [[ -s /mnt/${CALIBFILENAME} ]]; then
-			md5sum -c /opt/${CALIBFILENAME}.md5
+			md5sum -c /tmp/${CALIBFILENAME}.md5
 			if [ $? -ne 0 ]; then
 				cp  /mnt/${CALIBFILENAME} /mnt_jffs2/${CALIBFILENAME} && do_reset=1
 			fi
