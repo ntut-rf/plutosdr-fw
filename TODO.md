@@ -13,3 +13,4 @@
 * Use ADI AXI DMA
 
 * Root filesystem overlay
+* JFFS2 overlay
