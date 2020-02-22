@@ -1,0 +1,6 @@
+config BR2_PACKAGE_IIO_FM_RADIO
+    bool "iio-fm-radio"
+    help
+      Simple IIO FM Radio receive example.
+
+      https://github.com/analogdevicesinc/iio-fm-radio
