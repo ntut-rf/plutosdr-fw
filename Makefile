@@ -359,3 +359,8 @@ update-scripts: upstream
 	git read-tree --prefix=build/scripts -u upstream/master:scripts
 	git rm -rf --cached build/scripts
 	mv build/scripts/{53-adi-plutosdr-usb.rules,create_fsbl_project.tcl,get_default_envs.sh,legal_info_html.sh,run.tcl,target_mtd_info.key} scripts/
+
+################################################################################
+
+sync-siso:
+	rsync buikd/pluto/target/usr/bin/ad9361-iiostream root@pluto.local:/bin/
