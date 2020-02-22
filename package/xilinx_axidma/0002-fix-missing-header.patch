@@ -1,0 +1,25 @@
+diff --git a/driver/axi_dma.c b/driver/axi_dma.c
+index ff8f8c5..7cfbc90 100644
+--- a/driver/axi_dma.c
++++ b/driver/axi_dma.c
+@@ -15,6 +15,7 @@
+ #include <linux/slab.h>             // Allocation functions
+ #include <linux/stat.h>             // Module parameter permission values
+ #include <linux/platform_device.h>  // Platform device definitions
++#include <linux/mod_devicetable.h>
+ 
+ // Local dependencies
+ #include "axidma.h"                 // Internal definitions
+diff --git a/driver/axidma_chrdev.c b/driver/axidma_chrdev.c
+index 90a7d9f..e63c0d1 100644
+--- a/driver/axidma_chrdev.c
++++ b/driver/axidma_chrdev.c
+@@ -274,7 +274,7 @@ static int axidma_mmap(struct file *file, struct vm_area_struct *vma)
+     dma_alloc->user_addr = (void *)vma->vm_start;
+ 
+     // Configure the DMA device
+-    of_dma_configure(dev->device, NULL);
++    of_dma_configure(dev->device, NULL, true);
+ 
+     // Allocate the requested region a contiguous and uncached for DMA
+     dma_alloc->kern_addr = dma_alloc_coherent(&dev->pdev->dev, dma_alloc->size,
