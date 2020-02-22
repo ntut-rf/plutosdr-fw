@@ -363,4 +363,4 @@ update-scripts: upstream
 ################################################################################
 
 sync-siso:
-	rsync buikd/pluto/target/usr/bin/ad9361-iiostream root@pluto.local:/bin/
+	rsync $(O)/target/usr/bin/ad9361-iiostream root@pluto.local:/bin/
