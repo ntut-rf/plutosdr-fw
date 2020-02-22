@@ -27,25 +27,16 @@ handle_frimware_frm () {
 	then
 		flash_indication_on
 		grep -q "${MAGIC}" /opt/firmware.frm && dd if=/opt/firmware.frm of=/dev/mtdblock3 bs=64k && fw_setenv fit_size ${FRM_SIZE} && echo "Done" || echo "Failed"
-		flash_indication_off
+		flash_erase -j /dev/mtd4 0 0
+        flash_indication_off
 		rm -f /opt/firmware.frm
 		sync
-        #format_user_partition
 		exit 0
 	else
 		rm -f /opt/firmware.frm
 		echo Failed Checksum error: $frm $md5
 		exit 1
 	fi
-}
-
-format_user_partition () {
-    cp -r /root /tmp/
-    umount /dev/mtdblock4
-    mkfs.vfat /dev/mtdblock4
-    mount /dev/mtdblock4 /root
-    cp -r /tmp/root/. /root
-    sync
 }
 
 if [[ -f ${FRM_FILE} ]] && [[ ${FRM_FILE: -4} == ".frm" ]] && [[ -s ${FRM_FILE} ]]

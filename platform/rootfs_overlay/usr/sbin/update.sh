@@ -167,15 +167,6 @@ handle_boot_frm () {
 	rm -f ${FILE} /tmp/boot_and_env_and_mtdinfo.bin /tmp/mtd-info.txt /tmp/boot_and_env.bin /tmp/u-boot-env.bin /tmp/boot.bin /tmp/mtd
 }
 
-format_user_partition () {
-    cp -r /root /tmp/
-    umount /dev/mtdblock4
-    mkfs.vfat /dev/mtdblock4
-    mount /dev/mtdblock4 /root
-    cp -r /tmp/root/. /root
-    sync
-}
-
 handle_frimware_frm () {
 	FILE="$1"
 	MAGIC="$2"
@@ -188,7 +179,8 @@ handle_frimware_frm () {
 	then
 		flash_indication_on
 		grep -q "${MAGIC}"  /tmp/firmware.frm && dd if=/tmp/firmware.frm of=/dev/mtdblock3 bs=64k && fw_setenv fit_size ${FRM_SIZE} && do_reset=1 && touch /mnt/SUCCESS || touch /mnt/FAILED
-		flash_indication_off
+        flash_erase -j /dev/mtd4 0 0
+        flash_indication_off
 	else
 		echo $frm $md5 > /mnt/FAILED_FIRMWARE_CHSUM_ERROR
 		do_reset=0
@@ -196,7 +188,6 @@ handle_frimware_frm () {
 
 	rm -f ${FILE} /tmp/firmware.frm
 	sync
-    #format_user_partition
 }
 
 while [ 1 ]
