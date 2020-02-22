@@ -1,0 +1,4 @@
+#!/bin/sh
+rmdir /overlay/mnt
+rmdir /overlay/merged
+rmdir /overlay
