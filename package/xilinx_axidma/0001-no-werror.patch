@@ -24,4 +24,3 @@ index 2043faf..75aa86a 100644
  
  # If specified, define the macro to fixup the path for the Xilinx DMA include.
  # In some 4.x Xilinx kernels, the file is still in the old path from 3.x.
- 
