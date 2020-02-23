@@ -16,7 +16,6 @@ sed -i '/hostname/a\
 
 sed -i -e '/::sysinit:\/bin\/hostname -F \/etc\/hostname/d' ${TARGET_DIR}/etc/inittab
 
-rm -f ${TARGET_DIR}/opt/boot.vfat
 rm -f ${TARGET_DIR}/etc/init.d/S99iiod
 
 ln -sf device_reboot ${TARGET_DIR}/sbin/pluto_reboot
