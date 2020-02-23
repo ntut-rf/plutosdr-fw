@@ -1,0 +1,20 @@
+diff --git a/include/uapi/linux/xilinx-v4l2-events.h b/include/uapi/linux/xilinx-v4l2-events.h
+index e31e998eb..ebe52336b 100644
+--- a/include/uapi/linux/xilinx-v4l2-events.h
++++ b/include/uapi/linux/xilinx-v4l2-events.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+ /*
+  * Xilinx V4L2 SCD Driver
+  *
+diff --git a/include/uapi/linux/xlnxsync.h b/include/uapi/linux/xlnxsync.h
+index 989b2f1ef..385307415 100644
+--- a/include/uapi/linux/xlnxsync.h
++++ b/include/uapi/linux/xlnxsync.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+ 
+ #ifndef __XLNXSYNC_H__
+ #define __XLNXSYNC_H__
