@@ -1,3 +1,5 @@
+comment "HDL"
+
 config VIVADO_VERSION
     string "Vivado version"
     default "2019.1"
@@ -15,27 +17,42 @@ config HDL_PROJECT
     default "pluto"
     help
 
+comment "PlutoSDR System"
+
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/libini/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/libad9361-iio/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/poll_sysfs/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/ad936x_ref_cal/Config.in"
-source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/gr-iio/Config.in"
+source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/ad9361-dts/Config.in"
+
+comment "PlutoSDR Apps"
+
+source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/retrogram-plutosdr/Config.in"
+source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/iio-fm-radio/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/libosmoplutosdr/Config.in"
+source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/gr-iio/Config.in"
+source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/charon/Config.in"
+
+comment "Xilinx"
+
+source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/xilinx_axidma/Config.in"
+source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/mb_remoteproc/Config.in"
+
+comment "SDR Utilities"
+
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/libfec/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/libtuntap/Config.in"
-source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/charon/Config.in"
-source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/retrogram-plutosdr/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/csdr/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/rxtools/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/soapy-sdr/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/soapy-remote/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/soapy-plutosdr/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/itpp/Config.in"
-source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/xilinx_axidma/Config.in"
-source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/mb_remoteproc/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/leansdr/Config.in"
+source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/multimon-ng/Config.in"
+
+comment "SISO"
+
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/sse2neon/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/siso/Config.in"
-source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/multimon-ng/Config.in"
-source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/iio-fm-radio/Config.in"
-source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/ad9361-dts/Config.in"
+
