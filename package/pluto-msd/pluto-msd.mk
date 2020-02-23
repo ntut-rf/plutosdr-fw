@@ -20,7 +20,7 @@ define PLUTO_MSD_BUILD_CMDS
 endef
 
 define PLUTO_MSD_INSTALL_TARGET_CMDS
-	cp -r $(@D)/msd $(TARGET_DIR)/www/
+	cp -r $(@D)/msd/. $(TARGET_DIR)/www/
 	$(INSTALL) -D -m 0644 $(@D)/VERSIONS $(TARGET_DIR)/opt/
 endef
 
