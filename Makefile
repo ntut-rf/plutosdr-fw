@@ -70,22 +70,6 @@ include $(BR2_DEFCONFIG)
 
 all: xilinx_axidma-reinstall
 
-################################### Metadata ###################################
-
-all: build/LICENSE.html
-
-build/LICENSE.html: build/VERSIONS
-	mkdir -p $(@D)
-	$(MAKE) legal-info
-	scripts/legal_info_html.sh "$(COMPLETE_NAME)" $<
-
-version = git describe --abbrev=4 --dirty --always --tags
-build/VERSIONS:
-	echo device-fw $$($(version)) > $@
-	echo hdl $$(cd hdl && $(version)) >> $@
-	echo linux $(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION) >> $@
-	echo u-boot-xlnx $(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION) >> $@
-
 ################################### U-Boot #####################################
 
 export UBOOT_DIR = $(strip $(O)/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION))

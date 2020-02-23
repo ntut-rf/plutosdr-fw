@@ -16,20 +16,8 @@ sed -i '/hostname/a\
 
 sed -i -e '/::sysinit:\/bin\/hostname -F \/etc\/hostname/d' ${TARGET_DIR}/etc/inittab
 
-BOARD_DIR="$(dirname $0)"
-
-MSD_DIR="${BOARD_DIR}/msd"
-
-cp ${O}/../LICENSE.html ${MSD_DIR}
-
 rm -f ${TARGET_DIR}/opt/boot.vfat
 rm -f ${TARGET_DIR}/etc/init.d/S99iiod
-
-${INSTALL} -D -m 0644 ${O}/../VERSIONS ${TARGET_DIR}/opt/
-
-mkdir -p ${TARGET_DIR}/www/img
-${INSTALL} -D -m 0644 ${MSD_DIR}/img/* ${TARGET_DIR}/www/img/
-${INSTALL} -D -m 0644 ${MSD_DIR}/index.html ${TARGET_DIR}/www/
 
 ln -sf device_reboot ${TARGET_DIR}/sbin/pluto_reboot
 

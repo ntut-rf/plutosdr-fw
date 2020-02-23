@@ -1,0 +1,4 @@
+config BR2_PACKAGE_PLUTO_MSD
+	bool "pluto-msd"
+	help
+	  pluto-msd

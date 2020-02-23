@@ -45,7 +45,7 @@ LICENSE_FILES=4
 SOURCE_ARCHIVE=5
 SOURCE_SITE=6
 
-FILE=build/LICENSE.html
+FILE=$3
 
 html_header () {
 	echo "<!DOCTYPE html>" > ${FILE}
