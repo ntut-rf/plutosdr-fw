@@ -1,0 +1,18 @@
+diff --git a/driver/axidma_chrdev.c b/driver/axidma_chrdev.c
+index 90a7d9f..1820470 100644
+--- a/driver/axidma_chrdev.c
++++ b/driver/axidma_chrdev.c
+@@ -326,11 +326,11 @@ ret:
+ static bool axidma_access_ok(const void __user *arg, size_t size, bool readonly)
+ {
+     // Note that VERIFY_WRITE implies VERIFY_WRITE, so read-write is handled
+-    if (!readonly && !access_ok(VERIFY_WRITE, arg, size)) {
++    if (!readonly && !access_ok(arg, size)) {
+         axidma_err("Argument address %p, size %zu cannot be written to.\n",
+                    arg, size);
+         return false;
+-    } else if (!access_ok(VERIFY_READ, arg, size)) {
++    } else if (!access_ok(arg, size)) {
+         axidma_err("Argument address %p, size %zu cannot be read from.\n",
+                    arg, size);
+         return false;
