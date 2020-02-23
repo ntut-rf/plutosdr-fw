@@ -1,7 +1,7 @@
 export SHELL:=/bin/bash
 
 export VIVADO_VERSION ?= 2019.1
-VIVADO_SETTINGS ?= /opt/Xilinx/Vivado/$(VIVADO_VERSION)/settings64.sh
+export VIVADO_SETTINGS ?= /opt/Xilinx/Vivado/$(VIVADO_VERSION)/settings64.sh
 
 ifdef TARGET
 $(shell echo $(TARGET) > .target)
@@ -172,20 +172,8 @@ ettus:
 
 ##################################### DTS ######################################
 
-TARGET_DTSI := $(LINUX_DIR)/arch/arm/boot/dts/zynq-pluto-sdr.dtsi
-
-#linux: dts
-
-.PHONY: dts clean-dts
-dts: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
-	source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(CURDIR)/scripts/generate_dts.tcl
-	sed -i '/axi_ad9361/,/}/d' $(O)/dts/pl.dtsi
-	sed -i '/misc_clk_0/,/}/d' $(O)/dts/pl.dtsi
-	sed -i '/axi_ad9361_adc_dma/,/}/d' $(O)/dts/pl.dtsi
-	sed -i '/axi_ad9361_dac_dma/,/}/d' $(O)/dts/pl.dtsi
-	sed -i '/axi_iic_main/,/}/d' $(O)/dts/pl.dtsi
-	grep -qxF '/include/ "pl.dtsi"' $(TARGET_DTSI) || printf '\n/include/ "pl.dtsi"\n' >> $(TARGET_DTSI)
-	grep -qxF '/include/ "user.dtsi"' $(TARGET_DTSI) || printf '\n/include/ "user.dtsi"\n' >> $(TARGET_DTSI)
+.PHONY: clean-dts
+#dts: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
 
 #################################### Images ####################################
 

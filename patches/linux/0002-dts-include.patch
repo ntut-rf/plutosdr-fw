@@ -1,0 +1,11 @@
+diff --git a/arch/arm/boot/dts/zynq-pluto-sdr.dtsi b/arch/arm/boot/dts/zynq-pluto-sdr.dtsi
+index 728eb771d..249f2e03b 100644
+--- a/arch/arm/boot/dts/zynq-pluto-sdr.dtsi
++++ b/arch/arm/boot/dts/zynq-pluto-sdr.dtsi
+@@ -423,3 +423,6 @@
+ 
+ 	};
+ };
++
++/include/ "pl.dtsi"
++/include/ "user.dtsi"

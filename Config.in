@@ -1,3 +1,20 @@
+config VIVADO_VERSION
+    string "Vivado version"
+    default "2019.1"
+    help
+      Vivado version
+
+config VIVADO_SETTINGS
+    string "Path to Vivado settings"
+    default "/opt/Xilinx/Vivado/$(VIVADO_VERSION)/settings64.sh"
+    help
+      Path to Vivado settings
+
+config HDL_PROJECT
+    string "HDL project name"
+    default "pluto"
+    help
+
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/libini/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/libad9361-iio/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/poll_sysfs/Config.in"
@@ -21,3 +38,4 @@ source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/sse2neon/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/siso/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/multimon-ng/Config.in"
 source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/iio-fm-radio/Config.in"
+source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/ad9361-dts/Config.in"
