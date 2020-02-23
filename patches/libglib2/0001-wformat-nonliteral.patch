@@ -1,0 +1,11 @@
+--- a/gio/gunixconnection.c
++++ b/gio/gunixconnection.c
+@@ -12,6 +12,8 @@
+  * Authors: Ryan Lortie <desrt@desrt.ca>
+  */
+ 
++#pragma GCC diagnostic ignored "-Wformat-nonliteral"
++
+ #include "config.h"
+ 
+ #include "gunixconnection.h"
