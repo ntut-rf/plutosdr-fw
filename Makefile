@@ -295,43 +295,6 @@ flash-%:
 	else echo "Invalid device"; \
 	fi
 
-.PHONY: upstream br-upstream update-msd update
-
-upstream:
-	git remote add -f -t master --no-tags upstream https://github.com/analogdevicesinc/plutosdr-fw.git || true
-
-br-upstream:
-	git remote add -f -t pluto --no-tags br-analog https://github.com/analogdevicesinc/buildroot.git || true
-
-MSD_DIR = platform/msd
-update-msd: br-upstream
-	rm -rf $(MSD_DIR)
-	git rm -rf $(MSD_DIR) || true
-	git read-tree --prefix=$(MSD_DIR) -u br-analog/pluto:board/pluto/msd
-
-update: br-upstream update-msd
-	rm -rf build/update
-	git rm -rf build/update || true
-	mkdir -p build/update
-	git read-tree --prefix=build/update -u br-analog/pluto:board/pluto
-	git rm -rf --cached build/update
-	mv build/update/S* platform/rootfs_overlay/etc/init.d/
-	chmod +x platform/rootfs_overlay/etc/init.d/*
-	mv build/update/{busybox-1.25.0.config,genimage-msd.cfg} platform/
-	mv build/update/{device_config,fw_env.config,input-event-daemon.conf,mdev.conf,motd} platform/rootfs_overlay/etc/
-	mv build/update/{device_reboot,udc_handle_suspend.sh,test_ensm_pinctrl.sh,update_frm.sh,update.sh} platform/rootfs_overlay/usr/sbin/
-	chmod +x platform/rootfs_overlay/usr/sbin/*
-	mv build/update/{automounter.sh,ifupdown.sh} platform/rootfs_overlay/usr/lib/mdev/
-	chmod +x platform/rootfs_overlay/usr/lib/mdev/{automounter.sh,ifupdown.sh}
-
-update-scripts: upstream
-	rm -rf build/scripts
-	git rm -rf build/scripts || true
-	mkdir -p build/scripts
-	git read-tree --prefix=build/scripts -u upstream/master:scripts
-	git rm -rf --cached build/scripts
-	mv build/scripts/{53-adi-plutosdr-usb.rules,create_fsbl_project.tcl,get_default_envs.sh,legal_info_html.sh,run.tcl,target_mtd_info.key} scripts/
-
 ################################################################################
 
 sync-siso:
