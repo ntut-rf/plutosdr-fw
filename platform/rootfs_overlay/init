@@ -16,15 +16,6 @@ exec 2>/dev/console
 /bin/mkdir -p /overlay/mnt/work /overlay/mnt/upper
 if /bin/mount -t overlay overlay -olowerdir=/,upperdir=/overlay/mnt/upper,workdir=/overlay/mnt/work /overlay/merged; then
     /bin/mount --bind /dev /overlay/merged/dev
-    # /bin/mount --bind /proc /overlay/merged/proc
-    # /bin/mount --bind /dev/pts /overlay/merged/dev/pts
-    # /bin/mount --bind /dev/shm /overlay/merged/dev/shm
-    # /bin/mount --bind /tmp /overlay/merged/tmp
-    # /bin/mount --bind /run /overlay/merged/run
-    # /bin/mount --bind /sys /overlay/merged/sys
-    # /bin/mount --bind /sys/kernel/debug /overlay/merged/sys/kernel/debug
-    # /bin/mount --bind /sys/kernel/config /overlay/merged/sys/kernel/config
-    # /bin/mount --bind /dev/iio_ffs /overlay/merged/dev/iio_ffs
     exec chroot /overlay/merged /sbin/init "$@"
 else
     exec /sbin/init "$@"
