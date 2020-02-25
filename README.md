@@ -56,8 +56,3 @@ $ make
 * Updated versions of buildroot packages
 
  The resulting firmware boots noticeably slower than the stock firmware.
- 
- ## Additional References
- 
- * https://ez.analog.com/adieducation/university-program/f/q-a/105941/adalm-pluto---firmware-dfu-flashing-fails-at-22-23mb
- * https://stackoverflow.com/questions/8585864/nand-partitioning-in-u-boot
