@@ -17,6 +17,26 @@ config HDL_PROJECT
     default "pluto"
     help
 
+comment "System"
+
+config COMPLETE_NAME
+    string "Device Complete Name"
+    default ""
+    help
+      Device Complete Name
+
+config DEVICE_VID
+    string "Device VID"
+    default "0x0456"
+    help
+      Device VID
+
+config DEVICE_PID
+    string "Device PID"
+    default "0xb673"
+    help
+      Device PID
+
 comment "PlutoSDR System"
 
 source "../package/libini/Config.in"

@@ -18,6 +18,7 @@ SUPPORTED_TARGETS := $(notdir $(wildcard targets/*))
 $(if $(filter $(TARGET),$(SUPPORTED_TARGETS)),,$(error Invalid TARGET variable; valid values are: $(SUPPORTED_TARGETS)))
 
 .PHONY: default
+default: all
 
 # Include target specific settings
 include targets/$(TARGET)/$(TARGET).mk
@@ -56,7 +57,8 @@ export PATH := $(PATH):$(O)/host/bin/
 
 ## Pass targets to buildroot
 %:
-	$(MAKE) BR2_EXTERNAL=$(BR2_EXTERNAL) BR2_DEFCONFIG=$(BR2_DEFCONFIG) O=$(O) -C buildroot $*
+	env - PATH=$(PATH) USER=$(USER) HOME=$(HOME) TERM=$(TERM) \
+    	$(MAKE) TARGET=$(TARGET) BR2_EXTERNAL=$(BR2_EXTERNAL) BR2_DEFCONFIG=$(BR2_DEFCONFIG) O=$(O) -C buildroot $*
 
 all menuconfig: $(O)/.config
 
