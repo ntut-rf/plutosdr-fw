@@ -56,8 +56,7 @@ export PATH := $(PATH):$(O)/host/bin/
 
 ## Pass targets to buildroot
 %:
-	env - PATH=$(PATH) USER=$(USER) HOME=$(HOME) TERM=$(TERM) \
-		$(MAKE) BR2_EXTERNAL=$(BR2_EXTERNAL) BR2_DEFCONFIG=$(BR2_DEFCONFIG) O=$(O) -C buildroot $*
+	$(MAKE) BR2_EXTERNAL=$(BR2_EXTERNAL) BR2_DEFCONFIG=$(BR2_DEFCONFIG) O=$(O) -C buildroot $*
 
 all menuconfig: $(O)/.config
 
@@ -192,39 +191,6 @@ bit: $(O)/images/system_top.bit.bin
 pl: $(O)/images/system_top.bit.bin
 	rsync -avzz -e "ssh -i $(SSH_KEY)" --chown=root:root $< root@$(TARGET).local:/lib/firmware
 	ssh -i $(SSH_KEY) root@$(TARGET).local "echo system_top.bit.bin > /sys/class/fpga_manager/fpga0/firmware"
-
-########################### DFU update firmware file ###########################
-
-.PHONY: dfu
-dfu: $(O)/images/$(TARGET).dfu $(O)/images/uboot-env.dfu $(O)/images/boot.dfu
-
-$(O)/images/rootfs.cpio.xz:
-	$(MAKE) all
-
-$(O)/images/$(TARGET).itb: $(O)/images/rootfs.cpio.xz $(O)/sdk/hw_0/system_top.bit
-	$(UBOOT_DIR)/tools/mkimage -f targets/$(TARGET)/$(TARGET).its $@
-
-$(O)/images/$(TARGET).dfu: $(O)/images/$(TARGET).itb
-	cp $< $<.tmp
-	dfu-suffix -a $<.tmp -v $(DEVICE_VID) -p $(DEVICE_PID)
-	mv $<.tmp $@
-
-$(O)/images/%.dfu: $(O)/images/%.bin
-	cp $< $<.tmp
-	dfu-suffix -a $<.tmp -v $(DEVICE_VID) -p $(DEVICE_PID)
-	mv $<.tmp $@
-
-########################### MSD update firmware file ###########################
-
-.PHONY: frm
-frm: $(O)/images/$(TARGET).frm $(O)/images/boot.frm
-
-$(O)/images/$(TARGET).frm: $(O)/images/$(TARGET).itb
-	md5sum $< | cut -d ' ' -f 1 > $@.md5
-	cat $< $@.md5 > $@
-
-$(O)/images/boot.frm: $(O)/images/boot.bin $(O)/images/uboot-env.bin scripts/target_mtd_info.key
-	cat $^ | tee $@ | md5sum | cut -d ' ' -f1 | tee -a $@
 
 #################################### Clean #####################################
 
