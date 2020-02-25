@@ -55,11 +55,6 @@ export O=$(CURDIR)/build/$(TARGET)
 CROSS_COMPILE ?= arm-buildroot-linux-gnueabihf-
 export PATH := $(PATH):$(O)/host/bin/
 
-## Pass targets to buildroot
-%:
-	env - PATH=$(PATH) USER=$(USER) HOME=$(HOME) TERM=$(TERM) \
-    	$(MAKE) TARGET=$(TARGET) BR2_EXTERNAL=$(BR2_EXTERNAL) BR2_DEFCONFIG=$(BR2_DEFCONFIG) O=$(O) -C buildroot $*
-
 all menuconfig: $(O)/.config
 
 ## Making sure defconfig is already run
@@ -71,9 +66,14 @@ include $(BR2_DEFCONFIG)
 
 all: xilinx_axidma-reinstall
 
-################################### U-Boot #####################################
-
 export UBOOT_DIR = $(strip $(O)/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION))
+
+## Pass targets to buildroot
+%:
+	env - PATH=$(PATH) USER=$(USER) HOME=$(HOME) TERM=$(TERM) \
+    	$(MAKE) TARGET=$(TARGET) UBOOT_DIR=$(UBOOT_DIR) BR2_EXTERNAL=$(BR2_EXTERNAL) BR2_DEFCONFIG=$(BR2_DEFCONFIG) O=$(O) -C buildroot $*
+
+################################### U-Boot #####################################
 
 $(O)/images/u-boot.elf:
 	$(MAKE) uboot-reconfigure

@@ -4,7 +4,6 @@
 set -e
 
 #$(O)/images/$(TARGET).itb:
-UBOOT_DIR=${O}/build/uboot-${BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION}
 ${UBOOT_DIR}/tools/mkimage -f ${BR2_EXTERNAL}/targets/${TARGET}/${TARGET}.its ${O}/images/${TARGET}.itb
 
 ########################### DFU update firmware file ###########################
