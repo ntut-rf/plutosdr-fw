@@ -132,11 +132,14 @@ $(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit: $(O)/hdl/$(HDL_PROJ
 .PHONY: hdf
 hdf: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
 
+export ADI_HDL_DIR=$(CURDIR)/hdl
+export ETTUS_FPGA_DIR=$(CURDIR)/ettus-fpga
+
 $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf:
 	mkdir -p $(O)/hdl
 	cp $(CURDIR)/targets/$(TARGET)/hdl/*.tcl $(O)/hdl/
 	source $(VIVADO_SETTINGS) && \
-		$(MAKE) ADI_HDL_DIR=$(CURDIR)/hdl VPATH=$(HDL_PROJECT_DIR) -I $(HDL_PROJECT_DIR) \
+		$(MAKE) VPATH=$(HDL_PROJECT_DIR) -I $(HDL_PROJECT_DIR) \
 		-C $(O)/hdl -f $(CURDIR)/targets/$(TARGET)/hdl/Makefile
 
 .PHONY: $(wildcard ip/*)
@@ -144,7 +147,7 @@ $(wildcard ip/*):
 	mkdir -p $(CURDIR)/build/$@
 	cp $@/* $(CURDIR)/build/$@
 	source $(VIVADO_SETTINGS) && \
-		$(MAKE) ADI_HDL_DIR=$(CURDIR)/hdl VPATH="$(CURDIR)/$@ $(CURDIR)/hdl" -I $(CURDIR)/hdl \
+		$(MAKE) VPATH="$(CURDIR)/$@ $(ADI_HDL_DIR) $(ETTUS_FPGA_DIR)" -I $(CURDIR)/hdl \
 		-C $(CURDIR)/build/$@ -f $(CURDIR)/$@/Makefile
 
 export
