@@ -3,6 +3,8 @@ LIBRARY_NAME := e31x_core
 
 LIBRARY_SRC += $(ETTUS_FPGA_DIR)/usrp3/top/e31x/e31x_core.v
 LIBRARY_SRC += $(ETTUS_FPGA_DIR)/usrp3/top/e31x/e31x_rfnoc_image_core.v
+LIBRARY_SRC += $(ETTUS_FPGA_DIR)/usrp3/top/e31x/ip/fifo_4k_2clk/fifo_4k_2clk.xci
+LIBRARY_SRC += $(ETTUS_FPGA_DIR)/usrp3/top/e31x/ip/fifo_short_2clk/fifo_short_2clk.xci
 LIBRARY_SRC += $(ETTUS_FPGA_DIR)/usrp3/lib/axi/axis_data_swap.v
 LIBRARY_SRC += $(ETTUS_FPGA_DIR)/usrp3/lib/control/axil_regport_master.v
 LIBRARY_SRC += $(ETTUS_FPGA_DIR)/usrp3/lib/control/axi_setting_reg.v
