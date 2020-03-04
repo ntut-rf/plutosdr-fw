@@ -18,7 +18,23 @@ set_property verilog_define {GIT_HASH=32'h0c75f3d0 RFNOC_EDGE_TBL_FILE=/home/en/
 report_ip_status
 upgrade_ip [get_ips *]
 
-adi_ip_properties_lite $library_name
+adi_ip_properties $library_name
+
+ipx::infer_bus_interface {\
+    s_dma_tready \
+    s_dma_tvalid \
+    s_dma_tdata \
+    s_dma_tlast \
+    s_dma_tuser} \
+  xilinx.com:interface:axis_rtl:1.0 [ipx::current_core]
+
+ipx::infer_bus_interface {\
+    m_dma_tready \
+    m_dma_tvalid \
+    m_dma_tdata \
+    m_dma_tlast \
+    m_dma_tdest} \
+  xilinx.com:interface:axis_rtl:1.0 [ipx::current_core]
 
 ipx::save_core [ipx::current_core]
 
