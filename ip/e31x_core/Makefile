@@ -62,6 +62,7 @@ LIBRARY_SRC += $(ETTUS_FPGA_DIR)/usrp3/lib/rfnoc/core/ctrlport_endpoint.v
 LIBRARY_SRC += $(ETTUS_FPGA_DIR)/usrp3/lib/rfnoc/core/rfnoc_core_kernel.v
 LIBRARY_SRC += $(ETTUS_FPGA_DIR)/usrp3/lib/rfnoc/crossbar/axis_ctrl_crossbar_2d_mesh.v
 LIBRARY_SRC += $(ETTUS_FPGA_DIR)/usrp3/lib/rfnoc/crossbar/axis_ctrl_crossbar_nxn.v
+LIBRARY_SRC += $(ETTUS_FPGA_DIR)/usrp3/lib/rfnoc/crossbar/axis_ingress_vc_buff.v
 LIBRARY_SRC += $(ETTUS_FPGA_DIR)/usrp3/lib/rfnoc/crossbar/axis_port_terminator.v
 LIBRARY_SRC += $(ETTUS_FPGA_DIR)/usrp3/lib/rfnoc/crossbar/axis_switch.v
 LIBRARY_SRC += $(ETTUS_FPGA_DIR)/usrp3/lib/rfnoc/crossbar/chdr_xb_ingress_buff.v
