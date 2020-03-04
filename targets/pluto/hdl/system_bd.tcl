@@ -13,6 +13,7 @@ source -notrace $ad_hdl_dir/projects/pluto/system_bd.tcl
 
 ## add_one (stream)
 
+ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP0 1
 ad_ip_instance axi_dma axi_dma_0
 ad_ip_parameter axi_dma_0 CONFIG.c_sg_include_stscntrl_strm 0
 ad_ip_parameter axi_dma_0 CONFIG.c_sg_length_width 23
