@@ -147,7 +147,7 @@ $(wildcard ip/*):
 	mkdir -p $(CURDIR)/build/$@
 	cp $@/* $(CURDIR)/build/$@
 	source $(VIVADO_SETTINGS) && \
-		$(MAKE) VPATH="$(CURDIR)/$@ $(ADI_HDL_DIR) $(ETTUS_FPGA_DIR)" -I $(CURDIR)/hdl \
+		$(MAKE) VPATH="$(CURDIR)/$@ $(ADI_HDL_DIR)" -I $(ADI_HDL_DIR) \
 		-C $(CURDIR)/build/$@ -f $(CURDIR)/$@/Makefile
 
 export
