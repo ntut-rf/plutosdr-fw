@@ -11,7 +11,7 @@ source -notrace $ad_hdl_dir/projects/pluto/system_bd.tcl
 # ad_ip_instance axil_add_one axil_add_one_0
 # ad_cpu_interconnect 0x41000000 axil_add_one_0
 
-## add_one (stream)
+## AXI DMA
 
 ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP0 1
 ad_ip_instance axi_dma axi_dma_0
@@ -36,16 +36,27 @@ ad_connect sys_cpu_resetn axi_hp0_interconnect/S02_ARESETN
 ad_cpu_interrupt ps-0 mb-0 axi_dma_0/mm2s_introut
 ad_cpu_interrupt ps-1 mb-1 axi_dma_0/s2mm_introut
 
-ad_ip_parameter axi_dma_0 CONFIG.c_m_axis_mm2s_tdata_width 8
+ad_ip_parameter axi_dma_0 CONFIG.c_m_axis_mm2s_tdata_width 32
 
-ad_ip_instance axis_add_one axis_add_one_0
-ad_connect sys_cpu_clk axis_add_one_0/ap_clk
-ad_connect sys_cpu_resetn axis_add_one_0/ap_rst_n
-ad_connect axi_dma_0/M_AXIS_MM2S axis_add_one_0/A
-ad_connect axi_dma_0/S_AXIS_S2MM axis_add_one_0/B
+## FFT
 
-ad_ip_instance xlconstant xlconstant_0
-ad_connect xlconstant_0/dout axis_add_one_0/ap_start
+ad_ip_instance xfft xfft_0
+ad_connect axi_dma_0/M_AXIS_MM2S xfft_0/S_AXIS_DATA
+ad_connect axi_dma_0/S_AXIS_S2MM xfft_0/M_AXIS_DATA
+ad_ip_parameter xfft_0 CONFIG.data_format floating_point
+ad_ip_parameter xfft_0 CONFIG.phase_factor_width 24
+ad_connect sys_cpu_clk xfft_0/aclk
+
+## axis_add_one
+
+# ad_ip_instance axis_add_one axis_add_one_0
+# ad_connect sys_cpu_clk axis_add_one_0/ap_clk
+# ad_connect sys_cpu_resetn axis_add_one_0/ap_rst_n
+# ad_connect axi_dma_0/M_AXIS_MM2S axis_add_one_0/A
+# ad_connect axi_dma_0/S_AXIS_S2MM axis_add_one_0/B
+
+# ad_ip_instance xlconstant xlconstant_0
+# ad_connect xlconstant_0/dout axis_add_one_0/ap_start
 
 ## Peripheral data interface
 
