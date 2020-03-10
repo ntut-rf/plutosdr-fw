@@ -138,7 +138,7 @@ hdf: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
 export ADI_HDL_DIR=$(CURDIR)/hdl
 export ETTUS_FPGA_DIR=$(CURDIR)/ettus-fpga
 
-$(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf:
+$(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf: $(CURDIR)/targets/$(TARGET)/hdl/system_bd.tcl
 	mkdir -p $(O)/hdl
 	cp $(CURDIR)/targets/$(TARGET)/hdl/*.tcl $(O)/hdl/
 	source $(VIVADO_SETTINGS) && \
