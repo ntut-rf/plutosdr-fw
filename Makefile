@@ -269,4 +269,4 @@ flash-%:
 ################################################################################
 
 sync-siso:
-	rsync $(O)/target/usr/bin/{siso-source,siso-timing,siso-threads} root@pluto.local:/bin/
+	rsync $(O)/target/usr/bin/{siso-source,siso-timing,siso-threads,siso-stream} root@pluto.local:/bin/
