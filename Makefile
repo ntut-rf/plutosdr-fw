@@ -79,6 +79,9 @@ $(O)/images/u-boot.elf:
 	$(MAKE) uboot-reconfigure
 	mv $(O)/images/u-boot $@
 
+.PHONY: uboot-env.bin
+uboot-env.bin: $(O)/images/uboot-env.bin
+
 $(O)/images/uboot-env.bin: $(O)/images/uboot-env.txt
 	$(UBOOT_DIR)/tools/mkenvimage -s 0x20000 -o $@ $<
 
@@ -269,4 +272,4 @@ flash-%:
 ################################################################################
 
 sync-siso:
-	rsync $(O)/target/usr/bin/{siso-source,siso-timing,siso-threads,siso-stream} root@pluto.local:/bin/
+	rsync $(O)/target/usr/bin/{siso-source,siso-timing,siso-threads,siso-stream-iio} root@pluto.local:/bin/
