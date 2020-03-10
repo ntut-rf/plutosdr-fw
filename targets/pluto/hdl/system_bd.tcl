@@ -49,6 +49,9 @@ ad_ip_parameter xfft_0 CONFIG.output_ordering natural_order
 ad_ip_parameter xfft_0 CONFIG.rounding_modes convergent_rounding
 ad_connect sys_cpu_clk xfft_0/aclk
 
+ad_ip_instance xlconstant xlconstant_0
+ad_connect xlconstant_0/dout xfft_0/s_axis_config_tvalid
+
 ## axis_add_one
 
 # ad_ip_instance axis_add_one axis_add_one_0
