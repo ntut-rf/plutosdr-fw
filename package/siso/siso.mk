@@ -4,6 +4,7 @@ SISO_DEPENDENCIES += gnuradio sse2neon libiio xilinx_axidma
 SISO_INSTALL_TARGET := YES
 
 define SISO_BUILD_CMDS
+	$(MAKE) -C $(@D)/app clean
 	$(MAKE) WORKING_DIR=$(@D) CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" LD="$(TARGET_LD)" -C $(@D)/app
 	$(MAKE) WORKING_DIR=$(@D) CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" LD="$(TARGET_LD)" -C $(@D) top_block.py
 endef
