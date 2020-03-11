@@ -1,6 +1,6 @@
 SISO_SITE_METHOD := local
 SISO_SITE := ~/SISO
-SISO_DEPENDENCIES += gnuradio sse2neon libiio
+SISO_DEPENDENCIES += gnuradio sse2neon libiio xilinx_axidma
 SISO_INSTALL_TARGET := YES
 
 define SISO_BUILD_CMDS
