@@ -38,7 +38,8 @@ ad_ip_parameter xfft_0 CONFIG.implementation_options radix_4_burst_io
 ad_ip_parameter xfft_0 CONFIG.transform_length 2048
 ad_ip_parameter xfft_0 CONFIG.output_ordering natural_order
 ad_ip_parameter xfft_0 CONFIG.rounding_modes convergent_rounding
-#ad_ip_parameter xfft_0 CONFIG.throttle_scheme realtime
+ad_ip_parameter xfft_0 CONFIG.complex_mult_type use_mults_performance
+#ad_ip_parameter xfft_0 CONFIG.butterfly_type use_xtremedsp_slices
 ad_connect sys_cpu_clk xfft_0/aclk
 
 ad_ip_instance xlconstant xlconstant_0
