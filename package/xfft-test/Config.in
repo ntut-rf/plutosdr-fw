@@ -1,0 +1,5 @@
+config BR2_PACKAGE_XFFT_TEST
+	bool "xfft-test"
+	help
+	  XFFT test program.
+	  
