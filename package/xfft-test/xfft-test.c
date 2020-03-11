@@ -56,7 +56,9 @@ int main(int argc, char **argv)
     }
 
     for (int i = 0; i < FFT_SIZE; i++)
-        input[i] = 1. + 1.i;
+        input[i] = 0;
+
+    input[1] = 10000;
         
     struct timespec starttime;
     struct timespec endtime;
