@@ -34,7 +34,7 @@ ad_ip_parameter axi_dma_0 CONFIG.c_m_axis_mm2s_tdata_width 32
 ad_ip_instance xfft xfft_0
 ad_connect axi_dma_0/M_AXIS_MM2S xfft_0/S_AXIS_DATA
 ad_connect axi_dma_0/S_AXIS_S2MM xfft_0/M_AXIS_DATA
-ad_ip_parameter xfft_0 CONFIG.implementation_options radix_2_lite_burst_io
+ad_ip_parameter xfft_0 CONFIG.implementation_options radix_4_burst_io
 ad_ip_parameter xfft_0 CONFIG.transform_length 2048
 ad_ip_parameter xfft_0 CONFIG.output_ordering natural_order
 ad_ip_parameter xfft_0 CONFIG.rounding_modes convergent_rounding
