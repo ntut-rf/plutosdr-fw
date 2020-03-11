@@ -5,15 +5,22 @@
 #include <string.h>             // Memory setting and copying
 #include <errno.h>              // Error codes
 #include <complex.h>
+#include <time.h>
 #include "libaxidma.h"
 
 #define FFT_SIZE 2048
 
 axidma_dev_t dev;
-int output_channel = 0;
-int input_channel = 1;
+int output_channel = 1;
+int input_channel = 0;
 complex short* input;        
 complex short* output;
+
+long diffts(struct timespec t1, struct timespec t2)
+{
+    return 1000000000l * (t2.tv_sec - t1.tv_sec) + 
+        (t2.tv_nsec < t1.tv_nsec ? t1.tv_nsec + t2.tv_nsec : t2.tv_nsec - t1.tv_nsec);
+}
 
 void cleanup()
 {
@@ -49,13 +56,21 @@ int main(int argc, char **argv)
     }
 
     for (int i = 0; i < FFT_SIZE; i++)
-        input[i] = 1. + 0.i;
+        input[i] = 1. + 1.i;
+        
+    struct timespec starttime;
+    struct timespec endtime;
+
+    clock_gettime(CLOCK_MONOTONIC, &starttime);
 
     // Perform the main transaction
     int rc = axidma_twoway_transfer(dev, 
         input_channel, input, FFT_SIZE*sizeof(complex short), NULL, 
         output_channel, output, FFT_SIZE*sizeof(complex short), NULL,
         true);
+
+    clock_gettime(CLOCK_MONOTONIC, &endtime);
+
     if (rc < 0) {
         fprintf(stderr, "DMA read write transaction failed.\n");
         cleanup();
@@ -64,6 +79,8 @@ int main(int argc, char **argv)
 
     for (int i = 0; i < FFT_SIZE; i++)
         printf("%f%+fi\n", crealf(output[i]), cimagf(output[i]));
+
+    fprintf(stderr, "Time elapsed: %d us\n", diffts(starttime, endtime)/1000);
 
     cleanup();
     return 0;
