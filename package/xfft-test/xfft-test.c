@@ -12,13 +12,13 @@
 axidma_dev_t dev;
 int output_channel = 0;
 int input_channel = 1;
-_Complex short* input;        
-_Complex short* output;
+complex short* input;        
+complex short* output;
 
 void cleanup()
 {
-    if (input) axidma_free(dev, input, FFT_SIZE*sizeof(_Complex short));
-    if (output) axidma_free(dev, output, FFT_SIZE*sizeof(_Complex short));
+    if (input) axidma_free(dev, input, FFT_SIZE*sizeof(complex short));
+    if (output) axidma_free(dev, output, FFT_SIZE*sizeof(complex short));
     axidma_destroy(dev);
 }
 
@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     }
 
     // Allocate the input buffer
-    input = axidma_malloc(dev, FFT_SIZE*sizeof(_Complex short));
+    input = axidma_malloc(dev, FFT_SIZE*sizeof(complex short));
     if (input == NULL) {
         fprintf(stderr, "Failed to allocate the input buffer.\n");
         cleanup();
@@ -41,7 +41,7 @@ int main(int argc, char **argv)
     }
 
     // Allocate the output buffer
-    output = axidma_malloc(dev, FFT_SIZE*sizeof(_Complex short));
+    output = axidma_malloc(dev, FFT_SIZE*sizeof(complex short));
     if (output == NULL) {
         fprintf(stderr, "Failed to allocate the output buffer.\n");
         cleanup();
@@ -53,8 +53,8 @@ int main(int argc, char **argv)
 
     // Perform the main transaction
     int rc = axidma_twoway_transfer(dev, 
-        input_channel, input, FFT_SIZE*sizeof(_Complex short), NULL, 
-        output_channel, output, FFT_SIZE*sizeof(_Complex short), NULL,
+        input_channel, input, FFT_SIZE*sizeof(complex short), NULL, 
+        output_channel, output, FFT_SIZE*sizeof(complex short), NULL,
         true);
     if (rc < 0) {
         fprintf(stderr, "DMA read write transaction failed.\n");
