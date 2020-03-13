@@ -79,7 +79,7 @@ $(O)/images/uboot-env.bin: $(O)/images/uboot-env.txt
 
 $(O)/images/uboot-env.txt:
 	mkdir -p $(@D)
-	cd $(@D) && PATH=$(CURDIR)/build/host/bin/:$(PATH) CROSS_COMPILE=$(CROSS_COMPILE) $(CURDIR)/scripts/get_default_envs.sh > $@
+	cd $(@D) && PATH=$(CURDIR)/build/host/bin/:$(PATH) CROSS_COMPILE=$(CROSS_COMPILE) $(CURDIR)/platform/get_default_envs.sh > $@
 	echo attr_name=compatible >> $@
 	echo attr_val=ad9364 >> $@
 	sed -i 's,^\(maxcpus[ ]*=\).*,\1'2',g' $@
@@ -122,7 +122,7 @@ fsbl: $(O)/sdk/fsbl/Release/fsbl.elf
 
 $(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
 	mkdir -p $(O)
-	source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(CURDIR)/scripts/create_fsbl_project.tcl
+	source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(CURDIR)/platform/create_fsbl_project.tcl
 
 .PHONY: hdf
 hdf: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
@@ -249,7 +249,7 @@ flash-%:
 		(umount /dev/$*2 || true) && \
 		dd if=$(O)/images/sdcard.img of=/dev/$* bs=4k status=progress && \
 		sync; \
-		scripts/expand-rootfs.sh /dev/$*; \
+		platform/expand-rootfs.sh /dev/$*; \
 		sync; partprobe; \
 	else echo "Invalid device"; \
 	fi

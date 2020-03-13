@@ -29,4 +29,4 @@ md5sum ${O}/images/${TARGET}.itb | cut -d ' ' -f 1 > ${O}/images/${TARGET}.frm.m
 cat ${O}/images/${TARGET}.itb ${O}/images/${TARGET}.frm.md5 > ${O}/images/${TARGET}.frm
 
 #$(O)/images/boot.frm:
-cat ${O}/images/boot.bin ${O}/images/uboot-env.bin ${BR2_EXTERNAL}/scripts/target_mtd_info.key | tee ${O}/images/boot.frm | md5sum | cut -d ' ' -f1 | tee -a ${O}/images/boot.frm
+cat ${O}/images/boot.bin ${O}/images/uboot-env.bin ${BR2_EXTERNAL}/platform/target_mtd_info.key | tee ${O}/images/boot.frm | md5sum | cut -d ' ' -f1 | tee -a ${O}/images/boot.frm
