@@ -1,4 +1,6 @@
 config BR2_PACKAGE_SISO
-    bool "SISO"
-    help
+	bool "SISO"
+	select BR2_PACKAGE_XILINX_AXIDMA
+	select BR2_PACKAGE_SSE2NEON
+	help
       

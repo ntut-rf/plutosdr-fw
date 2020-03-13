@@ -1,5 +1,8 @@
 config BR2_PACKAGE_RETROGRAM_PLUTOSDR
 	bool "retrogram-plutosdr"
+	select BR2_PACKAGE_LIBAD9361_IIO
+	select BR2_PACKAGE_BOOST
+	select BR2_PACKAGE_NCURSES
 	help
 	  Wideband Spectrum analyzer on your terminal/ssh console with ASCII art.
 	  
