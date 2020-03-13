@@ -8,9 +8,4 @@
 	url = https://github.com/analogdevicesinc/hdl
 	branch = master
 	ignore = all
-[submodule "device-tree-xlnx"]
-	path = device-tree-xlnx
-	url = https://github.com/Xilinx/device-tree-xlnx.git
-	branch = master
-	ignore = all
 
