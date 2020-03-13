@@ -7,6 +7,7 @@
 AD9361_DTS_VERSION = 0.1
 AD9361_DTS_SITE_METHOD = local
 AD9361_DTS_SITE := $(BR2_EXTERNAL)/package/ad9361-dts
+AD9361_DTS_DEPENDENCIES = host-device-tree-xlnx
 
 define AD9361_DTS_BUILD_CMDS
 	HDL_PROJECT=$(HDL_PROJECT) source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(@D)/generate_dts.tcl

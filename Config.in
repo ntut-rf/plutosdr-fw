@@ -55,6 +55,7 @@ source "../package/charon/Config.in"
 
 comment "Xilinx"
 
+source "../package/device-tree-xlnx/Config.in.host"
 source "../package/xilinx_axidma/Config.in"
 source "../package/xfft-test/Config.in"
 #source "../package/mb_remoteproc/Config.in"

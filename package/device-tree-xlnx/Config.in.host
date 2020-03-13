@@ -1,0 +1,6 @@
+config BR2_PACKAGE_HOST_DEVICE_TREE_XLNX
+	bool "host device-tree-xlnx"
+	help
+	  Linux device tree generator for the Xilinx SDK.
+
+	  https://github.com/Xilinx/device-tree-xlnx

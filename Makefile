@@ -26,7 +26,7 @@ include targets/$(TARGET)/$(TARGET).mk
 ################################### Patches ####################################
 
 .PHONY: patch
-patch: patch-br patch-hdl patch-dtg
+patch: patch-br patch-hdl
 
 .PHONY: patch-br
 patch-br:
@@ -37,10 +37,6 @@ patch-br:
 .PHONY: patch-hdl
 patch-hdl:
 	patch -d hdl -p1 --forward < hdl.patch || true
-
-.PHONY: patch-dtg
-patch-dtg:
-	patch -d device-tree-xlnx -p1 --forward < device-tree-xlnx.patch || true
 
 ################################## Buildroot ###################################
 
