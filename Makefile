@@ -30,7 +30,7 @@ patch: patch-br patch-hdl
 
 .PHONY: patch-br
 patch-br:
-	for patch in patches/*.patch; do \
+	for patch in patches/buildroot/*.patch; do \
 		patch -d buildroot -p1 --forward < $$patch || true; \
 	done
 
