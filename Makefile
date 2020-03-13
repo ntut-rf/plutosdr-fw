@@ -26,7 +26,7 @@ include targets/$(TARGET)/$(TARGET).mk
 ################################### Patches ####################################
 
 .PHONY: patch
-patch: patch-br patch-hdl patch-dtg patch-ettus
+patch: patch-br patch-hdl patch-dtg
 
 .PHONY: patch-br
 patch-br:
@@ -41,10 +41,6 @@ patch-hdl:
 .PHONY: patch-dtg
 patch-dtg:
 	patch -d device-tree-xlnx -p1 --forward < device-tree-xlnx.patch || true
-
-.PHONY: patch-ettus
-patch-ettus:
-	patch -d ettus-fpga -p1 --forward < ettus-fpga.patch || true
 
 ################################## Buildroot ###################################
 
@@ -136,7 +132,6 @@ $(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit: $(O)/hdl/$(HDL_PROJ
 hdf: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
 
 export ADI_HDL_DIR=$(CURDIR)/hdl
-export ETTUS_FPGA_DIR=$(CURDIR)/ettus-fpga
 
 $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf: $(CURDIR)/targets/$(TARGET)/hdl/system_bd.tcl
 	mkdir -p $(O)/hdl
@@ -154,12 +149,6 @@ $(wildcard ip/*):
 		-C $(CURDIR)/build/$@ -f $(CURDIR)/$@/Makefile
 
 export
-.PHONY: ettus
-ettus:
-	source $(VIVADO_SETTINGS) && \
-		cd ettus-fpga/usrp3/top/e31x && \
-		source setupenv.sh && \
-		$(MAKE) GUI=1 HLS=1
 
 ##################################### DTS ######################################
 
