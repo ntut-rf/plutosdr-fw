@@ -1,3 +1,9 @@
+################################################################################
+#
+# sse2neon
+#
+################################################################################
+
 SSE2NEON_VERSION := 65cdf9a
 SSE2NEON_SITE := https://github.com/DLTcollab/sse2neon.git
 SSE2NEON_SITE_METHOD := git

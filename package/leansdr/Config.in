@@ -1,7 +1,7 @@
 config BR2_PACKAGE_LEANSDR
 	bool "leansdr"
-    select BR2_PACKAGE_FFTW
+	select BR2_PACKAGE_FFTW
 	select BR2_PACKAGE_FFTW_SINGLE
-    select BR2_PACKAGE_LIBIIO
+	select BR2_PACKAGE_LIBIIO
 	help
 	  Lightweight, portable software-defined radio

@@ -4,7 +4,6 @@
 #
 ################################################################################
 
-
 AD936X_REF_CAL_VERSION = 849ffc6
 AD936X_REF_CAL_SITE = https://github.com/analogdevicesinc/plutosdr_scripts.git
 AD936X_REF_CAL_SITE_METHOD = git

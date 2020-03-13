@@ -4,7 +4,6 @@
 #
 ################################################################################
 
-PLUTO_MSD_VERSION = 0.1
 PLUTO_MSD_SITE = $(BR2_EXTERNAL)/package/pluto-msd
 PLUTO_MSD_SITE_METHOD = local
 PLUTO_MSD_DEPENDENCIES = legal-info

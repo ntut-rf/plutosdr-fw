@@ -13,5 +13,4 @@ RXTOOLS_LICENSE = GPL-2.0
 RXTOOLS_LICENSE_FILES =  COPYING
 RXTOOLS_DEPENDENCIES = soapy-sdr
 
-
 $(eval $(cmake-package))

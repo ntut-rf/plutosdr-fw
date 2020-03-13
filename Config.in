@@ -76,5 +76,5 @@ source "../package/multimon-ng/Config.in"
 comment "SISO"
 
 source "../package/sse2neon/Config.in"
-source "../package/siso/Config.in"
+source "../package/SISO/Config.in"
 
