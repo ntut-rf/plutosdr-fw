@@ -5,7 +5,7 @@
 
 /bin/mkdir -p /overlay /overlay/mnt /overlay/merged
 if ! /bin/mount -t jffs2 /dev/mtdblock4 /overlay/mnt; then
-    flash_erase -j /dev/mtd4
+    flash_erase /dev/mtd4
     /bin/mount -t jffs2 /dev/mtdblock4 /overlay/mnt
 fi
 
