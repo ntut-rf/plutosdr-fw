@@ -71,8 +71,11 @@ $(O)/images/u-boot.elf:
 	$(MAKE) uboot-reconfigure
 	mv $(O)/images/u-boot $@
 
-.PHONY: uboot-env.bin
+.PHONY: uboot-env.bin uboot-env.txt
+
 uboot-env.bin: $(O)/images/uboot-env.bin
+
+uboot-env.txt: $(O)/images/uboot-env.txt
 
 $(O)/images/uboot-env.bin: $(O)/images/uboot-env.txt
 	$(UBOOT_DIR)/tools/mkenvimage -s 0x20000 -o $@ $<
@@ -220,6 +223,8 @@ clean-dts:
 dfu-fw: $(O)/images/$(TARGET).dfu
 	dfu-util -D $< -a firmware.dfu
 
+boot.dfu: $(O)/images/boot.dfu 
+
 dfu-boot: $(O)/images/boot.dfu 
 	dfu-util -D $< -a boot.dfu
 
@@ -257,4 +262,4 @@ flash-%:
 ################################################################################
 
 sync-siso:
-	rsync $(O)/target/usr/bin/{siso-source,siso-timing,siso-threads,siso-stream-iio,xfft-test,fft-test} root@pluto.local:/bin/
+	rsync $(O)/target/usr/bin/{siso-*,xfft-test,fft-test} root@pluto.local:/bin/

@@ -15,7 +15,7 @@ ENV_OBJ_FILE_COPY="copy_${ENV_OBJ_FILE}"
 echoerr() { echo "$@" 1>&2; }
 
 path=$(readlink -f $0)
-env_obj_file_path=$(find ${path%/scripts*} -not -path "*/spl/*" \
+env_obj_file_path=$(find ${path%/platform*} -not -path "*/spl/*" \
 			 -name "${ENV_OBJ_FILE}")
 [ -z "${env_obj_file_path}" ] && \
     { echoerr "File '${ENV_OBJ_FILE}' not found!"; exit 1; }
