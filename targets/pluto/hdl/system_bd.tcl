@@ -45,6 +45,19 @@ ad_connect sys_cpu_clk xfft_0/aclk
 ad_ip_instance xlconstant xlconstant_0
 ad_connect xlconstant_0/dout xfft_0/s_axis_config_tvalid
 
+ad_ip_instance axi_gpreg axi_gpreg_0
+ad_cpu_interconnect 0x41000000 axi_gpreg_0
+ad_ip_parameter axi_gpreg_0 CONFIG.NUM_OF_IO 1
+ad_ip_parameter axi_gpreg_0 CONFIG.NUM_OF_CLK_MONS 0
+ad_ip_parameter axi_gpreg_0 CONFIG.BUF_ENABLE_1 0
+ad_ip_parameter axi_gpreg_0 CONFIG.BUF_ENABLE_2 0
+ad_ip_parameter axi_gpreg_0 CONFIG.BUF_ENABLE_3 0
+ad_ip_parameter axi_gpreg_0 CONFIG.BUF_ENABLE_4 0
+ad_ip_parameter axi_gpreg_0 CONFIG.BUF_ENABLE_5 0
+ad_ip_parameter axi_gpreg_0 CONFIG.BUF_ENABLE_6 0
+ad_ip_parameter axi_gpreg_0 CONFIG.BUF_ENABLE_7 0
+ad_connect axi_gpreg_0/up_gp_out_0 xfft_0/s_axis_config_tdata
+
 ## Peripheral data interface
 
 # ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_GP0 1
