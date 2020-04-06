@@ -262,4 +262,4 @@ flash-%:
 ################################################################################
 
 sync-siso:
-	rsync $(O)/target/usr/bin/{siso-*,xfft-test,fft-test} root@pluto.local:/bin/
+	rsync $(O)/target/usr/bin/{siso-*,xfft-test,fft-test} root@pluto1.local:/bin/

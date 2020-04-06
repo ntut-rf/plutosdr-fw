@@ -58,6 +58,35 @@ ad_ip_parameter axi_gpreg_0 CONFIG.BUF_ENABLE_6 0
 ad_ip_parameter axi_gpreg_0 CONFIG.BUF_ENABLE_7 0
 ad_connect axi_gpreg_0/up_gp_out_0 xfft_0/s_axis_config_tdata
 
+# OFDM symbol acquisition
+ad_ip_instance axis_ofdm_sym_acquisition_top axis_ofdm_sym_acquis_0
+ad_connect sys_cpu_clk axis_ofdm_sym_acquis_0/ap_clk
+ad_connect sys_cpu_resetn axis_ofdm_sym_acquis_0/ap_rst_n
+
+ad_ip_instance axi_dma axi_dma_1
+ad_ip_parameter axi_dma_1 CONFIG.c_sg_include_stscntrl_strm 0
+ad_ip_parameter axi_dma_1 CONFIG.c_sg_length_width 23
+ad_cpu_interconnect 0x43000000 axi_dma_1
+ad_connect sys_cpu_clk axi_dma_1/m_axi_sg_aclk
+ad_connect sys_cpu_clk axi_dma_1/m_axi_mm2s_aclk
+ad_connect sys_cpu_clk axi_dma_1/m_axi_s2mm_aclk
+ad_mem_hp0_interconnect sys_cpu_clk axi_dma_1/M_AXI_SG
+ad_mem_hp0_interconnect sys_cpu_clk axi_dma_1/M_AXI_MM2S
+ad_mem_hp0_interconnect sys_cpu_clk axi_dma_1/M_AXI_S2MM
+ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/S03_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/S04_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/S05_ACLK
+ad_connect sys_cpu_resetn axi_hp0_interconnect/S03_ARESETN
+ad_connect sys_cpu_resetn axi_hp0_interconnect/S04_ARESETN
+ad_connect sys_cpu_resetn axi_hp0_interconnect/S05_ARESETN
+ad_cpu_interrupt ps-2 mb-2 axi_dma_1/mm2s_introut
+ad_cpu_interrupt ps-3 mb-3 axi_dma_1/s2mm_introut
+
+ad_connect axi_dma_1/M_AXIS_MM2S axis_ofdm_sym_acquis_0/in_r
+ad_connect axi_dma_1/S_AXIS_S2MM axis_ofdm_sym_acquis_0/out_r
+
+ad_connect xlconstant_0/dout axis_ofdm_sym_acquis_0/ap_start
+
 ## Peripheral data interface
 
 # ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_GP0 1
