@@ -4,12 +4,6 @@
         dmas = <&axi_dma_0 0 &axi_dma_0 1>;
         dma-names = "tx_channel", "rx_channel";
     };
-
-    axidma_chrdev: axidma_chrdev@1 {
-        compatible = "xlnx,axidma-chrdev";
-        dmas = <&axi_dma_1 2 &axi_dma_1 3>;
-        dma-names = "tx_channel", "rx_channel";
-    };
 };
 
 &primary_flash {
