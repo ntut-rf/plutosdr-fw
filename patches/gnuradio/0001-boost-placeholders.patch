@@ -1,3 +1,47 @@
+diff --git a/docs/usage-manual/(exported from wiki) Message Passing.txt b/docs/usage-manual/(exported from wiki) Message Passing.txt
+index 9abb0084a..dbd2b3c3e 100644
+--- a/docs/usage-manual/(exported from wiki) Message Passing.txt	
++++ b/docs/usage-manual/(exported from wiki) Message Passing.txt	
+@@ -95,7 +95,7 @@ must then bind this port to the message handler. For this, we use
+ Boost's 'bind' function:
+ 
+   set_msg_handler(pmt::pmt_t port_id,
+-    boost::bind(&block_class::message_handler_function, this, _1));
++    boost::bind(&block_class::message_handler_function, this, boost::placeholders::_1));
+ 
+ Or starting in GNU Radio 3.8 using C++11 we can avoid Boost and express the binding as a lambda function (preferred)
+ 
+@@ -111,9 +111,9 @@ it is this function that is used to process the message.
+ The 'port_id' is the same PMT as used when registering the input
+ port. The 'block_class::message_handler_function' is the member
+ function of the class designated to handle messages to this port. The
+-'this' and '_1' are standard ways of using the Boost bind function to
++'this' and 'boost::placeholders::_1' are standard ways of using the Boost bind function to
+ pass the 'this' pointer as the first argument to the class (standard
+-OOP practice) and the _1 is an indicator that the function expects 1
++OOP practice) and the boost::placeholders::_1 is an indicator that the function expects 1
+ additional argument. The prototype for all message handling functions
+ is:
+ 
+@@ -247,15 +247,15 @@ The constructor of this block looks like this:
+  {
+    message_port_register_in(pmt::mp("print"));
+    set_msg_handler(pmt::mp("print"),
+-     boost::bind(&message_debug_impl::print, this, _1));
++     boost::bind(&message_debug_impl::print, this, boost::placeholders::_1));
+  
+    message_port_register_in(pmt::mp("store"));
+    set_msg_handler(pmt::mp("store"),
+-     boost::bind(&message_debug_impl::store, this, _1));
++     boost::bind(&message_debug_impl::store, this, boost::placeholders::_1));
+  
+    message_port_register_in(pmt::mp("print_pdu"));
+    set_msg_handler(pmt::mp("print_pdu"),
+-     boost::bind(&message_debug_impl::print_pdu, this, _1));
++     boost::bind(&message_debug_impl::print_pdu, this, boost::placeholders::_1));
+  }
+ </syntaxhighlight>
+ 
 diff --git a/gnuradio-runtime/lib/block.cc b/gnuradio-runtime/lib/block.cc
 index 96867787b..0f18ef4cb 100644
 --- a/gnuradio-runtime/lib/block.cc
@@ -11,3 +55,748 @@ index 96867787b..0f18ef4cb 100644
  
      configure_default_loggers(d_logger, d_debug_logger, symbol_name());
  }
+diff --git a/gr-analog/lib/sig_source_impl.cc b/gr-analog/lib/sig_source_impl.cc
+index c07c2696b..77b8d74aa 100644
+--- a/gr-analog/lib/sig_source_impl.cc
++++ b/gr-analog/lib/sig_source_impl.cc
+@@ -55,7 +55,7 @@ sig_source_impl<T>::sig_source_impl(double sampling_freq,
+     this->set_phase(phase);
+     this->message_port_register_in(pmt::mp("freq"));
+     this->set_msg_handler(pmt::mp("freq"),
+-                          boost::bind(&sig_source_impl<T>::set_frequency_msg, this, _1));
++                          boost::bind(&sig_source_impl<T>::set_frequency_msg, this, boost::placeholders::_1));
+ }
+ 
+ template <class T>
+diff --git a/gr-blocks/lib/copy_impl.cc b/gr-blocks/lib/copy_impl.cc
+index 3470756c8..07a976d9c 100644
+--- a/gr-blocks/lib/copy_impl.cc
++++ b/gr-blocks/lib/copy_impl.cc
+@@ -32,7 +32,7 @@ copy_impl::copy_impl(size_t itemsize)
+       d_enabled(true)
+ {
+     message_port_register_in(pmt::mp("en"));
+-    set_msg_handler(pmt::mp("en"), boost::bind(&copy_impl::handle_enable, this, _1));
++    set_msg_handler(pmt::mp("en"), boost::bind(&copy_impl::handle_enable, this, boost::placeholders::_1));
+ }
+ 
+ copy_impl::~copy_impl() {}
+diff --git a/gr-blocks/lib/message_debug_impl.cc b/gr-blocks/lib/message_debug_impl.cc
+index a9c7fbbe9..ae32f1605 100644
+--- a/gr-blocks/lib/message_debug_impl.cc
++++ b/gr-blocks/lib/message_debug_impl.cc
+@@ -78,14 +78,14 @@ message_debug_impl::message_debug_impl()
+     : block("message_debug", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0))
+ {
+     message_port_register_in(pmt::mp("print"));
+-    set_msg_handler(pmt::mp("print"), boost::bind(&message_debug_impl::print, this, _1));
++    set_msg_handler(pmt::mp("print"), boost::bind(&message_debug_impl::print, this, boost::placeholders::_1));
+ 
+     message_port_register_in(pmt::mp("store"));
+-    set_msg_handler(pmt::mp("store"), boost::bind(&message_debug_impl::store, this, _1));
++    set_msg_handler(pmt::mp("store"), boost::bind(&message_debug_impl::store, this, boost::placeholders::_1));
+ 
+     message_port_register_in(pmt::mp("print_pdu"));
+     set_msg_handler(pmt::mp("print_pdu"),
+-                    boost::bind(&message_debug_impl::print_pdu, this, _1));
++                    boost::bind(&message_debug_impl::print_pdu, this, boost::placeholders::_1));
+ }
+ 
+ message_debug_impl::~message_debug_impl() {}
+diff --git a/gr-blocks/lib/message_strobe_impl.cc b/gr-blocks/lib/message_strobe_impl.cc
+index 9a601c6cb..1a408cf5d 100644
+--- a/gr-blocks/lib/message_strobe_impl.cc
++++ b/gr-blocks/lib/message_strobe_impl.cc
+@@ -42,7 +42,7 @@ message_strobe_impl::message_strobe_impl(pmt::pmt_t msg, long period_ms)
+ 
+     message_port_register_in(pmt::mp("set_msg"));
+     set_msg_handler(pmt::mp("set_msg"),
+-                    boost::bind(&message_strobe_impl::set_msg, this, _1));
++                    boost::bind(&message_strobe_impl::set_msg, this, boost::placeholders::_1));
+ }
+ 
+ message_strobe_impl::~message_strobe_impl() {}
+diff --git a/gr-blocks/lib/message_strobe_random_impl.cc b/gr-blocks/lib/message_strobe_random_impl.cc
+index 793066c41..81025e376 100644
+--- a/gr-blocks/lib/message_strobe_random_impl.cc
++++ b/gr-blocks/lib/message_strobe_random_impl.cc
+@@ -55,7 +55,7 @@ message_strobe_random_impl::message_strobe_random_impl(
+ 
+     message_port_register_in(pmt::mp("set_msg"));
+     set_msg_handler(pmt::mp("set_msg"),
+-                    boost::bind(&message_strobe_random_impl::set_msg, this, _1));
++                    boost::bind(&message_strobe_random_impl::set_msg, this, boost::placeholders::_1));
+ }
+ 
+ void message_strobe_random_impl::set_mean(float mean_ms)
+diff --git a/gr-blocks/lib/multiply_matrix_impl.cc b/gr-blocks/lib/multiply_matrix_impl.cc
+index b3452a5c1..87564c7d1 100644
+--- a/gr-blocks/lib/multiply_matrix_impl.cc
++++ b/gr-blocks/lib/multiply_matrix_impl.cc
+@@ -225,7 +225,7 @@ multiply_matrix_impl<gr_complex>::multiply_matrix_impl(
+     message_port_register_in(port_name);
+     set_msg_handler(
+         port_name,
+-        boost::bind(&multiply_matrix_impl<gr_complex>::msg_handler_A, this, _1));
++        boost::bind(&multiply_matrix_impl<gr_complex>::msg_handler_A, this, boost::placeholders::_1));
+ }
+ 
+ template <>
+@@ -245,7 +245,7 @@ multiply_matrix_impl<float>::multiply_matrix_impl(
+     pmt::pmt_t port_name = pmt::string_to_symbol("set_A");
+     message_port_register_in(port_name);
+     set_msg_handler(port_name,
+-                    boost::bind(&multiply_matrix_impl<float>::msg_handler_A, this, _1));
++                    boost::bind(&multiply_matrix_impl<float>::msg_handler_A, this, boost::placeholders::_1));
+ }
+ 
+ 
+diff --git a/gr-blocks/lib/mute_impl.cc b/gr-blocks/lib/mute_impl.cc
+index f8873234b..653129b24 100644
+--- a/gr-blocks/lib/mute_impl.cc
++++ b/gr-blocks/lib/mute_impl.cc
+@@ -36,7 +36,7 @@ mute_impl<T>::mute_impl(bool mute)
+ {
+     this->message_port_register_in(pmt::intern("set_mute"));
+     this->set_msg_handler(pmt::intern("set_mute"),
+-                          boost::bind(&mute_impl<T>::set_mute_pmt, this, _1));
++                          boost::bind(&mute_impl<T>::set_mute_pmt, this, boost::placeholders::_1));
+ }
+ 
+ template <class T>
+diff --git a/gr-blocks/lib/nop_impl.cc b/gr-blocks/lib/nop_impl.cc
+index 0ae48446d..65a988761 100644
+--- a/gr-blocks/lib/nop_impl.cc
++++ b/gr-blocks/lib/nop_impl.cc
+@@ -33,7 +33,7 @@ nop_impl::nop_impl(size_t sizeof_stream_item)
+     // Arrange to have count_received_msgs called when messages are received.
+     message_port_register_in(pmt::mp("port"));
+     set_msg_handler(pmt::mp("port"),
+-                    boost::bind(&nop_impl::count_received_msgs, this, _1));
++                    boost::bind(&nop_impl::count_received_msgs, this, boost::placeholders::_1));
+ }
+ 
+ nop_impl::~nop_impl() {}
+diff --git a/gr-blocks/lib/pdu_filter_impl.cc b/gr-blocks/lib/pdu_filter_impl.cc
+index 9924db5e8..e3e0ebcd9 100644
+--- a/gr-blocks/lib/pdu_filter_impl.cc
++++ b/gr-blocks/lib/pdu_filter_impl.cc
+@@ -33,7 +33,7 @@ pdu_filter_impl::pdu_filter_impl(pmt::pmt_t k, pmt::pmt_t v, bool invert)
+     message_port_register_out(pdu::pdu_port_id());
+     message_port_register_in(pdu::pdu_port_id());
+     set_msg_handler(pdu::pdu_port_id(),
+-                    boost::bind(&pdu_filter_impl::handle_msg, this, _1));
++                    boost::bind(&pdu_filter_impl::handle_msg, this, boost::placeholders::_1));
+ }
+ 
+ void pdu_filter_impl::handle_msg(pmt::pmt_t pdu)
+diff --git a/gr-blocks/lib/pdu_remove_impl.cc b/gr-blocks/lib/pdu_remove_impl.cc
+index b68d692b9..81f0c49b9 100644
+--- a/gr-blocks/lib/pdu_remove_impl.cc
++++ b/gr-blocks/lib/pdu_remove_impl.cc
+@@ -31,7 +31,7 @@ pdu_remove_impl::pdu_remove_impl(pmt::pmt_t k)
+     message_port_register_out(pdu::pdu_port_id());
+     message_port_register_in(pdu::pdu_port_id());
+     set_msg_handler(pdu::pdu_port_id(),
+-                    boost::bind(&pdu_remove_impl::handle_msg, this, _1));
++                    boost::bind(&pdu_remove_impl::handle_msg, this, boost::placeholders::_1));
+ }
+ 
+ void pdu_remove_impl::handle_msg(pmt::pmt_t pdu)
+diff --git a/gr-blocks/lib/pdu_set_impl.cc b/gr-blocks/lib/pdu_set_impl.cc
+index 5b25b4604..4e970c4ed 100644
+--- a/gr-blocks/lib/pdu_set_impl.cc
++++ b/gr-blocks/lib/pdu_set_impl.cc
+@@ -31,7 +31,7 @@ pdu_set_impl::pdu_set_impl(pmt::pmt_t k, pmt::pmt_t v)
+ {
+     message_port_register_out(pdu::pdu_port_id());
+     message_port_register_in(pdu::pdu_port_id());
+-    set_msg_handler(pdu::pdu_port_id(), boost::bind(&pdu_set_impl::handle_msg, this, _1));
++    set_msg_handler(pdu::pdu_port_id(), boost::bind(&pdu_set_impl::handle_msg, this, boost::placeholders::_1));
+ }
+ 
+ void pdu_set_impl::handle_msg(pmt::pmt_t pdu)
+diff --git a/gr-blocks/lib/random_pdu_impl.cc b/gr-blocks/lib/random_pdu_impl.cc
+index 9a00386f0..e429ff3b8 100644
+--- a/gr-blocks/lib/random_pdu_impl.cc
++++ b/gr-blocks/lib/random_pdu_impl.cc
+@@ -39,7 +39,7 @@ random_pdu_impl::random_pdu_impl(int min_items,
+     message_port_register_out(pdu::pdu_port_id());
+     message_port_register_in(pmt::mp("generate"));
+     set_msg_handler(pmt::mp("generate"),
+-                    boost::bind(&random_pdu_impl::generate_pdu, this, _1));
++                    boost::bind(&random_pdu_impl::generate_pdu, this, boost::placeholders::_1));
+     if (length_modulo < 1)
+         throw std::runtime_error("length_module must be >= 1");
+     if (max_items < length_modulo)
+diff --git a/gr-blocks/lib/repeat_impl.cc b/gr-blocks/lib/repeat_impl.cc
+index b55a5f6d1..8471a5f81 100644
+--- a/gr-blocks/lib/repeat_impl.cc
++++ b/gr-blocks/lib/repeat_impl.cc
+@@ -33,7 +33,7 @@ repeat_impl::repeat_impl(size_t itemsize, int interp)
+ {
+     message_port_register_in(pmt::mp("interpolation"));
+     set_msg_handler(pmt::mp("interpolation"),
+-                    boost::bind(&repeat_impl::msg_set_interpolation, this, _1));
++                    boost::bind(&repeat_impl::msg_set_interpolation, this, boost::placeholders::_1));
+ }
+ 
+ void repeat_impl::msg_set_interpolation(pmt::pmt_t msg)
+diff --git a/gr-blocks/lib/socket_pdu_impl.cc b/gr-blocks/lib/socket_pdu_impl.cc
+index cd74d6060..25c50d15d 100644
+--- a/gr-blocks/lib/socket_pdu_impl.cc
++++ b/gr-blocks/lib/socket_pdu_impl.cc
+@@ -89,7 +89,7 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
+         start_tcp_accept();
+ 
+         set_msg_handler(pdu::pdu_port_id(),
+-                        boost::bind(&socket_pdu_impl::tcp_server_send, this, _1));
++                        boost::bind(&socket_pdu_impl::tcp_server_send, this, boost::placeholders::_1));
+     } else if (type == "TCP_CLIENT") {
+         boost::system::error_code error = boost::asio::error::host_not_found;
+         d_tcp_socket.reset(new boost::asio::ip::tcp::socket(d_io_service));
+@@ -99,7 +99,7 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
+         d_tcp_socket->set_option(boost::asio::ip::tcp::no_delay(d_tcp_no_delay));
+ 
+         set_msg_handler(pdu::pdu_port_id(),
+-                        boost::bind(&socket_pdu_impl::tcp_client_send, this, _1));
++                        boost::bind(&socket_pdu_impl::tcp_client_send, this, boost::placeholders::_1));
+ 
+         d_tcp_socket->async_read_some(
+             boost::asio::buffer(d_rxbuf),
+@@ -119,7 +119,7 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
+                         boost::asio::placeholders::bytes_transferred));
+ 
+         set_msg_handler(pdu::pdu_port_id(),
+-                        boost::bind(&socket_pdu_impl::udp_send, this, _1));
++                        boost::bind(&socket_pdu_impl::udp_send, this, boost::placeholders::_1));
+     } else if (type == "UDP_CLIENT") {
+         d_udp_socket.reset(
+             new boost::asio::ip::udp::socket(d_io_service, d_udp_endpoint));
+@@ -132,7 +132,7 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
+                         boost::asio::placeholders::bytes_transferred));
+ 
+         set_msg_handler(pdu::pdu_port_id(),
+-                        boost::bind(&socket_pdu_impl::udp_send, this, _1));
++                        boost::bind(&socket_pdu_impl::udp_send, this, boost::placeholders::_1));
+     } else
+         throw std::runtime_error("gr::blocks:socket_pdu: unknown socket type");
+ 
+diff --git a/gr-blocks/lib/tagged_stream_multiply_length_impl.cc b/gr-blocks/lib/tagged_stream_multiply_length_impl.cc
+index e1c840a0d..77e3dc9ea 100644
+--- a/gr-blocks/lib/tagged_stream_multiply_length_impl.cc
++++ b/gr-blocks/lib/tagged_stream_multiply_length_impl.cc
+@@ -39,7 +39,7 @@ tagged_stream_multiply_length_impl::tagged_stream_multiply_length_impl(
+     message_port_register_in(pmt::intern("set_scalar"));
+     set_msg_handler(
+         pmt::intern("set_scalar"),
+-        boost::bind(&tagged_stream_multiply_length_impl::set_scalar_pmt, this, _1));
++        boost::bind(&tagged_stream_multiply_length_impl::set_scalar_pmt, this, boost::placeholders::_1));
+ }
+ 
+ tagged_stream_multiply_length_impl::~tagged_stream_multiply_length_impl() {}
+diff --git a/gr-blocks/lib/tuntap_pdu_impl.cc b/gr-blocks/lib/tuntap_pdu_impl.cc
+index 83e861ff9..79c240281 100644
+--- a/gr-blocks/lib/tuntap_pdu_impl.cc
++++ b/gr-blocks/lib/tuntap_pdu_impl.cc
+@@ -84,7 +84,7 @@ tuntap_pdu_impl::tuntap_pdu_impl(std::string dev, int MTU, bool istunflag)
+ 
+     // set up input message port
+     message_port_register_in(pdu::pdu_port_id());
+-    set_msg_handler(pdu::pdu_port_id(), boost::bind(&tuntap_pdu_impl::send, this, _1));
++    set_msg_handler(pdu::pdu_port_id(), boost::bind(&tuntap_pdu_impl::send, this, boost::placeholders::_1));
+ }
+ 
+ int tuntap_pdu_impl::tun_alloc(char* dev, int flags)
+diff --git a/gr-digital/lib/chunks_to_symbols_impl.cc b/gr-digital/lib/chunks_to_symbols_impl.cc
+index e13e2f14e..591fda53e 100644
+--- a/gr-digital/lib/chunks_to_symbols_impl.cc
++++ b/gr-digital/lib/chunks_to_symbols_impl.cc
+@@ -58,7 +58,7 @@ chunks_to_symbols_impl<IN_T, OUT_T>::chunks_to_symbols_impl(
+     this->set_msg_handler(
+         pmt::mp("set_symbol_table"),
+         boost::bind(
+-            &chunks_to_symbols_impl<IN_T, OUT_T>::handle_set_symbol_table, this, _1));
++            &chunks_to_symbols_impl<IN_T, OUT_T>::handle_set_symbol_table, this, boost::placeholders::_1));
+ }
+ 
+ template <class IN_T, class OUT_T>
+diff --git a/gr-digital/lib/constellation_receiver_cb_impl.cc b/gr-digital/lib/constellation_receiver_cb_impl.cc
+index 5ea92c467..b6e9a7a08 100644
+--- a/gr-digital/lib/constellation_receiver_cb_impl.cc
++++ b/gr-digital/lib/constellation_receiver_cb_impl.cc
+@@ -51,12 +51,12 @@ constellation_receiver_cb_impl::constellation_receiver_cb_impl(
+     message_port_register_in(pmt::mp("set_constellation"));
+     set_msg_handler(
+         pmt::mp("set_constellation"),
+-        boost::bind(&constellation_receiver_cb_impl::handle_set_constellation, this, _1));
++        boost::bind(&constellation_receiver_cb_impl::handle_set_constellation, this, boost::placeholders::_1));
+ 
+     message_port_register_in(pmt::mp("rotate_phase"));
+     set_msg_handler(
+         pmt::mp("rotate_phase"),
+-        boost::bind(&constellation_receiver_cb_impl::handle_rotate_phase, this, _1));
++        boost::bind(&constellation_receiver_cb_impl::handle_rotate_phase, this, boost::placeholders::_1));
+ }
+ 
+ constellation_receiver_cb_impl::~constellation_receiver_cb_impl() {}
+diff --git a/gr-digital/lib/costas_loop_cc_impl.cc b/gr-digital/lib/costas_loop_cc_impl.cc
+index 5f2cba275..de521c3e5 100644
+--- a/gr-digital/lib/costas_loop_cc_impl.cc
++++ b/gr-digital/lib/costas_loop_cc_impl.cc
+@@ -42,7 +42,7 @@ costas_loop_cc_impl::costas_loop_cc_impl(float loop_bw, unsigned int order, bool
+ {
+     message_port_register_in(pmt::mp("noise"));
+     set_msg_handler(pmt::mp("noise"),
+-                    boost::bind(&costas_loop_cc_impl::handle_set_noise, this, _1));
++                    boost::bind(&costas_loop_cc_impl::handle_set_noise, this, boost::placeholders::_1));
+ }
+ 
+ costas_loop_cc_impl::~costas_loop_cc_impl() {}
+diff --git a/gr-digital/lib/crc32_async_bb_impl.cc b/gr-digital/lib/crc32_async_bb_impl.cc
+index 971f69d48..4533009cb 100644
+--- a/gr-digital/lib/crc32_async_bb_impl.cc
++++ b/gr-digital/lib/crc32_async_bb_impl.cc
+@@ -36,9 +36,9 @@ crc32_async_bb_impl::crc32_async_bb_impl(bool check)
+     message_port_register_out(d_out_port);
+ 
+     if (check)
+-        set_msg_handler(d_in_port, boost::bind(&crc32_async_bb_impl::check, this, _1));
++        set_msg_handler(d_in_port, boost::bind(&crc32_async_bb_impl::check, this, boost::placeholders::_1));
+     else
+-        set_msg_handler(d_in_port, boost::bind(&crc32_async_bb_impl::calc, this, _1));
++        set_msg_handler(d_in_port, boost::bind(&crc32_async_bb_impl::calc, this, boost::placeholders::_1));
+ }
+ 
+ crc32_async_bb_impl::~crc32_async_bb_impl() {}
+diff --git a/gr-digital/lib/header_payload_demux_impl.cc b/gr-digital/lib/header_payload_demux_impl.cc
+index 174c2f888..120a638f9 100644
+--- a/gr-digital/lib/header_payload_demux_impl.cc
++++ b/gr-digital/lib/header_payload_demux_impl.cc
+@@ -140,7 +140,7 @@ header_payload_demux_impl::header_payload_demux_impl(
+     message_port_register_in(msg_port_id());
+     set_msg_handler(
+         msg_port_id(),
+-        boost::bind(&header_payload_demux_impl::parse_header_data_msg, this, _1));
++        boost::bind(&header_payload_demux_impl::parse_header_data_msg, this, boost::placeholders::_1));
+     for (size_t i = 0; i < special_tags.size(); i++) {
+         d_special_tags.push_back(pmt::string_to_symbol(special_tags[i]));
+         d_special_tags_last_value.push_back(pmt::PMT_NIL);
+diff --git a/gr-digital/lib/protocol_formatter_async_impl.cc b/gr-digital/lib/protocol_formatter_async_impl.cc
+index 5235c5974..9b1f62a79 100644
+--- a/gr-digital/lib/protocol_formatter_async_impl.cc
++++ b/gr-digital/lib/protocol_formatter_async_impl.cc
+@@ -43,7 +43,7 @@ protocol_formatter_async_impl::protocol_formatter_async_impl(
+     message_port_register_out(d_pld_port);
+ 
+     set_msg_handler(d_in_port,
+-                    boost::bind(&protocol_formatter_async_impl::append, this, _1));
++                    boost::bind(&protocol_formatter_async_impl::append, this, boost::placeholders::_1));
+ }
+ 
+ protocol_formatter_async_impl::~protocol_formatter_async_impl() {}
+diff --git a/gr-fec/lib/async_decoder_impl.cc b/gr-fec/lib/async_decoder_impl.cc
+index 8848964f4..6977eee45 100644
+--- a/gr-fec/lib/async_decoder_impl.cc
++++ b/gr-fec/lib/async_decoder_impl.cc
+@@ -53,10 +53,10 @@ async_decoder_impl::async_decoder_impl(generic_decoder::sptr my_decoder,
+     if (d_packed) {
+         d_pack = new blocks::kernel::pack_k_bits(8);
+         set_msg_handler(d_in_port,
+-                        boost::bind(&async_decoder_impl::decode_packed, this, _1));
++                        boost::bind(&async_decoder_impl::decode_packed, this, boost::placeholders::_1));
+     } else {
+         set_msg_handler(d_in_port,
+-                        boost::bind(&async_decoder_impl::decode_unpacked, this, _1));
++                        boost::bind(&async_decoder_impl::decode_unpacked, this, boost::placeholders::_1));
+     }
+ 
+     // The maximum frame size is set by the initial frame size of the decoder.
+diff --git a/gr-fec/lib/async_encoder_impl.cc b/gr-fec/lib/async_encoder_impl.cc
+index 8cb0992d5..bf2ee692a 100644
+--- a/gr-fec/lib/async_encoder_impl.cc
++++ b/gr-fec/lib/async_encoder_impl.cc
+@@ -52,7 +52,7 @@ async_encoder_impl::async_encoder_impl(generic_encoder::sptr my_encoder,
+ 
+     if (d_packed) {
+         set_msg_handler(d_in_port,
+-                        boost::bind(&async_encoder_impl::encode_packed, this, _1));
++                        boost::bind(&async_encoder_impl::encode_packed, this, boost::placeholders::_1));
+ 
+         d_unpack = new blocks::kernel::unpack_k_bits(8);
+ 
+@@ -62,7 +62,7 @@ async_encoder_impl::async_encoder_impl(generic_encoder::sptr my_encoder,
+ 
+     } else {
+         set_msg_handler(d_in_port,
+-                        boost::bind(&async_encoder_impl::encode_unpacked, this, _1));
++                        boost::bind(&async_encoder_impl::encode_unpacked, this, boost::placeholders::_1));
+     }
+ 
+     if (d_packed || (strncmp(d_encoder->get_input_conversion(), "pack", 4) == 0)) {
+diff --git a/gr-fec/lib/depuncture_bb_impl.cc b/gr-fec/lib/depuncture_bb_impl.cc
+index d28217004..e3dcc4d60 100644
+--- a/gr-fec/lib/depuncture_bb_impl.cc
++++ b/gr-fec/lib/depuncture_bb_impl.cc
+@@ -62,7 +62,7 @@ depuncture_bb_impl::depuncture_bb_impl(int puncsize, int puncpat, int delay, cha
+     set_fixed_rate(true);
+     set_relative_rate((uint64_t)d_puncsize, (uint64_t)(d_puncsize - d_puncholes));
+     set_output_multiple(d_puncsize);
+-    // set_msg_handler(boost::bind(&depuncture_bb_impl::catch_msg, this, _1));
++    // set_msg_handler(boost::bind(&depuncture_bb_impl::catch_msg, this, boost::placeholders::_1));
+ }
+ 
+ depuncture_bb_impl::~depuncture_bb_impl() {}
+diff --git a/gr-fec/lib/puncture_bb_impl.cc b/gr-fec/lib/puncture_bb_impl.cc
+index 54271b66f..e9ced4ba3 100644
+--- a/gr-fec/lib/puncture_bb_impl.cc
++++ b/gr-fec/lib/puncture_bb_impl.cc
+@@ -60,7 +60,7 @@ puncture_bb_impl::puncture_bb_impl(int puncsize, int puncpat, int delay)
+     set_fixed_rate(true);
+     set_relative_rate((uint64_t)(d_puncsize - d_puncholes), (uint64_t)d_puncsize);
+     set_output_multiple(d_puncsize - d_puncholes);
+-    // set_msg_handler(boost::bind(&puncture_bb_impl::catch_msg, this, _1));
++    // set_msg_handler(boost::bind(&puncture_bb_impl::catch_msg, this, boost::placeholders::_1));
+ }
+ 
+ puncture_bb_impl::~puncture_bb_impl() {}
+diff --git a/gr-fec/lib/puncture_ff_impl.cc b/gr-fec/lib/puncture_ff_impl.cc
+index a8f6c69b2..721af6e25 100644
+--- a/gr-fec/lib/puncture_ff_impl.cc
++++ b/gr-fec/lib/puncture_ff_impl.cc
+@@ -60,7 +60,7 @@ puncture_ff_impl::puncture_ff_impl(int puncsize, int puncpat, int delay)
+     set_fixed_rate(true);
+     set_relative_rate((uint64_t)(d_puncsize - d_puncholes), (uint64_t)d_puncsize);
+     set_output_multiple(d_puncsize - d_puncholes);
+-    // set_msg_handler(boost::bind(&puncture_ff_impl::catch_msg, this, _1));
++    // set_msg_handler(boost::bind(&puncture_ff_impl::catch_msg, this, boost::placeholders::_1));
+ }
+ 
+ puncture_ff_impl::~puncture_ff_impl() {}
+diff --git a/gr-filter/lib/freq_xlating_fir_filter_impl.cc b/gr-filter/lib/freq_xlating_fir_filter_impl.cc
+index c005aa794..72fb17d9f 100644
+--- a/gr-filter/lib/freq_xlating_fir_filter_impl.cc
++++ b/gr-filter/lib/freq_xlating_fir_filter_impl.cc
+@@ -61,7 +61,7 @@ freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::freq_xlating_fir_filter_impl(
+         boost::bind(
+             &freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::handle_set_center_freq,
+             this,
+-            _1));
++            boost::placeholders::_1));
+ }
+ 
+ template <class IN_T, class OUT_T, class TAP_T>
+diff --git a/gr-filter/lib/mmse_resampler_cc_impl.cc b/gr-filter/lib/mmse_resampler_cc_impl.cc
+index 2ae7b6d1d..4a2dc83cf 100644
+--- a/gr-filter/lib/mmse_resampler_cc_impl.cc
++++ b/gr-filter/lib/mmse_resampler_cc_impl.cc
+@@ -41,7 +41,7 @@ mmse_resampler_cc_impl::mmse_resampler_cc_impl(float phase_shift, float resamp_r
+     set_inverse_relative_rate(d_mu_inc);
+     message_port_register_in(pmt::intern("msg_in"));
+     set_msg_handler(pmt::intern("msg_in"),
+-                    boost::bind(&mmse_resampler_cc_impl::handle_msg, this, _1));
++                    boost::bind(&mmse_resampler_cc_impl::handle_msg, this, boost::placeholders::_1));
+ }
+ 
+ mmse_resampler_cc_impl::~mmse_resampler_cc_impl() { delete d_resamp; }
+diff --git a/gr-filter/lib/mmse_resampler_ff_impl.cc b/gr-filter/lib/mmse_resampler_ff_impl.cc
+index c451323f8..63a4d5da0 100644
+--- a/gr-filter/lib/mmse_resampler_ff_impl.cc
++++ b/gr-filter/lib/mmse_resampler_ff_impl.cc
+@@ -42,7 +42,7 @@ mmse_resampler_ff_impl::mmse_resampler_ff_impl(float phase_shift, float resamp_r
+ 
+     message_port_register_in(pmt::intern("msg_in"));
+     set_msg_handler(pmt::intern("msg_in"),
+-                    boost::bind(&mmse_resampler_ff_impl::handle_msg, this, _1));
++                    boost::bind(&mmse_resampler_ff_impl::handle_msg, this, boost::placeholders::_1));
+ }
+ 
+ mmse_resampler_ff_impl::~mmse_resampler_ff_impl() { delete d_resamp; }
+diff --git a/gr-qtgui/lib/const_sink_c_impl.cc b/gr-qtgui/lib/const_sink_c_impl.cc
+index 96d6e36d9..739dca409 100644
+--- a/gr-qtgui/lib/const_sink_c_impl.cc
++++ b/gr-qtgui/lib/const_sink_c_impl.cc
+@@ -58,7 +58,7 @@ const_sink_c_impl::const_sink_c_impl(int size,
+     // setup PDU handling input port
+     message_port_register_in(pmt::mp("in"));
+     set_msg_handler(pmt::mp("in"),
+-                    boost::bind(&const_sink_c_impl::handle_pdus, this, _1));
++                    boost::bind(&const_sink_c_impl::handle_pdus, this, boost::placeholders::_1));
+ 
+     for (int i = 0; i < d_nconnections; i++) {
+         d_residbufs_real.push_back(
+diff --git a/gr-qtgui/lib/edit_box_msg_impl.cc b/gr-qtgui/lib/edit_box_msg_impl.cc
+index ce2c740c7..587bb4d22 100644
+--- a/gr-qtgui/lib/edit_box_msg_impl.cc
++++ b/gr-qtgui/lib/edit_box_msg_impl.cc
+@@ -146,7 +146,7 @@ edit_box_msg_impl::edit_box_msg_impl(data_type_t type,
+     message_port_register_out(d_port);
+     message_port_register_in(pmt::mp("val"));
+ 
+-    set_msg_handler(pmt::mp("val"), boost::bind(&edit_box_msg_impl::set_value, this, _1));
++    set_msg_handler(pmt::mp("val"), boost::bind(&edit_box_msg_impl::set_value, this, boost::placeholders::_1));
+ }
+ 
+ edit_box_msg_impl::~edit_box_msg_impl()
+diff --git a/gr-qtgui/lib/freq_sink_c_impl.cc b/gr-qtgui/lib/freq_sink_c_impl.cc
+index 6b6e2bda0..f1425e44a 100644
+--- a/gr-qtgui/lib/freq_sink_c_impl.cc
++++ b/gr-qtgui/lib/freq_sink_c_impl.cc
+@@ -70,17 +70,17 @@ freq_sink_c_impl::freq_sink_c_impl(int fftsize,
+ 
+     // setup bw input port
+     message_port_register_in(d_port_bw);
+-    set_msg_handler(d_port_bw, boost::bind(&freq_sink_c_impl::handle_set_bw, this, _1));
++    set_msg_handler(d_port_bw, boost::bind(&freq_sink_c_impl::handle_set_bw, this, boost::placeholders::_1));
+ 
+     // setup output message port to post frequency when display is
+     // double-clicked
+     message_port_register_out(d_port);
+     message_port_register_in(d_port);
+-    set_msg_handler(d_port, boost::bind(&freq_sink_c_impl::handle_set_freq, this, _1));
++    set_msg_handler(d_port, boost::bind(&freq_sink_c_impl::handle_set_freq, this, boost::placeholders::_1));
+ 
+     // setup PDU handling input port
+     message_port_register_in(pmt::mp("in"));
+-    set_msg_handler(pmt::mp("in"), boost::bind(&freq_sink_c_impl::handle_pdus, this, _1));
++    set_msg_handler(pmt::mp("in"), boost::bind(&freq_sink_c_impl::handle_pdus, this, boost::placeholders::_1));
+ 
+     d_main_gui = NULL;
+ 
+diff --git a/gr-qtgui/lib/freq_sink_f_impl.cc b/gr-qtgui/lib/freq_sink_f_impl.cc
+index 72eae1c7d..9282398d0 100644
+--- a/gr-qtgui/lib/freq_sink_f_impl.cc
++++ b/gr-qtgui/lib/freq_sink_f_impl.cc
+@@ -70,17 +70,17 @@ freq_sink_f_impl::freq_sink_f_impl(int fftsize,
+ 
+     // setup bw input port
+     message_port_register_in(d_port_bw);
+-    set_msg_handler(d_port_bw, boost::bind(&freq_sink_f_impl::handle_set_bw, this, _1));
++    set_msg_handler(d_port_bw, boost::bind(&freq_sink_f_impl::handle_set_bw, this, boost::placeholders::_1));
+ 
+     // setup output message port to post frequency when display is
+     // double-clicked
+     message_port_register_out(d_port);
+     message_port_register_in(d_port);
+-    set_msg_handler(d_port, boost::bind(&freq_sink_f_impl::handle_set_freq, this, _1));
++    set_msg_handler(d_port, boost::bind(&freq_sink_f_impl::handle_set_freq, this, boost::placeholders::_1));
+ 
+     // setup PDU handling input port
+     message_port_register_in(pmt::mp("in"));
+-    set_msg_handler(pmt::mp("in"), boost::bind(&freq_sink_f_impl::handle_pdus, this, _1));
++    set_msg_handler(pmt::mp("in"), boost::bind(&freq_sink_f_impl::handle_pdus, this, boost::placeholders::_1));
+ 
+     d_main_gui = NULL;
+ 
+diff --git a/gr-qtgui/lib/histogram_sink_f_impl.cc b/gr-qtgui/lib/histogram_sink_f_impl.cc
+index 0b34bb1b3..b06a0e6de 100644
+--- a/gr-qtgui/lib/histogram_sink_f_impl.cc
++++ b/gr-qtgui/lib/histogram_sink_f_impl.cc
+@@ -70,7 +70,7 @@ histogram_sink_f_impl::histogram_sink_f_impl(int size,
+     // setup PDU handling input port
+     message_port_register_in(pmt::mp("in"));
+     set_msg_handler(pmt::mp("in"),
+-                    boost::bind(&histogram_sink_f_impl::handle_pdus, this, _1));
++                    boost::bind(&histogram_sink_f_impl::handle_pdus, this, boost::placeholders::_1));
+ 
+     // +1 for the PDU buffer
+     for (int i = 0; i < d_nconnections + 1; i++) {
+diff --git a/gr-qtgui/lib/sink_c_impl.cc b/gr-qtgui/lib/sink_c_impl.cc
+index 42128a7d6..ef7fe5b28 100644
+--- a/gr-qtgui/lib/sink_c_impl.cc
++++ b/gr-qtgui/lib/sink_c_impl.cc
+@@ -84,7 +84,7 @@ sink_c_impl::sink_c_impl(int fftsize,
+     // double-clicked
+     message_port_register_out(d_port);
+     message_port_register_in(d_port);
+-    set_msg_handler(d_port, boost::bind(&sink_c_impl::handle_set_freq, this, _1));
++    set_msg_handler(d_port, boost::bind(&sink_c_impl::handle_set_freq, this, boost::placeholders::_1));
+ 
+     d_main_gui = NULL;
+ 
+diff --git a/gr-qtgui/lib/sink_f_impl.cc b/gr-qtgui/lib/sink_f_impl.cc
+index 8bb4184b4..b86640645 100644
+--- a/gr-qtgui/lib/sink_f_impl.cc
++++ b/gr-qtgui/lib/sink_f_impl.cc
+@@ -83,7 +83,7 @@ sink_f_impl::sink_f_impl(int fftsize,
+     // double-clicked
+     message_port_register_out(d_port);
+     message_port_register_in(d_port);
+-    set_msg_handler(d_port, boost::bind(&sink_f_impl::handle_set_freq, this, _1));
++    set_msg_handler(d_port, boost::bind(&sink_f_impl::handle_set_freq, this, boost::placeholders::_1));
+ 
+     d_main_gui = NULL;
+ 
+diff --git a/gr-qtgui/lib/time_raster_sink_b_impl.cc b/gr-qtgui/lib/time_raster_sink_b_impl.cc
+index 0d401d3f0..a5be30224 100644
+--- a/gr-qtgui/lib/time_raster_sink_b_impl.cc
++++ b/gr-qtgui/lib/time_raster_sink_b_impl.cc
+@@ -72,7 +72,7 @@ time_raster_sink_b_impl::time_raster_sink_b_impl(double samp_rate,
+     // setup PDU handling input port
+     message_port_register_in(pmt::mp("in"));
+     set_msg_handler(pmt::mp("in"),
+-                    boost::bind(&time_raster_sink_b_impl::handle_pdus, this, _1));
++                    boost::bind(&time_raster_sink_b_impl::handle_pdus, this, boost::placeholders::_1));
+ 
+     d_scale = 1.0f;
+ 
+diff --git a/gr-qtgui/lib/time_raster_sink_f_impl.cc b/gr-qtgui/lib/time_raster_sink_f_impl.cc
+index 242dd9910..7b140f0ed 100644
+--- a/gr-qtgui/lib/time_raster_sink_f_impl.cc
++++ b/gr-qtgui/lib/time_raster_sink_f_impl.cc
+@@ -72,7 +72,7 @@ time_raster_sink_f_impl::time_raster_sink_f_impl(double samp_rate,
+     // setup PDU handling input port
+     message_port_register_in(pmt::mp("in"));
+     set_msg_handler(pmt::mp("in"),
+-                    boost::bind(&time_raster_sink_f_impl::handle_pdus, this, _1));
++                    boost::bind(&time_raster_sink_f_impl::handle_pdus, this, boost::placeholders::_1));
+ 
+     d_icols = static_cast<int>(ceil(d_cols));
+     d_tmpflt = (float*)volk_malloc(d_icols * sizeof(float), volk_get_alignment());
+diff --git a/gr-qtgui/lib/time_sink_c_impl.cc b/gr-qtgui/lib/time_sink_c_impl.cc
+index d295741db..114c7a92c 100644
+--- a/gr-qtgui/lib/time_sink_c_impl.cc
++++ b/gr-qtgui/lib/time_sink_c_impl.cc
+@@ -68,7 +68,7 @@ time_sink_c_impl::time_sink_c_impl(int size,
+ 
+     // setup PDU handling input port
+     message_port_register_in(pmt::mp("in"));
+-    set_msg_handler(pmt::mp("in"), boost::bind(&time_sink_c_impl::handle_pdus, this, _1));
++    set_msg_handler(pmt::mp("in"), boost::bind(&time_sink_c_impl::handle_pdus, this, boost::placeholders::_1));
+ 
+     // +2 for the PDU message buffers
+     for (unsigned int n = 0; n < d_nconnections + 2; n++) {
+diff --git a/gr-qtgui/lib/time_sink_f_impl.cc b/gr-qtgui/lib/time_sink_f_impl.cc
+index c5dffdd3e..f3314effa 100644
+--- a/gr-qtgui/lib/time_sink_f_impl.cc
++++ b/gr-qtgui/lib/time_sink_f_impl.cc
+@@ -68,7 +68,7 @@ time_sink_f_impl::time_sink_f_impl(int size,
+ 
+     // setup PDU handling input port
+     message_port_register_in(pmt::mp("in"));
+-    set_msg_handler(pmt::mp("in"), boost::bind(&time_sink_f_impl::handle_pdus, this, _1));
++    set_msg_handler(pmt::mp("in"), boost::bind(&time_sink_f_impl::handle_pdus, this, boost::placeholders::_1));
+ 
+     // +1 for the PDU buffer
+     for (unsigned int n = 0; n < d_nconnections + 1; n++) {
+diff --git a/gr-qtgui/lib/waterfall_sink_c_impl.cc b/gr-qtgui/lib/waterfall_sink_c_impl.cc
+index a459ef76d..ee189ed69 100644
+--- a/gr-qtgui/lib/waterfall_sink_c_impl.cc
++++ b/gr-qtgui/lib/waterfall_sink_c_impl.cc
+@@ -106,19 +106,19 @@ waterfall_sink_c_impl::waterfall_sink_c_impl(int fftsize,
+     // setup bw input port
+     message_port_register_in(d_port_bw);
+     set_msg_handler(d_port_bw,
+-                    boost::bind(&waterfall_sink_c_impl::handle_set_bw, this, _1));
++                    boost::bind(&waterfall_sink_c_impl::handle_set_bw, this, boost::placeholders::_1));
+ 
+     // setup output message port to post frequency when display is
+     // double-clicked
+     message_port_register_out(d_port);
+     message_port_register_in(d_port);
+     set_msg_handler(d_port,
+-                    boost::bind(&waterfall_sink_c_impl::handle_set_freq, this, _1));
++                    boost::bind(&waterfall_sink_c_impl::handle_set_freq, this, boost::placeholders::_1));
+ 
+     // setup PDU handling input port
+     message_port_register_in(pmt::mp("in"));
+     set_msg_handler(pmt::mp("in"),
+-                    boost::bind(&waterfall_sink_c_impl::handle_pdus, this, _1));
++                    boost::bind(&waterfall_sink_c_impl::handle_pdus, this, boost::placeholders::_1));
+ }
+ 
+ waterfall_sink_c_impl::~waterfall_sink_c_impl()
+diff --git a/gr-qtgui/lib/waterfall_sink_f_impl.cc b/gr-qtgui/lib/waterfall_sink_f_impl.cc
+index ad6c4fdb7..f45a98983 100644
+--- a/gr-qtgui/lib/waterfall_sink_f_impl.cc
++++ b/gr-qtgui/lib/waterfall_sink_f_impl.cc
+@@ -104,19 +104,19 @@ waterfall_sink_f_impl::waterfall_sink_f_impl(int fftsize,
+     // setup bw input port
+     message_port_register_in(d_port_bw);
+     set_msg_handler(d_port_bw,
+-                    boost::bind(&waterfall_sink_f_impl::handle_set_bw, this, _1));
++                    boost::bind(&waterfall_sink_f_impl::handle_set_bw, this, boost::placeholders::_1));
+ 
+     // setup output message port to post frequency when display is
+     // double-clicked
+     message_port_register_out(d_port);
+     message_port_register_in(d_port);
+     set_msg_handler(d_port,
+-                    boost::bind(&waterfall_sink_f_impl::handle_set_freq, this, _1));
++                    boost::bind(&waterfall_sink_f_impl::handle_set_freq, this, boost::placeholders::_1));
+ 
+     // setup PDU handling input port
+     message_port_register_in(pmt::mp("in"));
+     set_msg_handler(pmt::mp("in"),
+-                    boost::bind(&waterfall_sink_f_impl::handle_pdus, this, _1));
++                    boost::bind(&waterfall_sink_f_impl::handle_pdus, this, boost::placeholders::_1));
+ }
+ 
+ waterfall_sink_f_impl::~waterfall_sink_f_impl()
+diff --git a/gr-uhd/lib/usrp_block_impl.cc b/gr-uhd/lib/usrp_block_impl.cc
+index 50edc82b5..922a30085 100644
+--- a/gr-uhd/lib/usrp_block_impl.cc
++++ b/gr-uhd/lib/usrp_block_impl.cc
+@@ -125,12 +125,12 @@ usrp_block_impl::usrp_block_impl(const ::uhd::device_addr_t& device_addr,
+     // Set up message ports:
+     message_port_register_in(pmt::mp("command"));
+     set_msg_handler(pmt::mp("command"),
+-                    boost::bind(&usrp_block_impl::msg_handler_command, this, _1));
++                    boost::bind(&usrp_block_impl::msg_handler_command, this, boost::placeholders::_1));
+ 
+ // cuz we lazy:
+ #define REGISTER_CMD_HANDLER(key, _handler) \
+     register_msg_cmd_handler(key,           \
+-                             boost::bind(&usrp_block_impl::_handler, this, _1, _2, _3))
++                             boost::bind(&usrp_block_impl::_handler, this, boost::placeholders::_1, _2, _3))
+     // Register default command handlers:
+     REGISTER_CMD_HANDLER(cmd_freq_key(), _cmd_handler_freq);
+     REGISTER_CMD_HANDLER(cmd_gain_key(), _cmd_handler_gain);
+@@ -249,7 +249,7 @@ bool usrp_block_impl::_check_mboard_sensors_locked()
+                 get_mboard_sensor_names(mboard_index),
+                 sensor_name,
+                 boost::bind(
+-                    &usrp_block_impl::get_mboard_sensor, this, _1, mboard_index))) {
++                    &usrp_block_impl::get_mboard_sensor, this, boost::placeholders::_1, mboard_index))) {
+             GR_LOG_WARN(
+                 d_logger,
+                 boost::format(
+diff --git a/gr-uhd/lib/usrp_source_impl.cc b/gr-uhd/lib/usrp_source_impl.cc
+index 38ec5ecc4..248aee658 100644
+--- a/gr-uhd/lib/usrp_source_impl.cc
++++ b/gr-uhd/lib/usrp_source_impl.cc
+@@ -46,7 +46,7 @@ usrp_source_impl::usrp_source_impl(const ::uhd::device_addr_t& device_addr,
+     _samp_rate = this->get_samp_rate();
+     _samps_per_packet = 1;
+     register_msg_cmd_handler(cmd_tag_key(),
+-                             boost::bind(&usrp_source_impl::_cmd_handler_tag, this, _1));
++                             boost::bind(&usrp_source_impl::_cmd_handler_tag, this, boost::placeholders::_1));
+ }
+ 
+ usrp_source_impl::~usrp_source_impl() {}
+diff --git a/gr-zeromq/lib/pub_msg_sink_impl.cc b/gr-zeromq/lib/pub_msg_sink_impl.cc
+index ca78a8ea8..e54d18755 100644
+--- a/gr-zeromq/lib/pub_msg_sink_impl.cc
++++ b/gr-zeromq/lib/pub_msg_sink_impl.cc
+@@ -50,7 +50,7 @@ pub_msg_sink_impl::pub_msg_sink_impl(char* address, int timeout, bool bind)
+     }
+ 
+     message_port_register_in(pmt::mp("in"));
+-    set_msg_handler(pmt::mp("in"), boost::bind(&pub_msg_sink_impl::handler, this, _1));
++    set_msg_handler(pmt::mp("in"), boost::bind(&pub_msg_sink_impl::handler, this, boost::placeholders::_1));
+ }
+ 
+ pub_msg_sink_impl::~pub_msg_sink_impl()
+diff --git a/gr-zeromq/lib/push_msg_sink_impl.cc b/gr-zeromq/lib/push_msg_sink_impl.cc
+index b9964ce6a..2fefcccf1 100644
+--- a/gr-zeromq/lib/push_msg_sink_impl.cc
++++ b/gr-zeromq/lib/push_msg_sink_impl.cc
+@@ -50,7 +50,7 @@ push_msg_sink_impl::push_msg_sink_impl(char* address, int timeout, bool bind)
+     }
+ 
+     message_port_register_in(pmt::mp("in"));
+-    set_msg_handler(pmt::mp("in"), boost::bind(&push_msg_sink_impl::handler, this, _1));
++    set_msg_handler(pmt::mp("in"), boost::bind(&push_msg_sink_impl::handler, this, boost::placeholders::_1));
+ }
+ 
+ push_msg_sink_impl::~push_msg_sink_impl()
