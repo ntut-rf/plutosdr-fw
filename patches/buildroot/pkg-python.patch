@@ -1,0 +1,20 @@
+diff --git a/package/pkg-python.mk b/package/pkg-python.mk
+index 31b53e281b..7fd7509a62 100644
+--- a/package/pkg-python.mk
++++ b/package/pkg-python.mk
+@@ -20,12 +20,9 @@
+ #
+ ################################################################################
+ 
+-# basename does not evaluate if a file exists, so we must check to ensure
+-# the _sysconfigdata__linux_*.py file exists. The "|| true" is added to return
+-# an empty string if the file does not exist.
+-PKG_PYTHON_SYSCONFIGDATA_PATH = $(PYTHON#_PATH)/_sysconfigdata__linux_*.py
+-PKG_PYTHON_SYSCONFIGDATA_NAME = `{ [ -e $(PKG_PYTHON_SYSCONFIGDATA_PATH) ] && basename $(PKG_PYTHON_SYSCONFIGDATA_PATH) .py; } || true`
+-
++define PKG_PYTHON_SYSCONFIGDATA_NAME
++$(basename $(notdir $(wildcard $(PYTHON3_PATH)/_sysconfigdata__linux_*.py)))
++endef
+ # Target distutils-based packages
+ PKG_PYTHON_DISTUTILS_ENV = \
+ 	PATH=$(BR_PATH) \
