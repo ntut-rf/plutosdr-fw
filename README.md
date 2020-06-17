@@ -56,10 +56,3 @@ $ make
 * Updated versions of buildroot packages
 
  The resulting firmware boots noticeably slower than the stock firmware.
-
- ## Notes
-
- * Fix when building `linux`:
- ```
- sed -i 's/^YYLTYPE yylloc;$/extern YYLTYPE yylloc;/' scripts/dtc/dtc-lexer.l
- ```
