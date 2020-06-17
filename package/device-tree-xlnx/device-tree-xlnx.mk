@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-DEVICE_TREE_XLNX_VERSION = a8b39cf
+DEVICE_TREE_XLNX_VERSION = bc84458
 DEVICE_TREE_XLNX_SITE = https://github.com/Xilinx/device-tree-xlnx.git
 DEVICE_TREE_XLNX_SITE_METHOD := git
 
