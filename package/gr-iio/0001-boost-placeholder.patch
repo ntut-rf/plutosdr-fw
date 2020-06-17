@@ -1,0 +1,13 @@
+diff --git a/lib/attr_sink_impl.cc b/lib/attr_sink_impl.cc
+index 0bc869c..9a368e4 100644
+--- a/lib/attr_sink_impl.cc
++++ b/lib/attr_sink_impl.cc
+@@ -89,7 +89,7 @@ namespace gr {
+       }
+ 
+       message_port_register_in(pmt::mp("attr"));
+-      set_msg_handler(pmt::mp("attr"), boost::bind(&attr_sink_impl::write_attribute, this, _1));
++      set_msg_handler(pmt::mp("attr"), boost::bind(&attr_sink_impl::write_attribute, this, boost::placeholders::_1));
+ 
+     }
+ 
