@@ -1,5 +1,7 @@
 /dts-v1/;
 /include/ "zynq-adrv9364-z7020.dtsi"
+/include/ "pl.dtsi"
+/include/ "user.dtsi"
 
 &usb0 {
         status = "okay";
