@@ -27,6 +27,11 @@ ad_connect sys_cpu_resetn axi_hp0_interconnect/S02_ARESETN
 ad_cpu_interrupt ps-0 mb-0 axi_dma_0/mm2s_introut
 ad_cpu_interrupt ps-1 mb-1 axi_dma_0/s2mm_introut
 
+ad_connect sys_ps7/FCLK_CLK0 axi_hp1_interconnect/S00_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_hp1_interconnect/M00_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_hp2_interconnect/S00_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_hp2_interconnect/M00_ACLK
+
 ## FFT
 
 ad_ip_parameter axi_dma_0 CONFIG.c_m_axis_mm2s_tdata_width 32
