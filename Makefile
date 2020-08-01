@@ -258,8 +258,3 @@ flash-%:
 		sync; partprobe; \
 	else echo "Invalid device"; \
 	fi
-
-################################################################################
-
-sync-siso:
-	rsync $(O)/target/usr/bin/{siso-*,xfft-test,fft-test,gmsk-*} root@pluto.local:/bin/
