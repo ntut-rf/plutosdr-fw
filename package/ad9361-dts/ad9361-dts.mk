@@ -17,6 +17,7 @@ define AD9361_DTS_BUILD_CMDS
 	sed -i '/axi_ad9361_adc_dma/,/}/d' $(O)/dts/pl.dtsi
 	sed -i '/axi_ad9361_dac_dma/,/}/d' $(O)/dts/pl.dtsi
 	sed -i '/axi_iic_main/,/}/d' $(O)/dts/pl.dtsi
+	sed -i '/axi_sysid_0/,/}/d' $(O)/dts/pl.dtsi
 endef
 
 $(eval $(generic-package))
