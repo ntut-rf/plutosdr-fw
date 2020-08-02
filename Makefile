@@ -55,6 +55,7 @@ $(O)/.config:
 
 ## Import BR2_* definitions
 include $(BR2_DEFCONFIG)
+HDL_PROJECT := $(patsubst "%",%,$(HDL_PROJECT))
 
 all: xilinx_axidma-reinstall
 
