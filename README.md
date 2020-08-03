@@ -53,9 +53,9 @@ $ make
  
  ## Frequency correction
  ```console
- # ad936x_ref_cal -e 860000000 /sys/bus/iio/devices/iio\:device0/
+ # ad936x_ref_cal -e 860000000 /sys/bus/iio/devices/iio\:device1/
  ```
  To read the xo correction value,
  ```console
- # cat /sys/bus/iio/devices/iio\:device0/xo_correction
+ # cat /sys/bus/iio/devices/iio\:device1/xo_correction
  ```
