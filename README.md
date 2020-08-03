@@ -50,3 +50,12 @@ $ make
 * Use xz compression to save space
 
  Note that the firmware boots slower than the official firmware.
+ 
+ ## Frequency correction
+ ```console
+ # ad936x_ref_cal -e 860000000 /sys/bus/iio/devices/iio\:device0/
+ ```
+ To read the xo correction value,
+ ```console
+ # cat /sys/bus/iio/devices/iio\:device0/xo_correction
+ ```
