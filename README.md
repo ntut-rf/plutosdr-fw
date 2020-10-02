@@ -71,6 +71,7 @@ $ make
  $ ln -s g++-10 g++
  $ ln -s ginstall install
  $ ln -s gfind find
+ $ ln -s gsed sed
  $ brew tap discoteq/discoteq
  $ brew install flock
  ```
