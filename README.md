@@ -72,6 +72,7 @@ $ make
  $ ln -s ginstall install
  $ ln -s gfind find
  $ ln -s gsed sed
+ $ ln -s gdate date
  $ brew tap discoteq/discoteq
  $ brew install flock
  ```
