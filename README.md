@@ -59,3 +59,20 @@ $ make
  ```console
  # cat /sys/bus/iio/devices/iio\:device1/xo_correction
  ```
+ 
+ ## MacOS
+ ```console
+ $ brew install gcc
+ $ brew install coreutils
+ $ brew install findutils
+ $ export PATH=/usr/local/bin:$PATH
+ $ cd /usr/local/bin
+ $ ln -s gcc-10 gcc
+ $ ln -s g++-10 g++
+ $ ln -s ginstall install
+ $ ln -s gfind find
+ $ ln -s gsed sed
+ $ ln -s gdate date
+ $ brew tap discoteq/discoteq
+ $ brew install flock
+ ```
