@@ -249,11 +249,11 @@ upload:
 	sudo eject /run/media/$$USER/PlutoSDR
 
 .PHONY: flash-%
-flash-%:
+flash-%: $(O)/images/sdcard.img
 	@if lsblk -do name,tran | grep usb | grep $*; then \
 		(umount /dev/$*1 || true) && \
 		(umount /dev/$*2 || true) && \
-		dd if=$(O)/images/sdcard.img of=/dev/$* bs=4k status=progress && \
+		dd if=$< of=/dev/$* bs=4k status=progress && \
 		sync; \
 		platform/expand-rootfs.sh /dev/$*; \
 		sync; partprobe; \
