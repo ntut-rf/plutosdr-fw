@@ -5,3 +5,8 @@
         dma-names = "tx_channel", "rx_channel";
     };
 };
+
+&usb0 {
+    status = "okay";
+    dr_mode = "peripheral";
+};

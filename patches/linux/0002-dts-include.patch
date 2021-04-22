@@ -13,17 +13,13 @@ diff --git a/arch/arm/boot/dts/zynq-adrv9364-z7020-bob.dts b/arch/arm/boot/dts/z
 index 379bdacfa0fb..4648fa465f68 100644
 --- a/arch/arm/boot/dts/zynq-adrv9364-z7020-bob.dts
 +++ b/arch/arm/boot/dts/zynq-adrv9364-z7020-bob.dts
-@@ -11,7 +11,13 @@
+@@ -11,7 +11,9 @@
   */
  /dts-v1/;
  #include "zynq-adrv9364-z7020.dtsi"
 +/include/ "pl.dtsi"
 +/include/ "user.dtsi"
  
-+&usb0 {
-+        status = "okay";
-+        dr_mode = "peripheral";
-+};
  
  &axi_i2c0 {
  	ad7291-bob@2C {
