@@ -1,4 +1,4 @@
-# PlutoSDR Firmware 
+# PlutoSDR / ADRV9364 Firmware 
 Customized firmware for the [PlutoSDR](https://wiki.analog.com/university/tools/pluto "PlutoSDR Wiki Page") and [ADRV9364-Z7020](https://www.analog.com/en/design-center/evaluation-hardware-and-software/evaluation-boards-kits/adrv9364-z7020.html).
 Modified from [stock firmware](https://github.com/analogdevicesinc/plutosdr-fw).
 
