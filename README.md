@@ -68,3 +68,4 @@ $ make
 * Package for hdl
 * Package for Pluto specific stuff
 * Fix for TX buffer clean
+* Network / Mass storage settings
