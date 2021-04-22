@@ -59,3 +59,12 @@ $ make
  ```console
  # cat /sys/bus/iio/devices/iio\:device1/xo_correction
  ```
+
+## To do
+
+* Time sync
+* Separate toolchain
+* Update hdl
+* Package for hdl
+* Package for Pluto specific stuff
+* Fix for TX buffer clean
