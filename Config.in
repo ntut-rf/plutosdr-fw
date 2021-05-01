@@ -79,3 +79,6 @@ comment "SISO"
 source "../package/sse2neon/Config.in"
 source "../package/SISO/Config.in"
 
+comment "HTTP3a"
+
+source "../package/zmq_routing/Config.in"
