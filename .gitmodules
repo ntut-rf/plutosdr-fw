@@ -3,9 +3,3 @@
 	url = https://github.com/buildroot/buildroot.git
 	branch = master
 	ignore = all
-[submodule "hdl"]
-	path = hdl
-	url = https://github.com/analogdevicesinc/hdl
-	branch = master
-	ignore = all
-
