@@ -37,7 +37,7 @@ config DEVICE_PID
     help
       Device PID
 
-comment "PlutoSDR System"
+comment "AD936x System"
 
 source "../package/libini/Config.in"
 source "../package/libad9361-iio/Config.in"
@@ -46,33 +46,17 @@ source "../package/ad936x_ref_cal/Config.in"
 source "../package/ad9361-dts/Config.in"
 source "../package/pluto-overlay/Config.in"
 
-comment "PlutoSDR Apps"
+comment "AD936x Apps"
 
 source "../package/retrogram-plutosdr/Config.in"
 source "../package/iio-fm-radio/Config.in"
-source "../package/libosmoplutosdr/Config.in"
 source "../package/gr-iio/Config.in"
-source "../package/charon/Config.in"
 
 comment "Xilinx"
 
 source "../package/device-tree-xlnx/Config.in.host"
 source "../package/xilinx_axidma/Config.in"
 source "../package/xfft-test/Config.in"
-#source "../package/mb_remoteproc/Config.in"
-
-comment "SDR Utilities"
-
-source "../package/libfec/Config.in"
-source "../package/libtuntap/Config.in"
-#source "../package/csdr/Config.in"
-#source "../package/rxtools/Config.in"
-source "../package/soapy-sdr/Config.in"
-source "../package/soapy-remote/Config.in"
-#source "../package/soapy-plutosdr/Config.in"
-#source "../package/itpp/Config.in"
-#source "../package/leansdr/Config.in"
-source "../package/multimon-ng/Config.in"
 
 comment "SISO"
 
