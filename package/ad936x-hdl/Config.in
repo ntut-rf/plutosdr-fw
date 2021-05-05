@@ -1,0 +1,6 @@
+config BR2_PACKAGE_AD936X_HDL
+	bool "ad936x-hdl"
+	help
+	  HDL for AD936x
+
+      

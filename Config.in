@@ -43,6 +43,7 @@ source "../package/libini/Config.in"
 source "../package/libad9361-iio/Config.in"
 source "../package/poll_sysfs/Config.in"
 source "../package/ad936x_ref_cal/Config.in"
+source "../package/ad936x-hdl/Config.in"
 source "../package/ad9361-dts/Config.in"
 source "../package/pluto-overlay/Config.in"
 
