@@ -6,7 +6,7 @@ index 4b60f33ff3..9508e0aba1 100644
  # shipped with the kernel sources, so we need flex and bison. For
  # reproducibility, we use our owns rather than the host ones.
  LINUX_DEPENDENCIES += host-bison host-flex
-+LINUX_DEPENDENCIES += ad9361-dts
++LINUX_DEPENDENCIES += ad936x-dts
  
  ifeq ($(BR2_LINUX_KERNEL_DTB_IS_SELF_BUILT),)
  define LINUX_BUILD_DTB
