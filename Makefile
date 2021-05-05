@@ -1,8 +1,5 @@
 export SHELL:=/bin/bash
 
-export VIVADO_VERSION ?= 2019.1
-export VIVADO_SETTINGS ?= /opt/Xilinx/Vivado/$(VIVADO_VERSION)/settings64.sh
-
 ifdef TARGET
 $(shell echo $(TARGET) > .target)
 else
