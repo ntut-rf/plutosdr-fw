@@ -118,35 +118,13 @@ busybox-diffconfig: $(BR2_PACKAGE_BUSYBOX_CONFIG)
 
 ###################################### HDL #####################################
 
-.PHONY: hdl
-hdl: $(O)/sdk/hw_0/system_top.bit
-
-.PHONY: fsbl
-fsbl: $(O)/sdk/fsbl/Release/fsbl.elf
-
-$(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
-	mkdir -p $(O)
-	source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(CURDIR)/platform/create_fsbl_project.tcl
-
-.PHONY: hdf
-hdf: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
-
-export ADI_HDL_DIR=$(CURDIR)/hdl
-
-$(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf: $(CURDIR)/targets/$(TARGET)/hdl/system_bd.tcl
-	mkdir -p $(O)/hdl
-	cp $(CURDIR)/targets/$(TARGET)/hdl/*.tcl $(O)/hdl/
-	source $(VIVADO_SETTINGS) && \
-		$(MAKE) VPATH=$(HDL_PROJECT_DIR) -I $(HDL_PROJECT_DIR) \
-		-C $(O)/hdl -f $(CURDIR)/targets/$(TARGET)/hdl/Makefile
-
-.PHONY: $(wildcard ip/*)
-$(wildcard ip/*):
-	mkdir -p $(CURDIR)/build/$@
-	cp $@/* $(CURDIR)/build/$@
-	source $(VIVADO_SETTINGS) && \
-		$(MAKE) VPATH="$(CURDIR)/$@ $(ADI_HDL_DIR)" -I $(ADI_HDL_DIR) \
-		-C $(CURDIR)/build/$@ -f $(CURDIR)/$@/Makefile
+# .PHONY: $(wildcard ip/*)
+# $(wildcard ip/*):
+# 	mkdir -p $(CURDIR)/build/$@
+# 	cp $@/* $(CURDIR)/build/$@
+# 	source $(VIVADO_SETTINGS) && \
+# 		$(MAKE) VPATH="$(CURDIR)/$@ $(ADI_HDL_DIR)" -I $(ADI_HDL_DIR) \
+# 		-C $(CURDIR)/build/$@ -f $(CURDIR)/$@/Makefile
 
 export
 
