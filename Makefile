@@ -26,17 +26,13 @@ include targets/$(TARGET)/$(TARGET).mk
 ################################### Patches ####################################
 
 .PHONY: patch
-patch: patch-br patch-hdl
+patch: patch-br
 
 .PHONY: patch-br
 patch-br:
 	for patch in patches/buildroot/*.patch; do \
 		patch -d buildroot -p1 --forward < $$patch || true; \
 	done
-
-.PHONY: patch-hdl
-patch-hdl:
-	patch -d hdl -p1 --forward < hdl.patch || true
 
 ################################## Buildroot ###################################
 
@@ -116,23 +112,6 @@ export BUSYBOX_DIR = $(strip $(O)/build/busybox-$(BUSYBOX_VERSION))
 busybox-diffconfig: $(BR2_PACKAGE_BUSYBOX_CONFIG)
 	$(LINUX_DIR)/scripts/diffconfig -m $< $(BUSYBOX_DIR)/.config > $(BR2_PACKAGE_BUSYBOX_CONFIG_FRAGMENT_FILES)
 
-###################################### HDL #####################################
-
-# .PHONY: $(wildcard ip/*)
-# $(wildcard ip/*):
-# 	mkdir -p $(CURDIR)/build/$@
-# 	cp $@/* $(CURDIR)/build/$@
-# 	source $(VIVADO_SETTINGS) && \
-# 		$(MAKE) VPATH="$(CURDIR)/$@ $(ADI_HDL_DIR)" -I $(ADI_HDL_DIR) \
-# 		-C $(CURDIR)/build/$@ -f $(CURDIR)/$@/Makefile
-
-export
-
-##################################### DTS ######################################
-
-.PHONY: clean-dts
-#dts: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
-
 #################################### Images ####################################
 
 .PHONY: boot.bin
@@ -169,21 +148,7 @@ pl: $(O)/images/system_top.bit.bin
 
 #################################### Clean #####################################
 
-.PHONY: clean-all clean-sdk clean-hdl clean-hdllib clean-target
-
-clean-all: clean-sdk clean-hdl clean-hdllib clean clean-ip
-
-clean-sdk:
-	rm -rf $(O)/sdk
-
-clean-hdl: clean-sdk
-	rm -rf $(O)/hdl
-
-clean-ip:
-	rm -rf build/ip
-
-clean-hdllib:
-	$(MAKE) -C hdl clean-all
+.PHONY: clean-target clean-images
 
 clean-target:
 	rm -rf $(O)/target
@@ -191,9 +156,6 @@ clean-target:
 
 clean-images:
 	rm -f $(O)/images/*
-
-clean-dts:
-	rm -rf $(O)/dts
 
 ##################################### DFU ######################################
 
