@@ -1,0 +1,7 @@
+config BR2_PACKAGE_AD936X_FSBL
+	bool "ad936x-fsbl"
+	select BR2_PACKAGE_AD936X_HDL
+	help
+	  First stage bootloader for AD936x
+
+      

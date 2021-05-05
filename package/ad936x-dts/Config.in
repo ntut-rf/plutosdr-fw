@@ -1,0 +1,8 @@
+config BR2_PACKAGE_AD936X_DTS
+	bool "ad936x-dts"
+	select BR2_PACKAGE_HOST_DEVICE_TREE_XLNX 
+	select BR2_PACKAGE_AD936X_HDL
+	help
+	  Custom device tree source for AD936x
+
+      

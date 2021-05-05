@@ -1,7 +1,0 @@
-config BR2_PACKAGE_AD9361_DTS
-	bool "ad9361-dts"
-	select BR2_PACKAGE_HOST_DEVICE_TREE_XLNX 
-	help
-	  Custom device tree source for AD9361
-
-      
