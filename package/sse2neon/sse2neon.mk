@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-SSE2NEON_VERSION := 69d1d90
+SSE2NEON_VERSION := bac3692
 SSE2NEON_SITE := https://github.com/DLTcollab/sse2neon.git
 SSE2NEON_SITE_METHOD := git
 SSE2NEON_DEPENDENCIES +=

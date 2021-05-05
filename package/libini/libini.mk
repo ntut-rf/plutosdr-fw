@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LIBINI_VERSION = c3413da
+LIBINI_VERSION = add8d48
 LIBINI_SITE = https://github.com/pcercuei/libini.git
 LIBINI_SITE_METHOD = git
 
