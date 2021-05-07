@@ -22,6 +22,7 @@ define AD936X_HDL_BUILD_CMDS
 endef
 
 define AD936X_HDL_INSTALL_TARGET_CMDS
+	mkdir -p $(O)/images
 	cp $(HDL_PROJECT_DIR)/$(subst /,_,$(HDL_PROJECT)).sdk/system_top.xsa $(O)/images/
 endef
 

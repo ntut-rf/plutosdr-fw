@@ -8,11 +8,9 @@ AD936X_FSBL_SITE_METHOD = local
 AD936X_FSBL_SITE = $(BR2_EXTERNAL)/package/ad936x-fsbl
 AD936X_FSBL_DEPENDENCIES = ad936x-hdl
 
-export WS_DIR = $(@D)
-export HW_DESIGN = $(O)/images/system_top.xsa
-
 define AD936X_FSBL_BUILD_CMDS
-	source $(VIVADO_SETTINGS) && xsct $(@D)/create_fsbl_project.tcl
+	cp $(O)/images/system_top.xsa $(@D)
+	cd $(@D) && source $(VIVADO_SETTINGS) && xsct $(@D)/create_fsbl_project.tcl
 endef
 
 define AD936X_FSBL_INSTALL_TARGET_CMDS
