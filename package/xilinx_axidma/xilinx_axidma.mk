@@ -28,6 +28,7 @@ define XILINX_AXIDMA_INSTALL_TARGET_CMDS
 	$(INSTALL) -D $(@D)/outputs/*.so $(TARGET_DIR)/usr/lib/
 	$(INSTALL) -D -m 755 $(@D)/outputs/{axidma_benchmark,axidma_display_image,axidma_transfer} $(TARGET_DIR)/usr/bin/
 	$(INSTALL) -D $(@D)/outputs/libaxidma.so $(STAGING_DIR)/usr/lib/
+	cp $(BR2_EXTERNAL)/package/xilinx_axidma/S46axidma $(TARGET_DIR)/etc/init.d/
 endef
 
 $(eval $(generic-package))
