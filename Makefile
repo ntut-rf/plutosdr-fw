@@ -34,9 +34,6 @@ export BR2_EXTERNAL=$(CURDIR)
 export BR2_DEFCONFIG=$(CURDIR)/targets/$(TARGET)/defconfig
 export O=$(CURDIR)/build/$(TARGET)
 
-CROSS_COMPILE ?= arm-buildroot-linux-gnueabihf-
-export PATH := $(PATH):$(O)/host/bin/
-
 all menuconfig: $(O)/.config
 
 ## Making sure defconfig is already run
@@ -57,22 +54,6 @@ export UBOOT_DIR = $(strip $(O)/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSI
     	$(MAKE) TARGET=$(TARGET) UBOOT_DIR=$(UBOOT_DIR) BR2_EXTERNAL=$(BR2_EXTERNAL) BR2_DEFCONFIG=$(BR2_DEFCONFIG) O=$(O) -C buildroot $*
 
 ################################### U-Boot #####################################
-
-.PHONY: uboot-env.bin uboot-env.txt
-
-uboot-env.bin: $(O)/images/uboot-env.bin
-
-uboot-env.txt: $(O)/images/uboot-env.txt
-
-$(O)/images/uboot-env.bin: $(O)/images/uboot-env.txt
-	$(UBOOT_DIR)/tools/mkenvimage -s 0x20000 -o $@ $<
-
-$(O)/images/uboot-env.txt:
-	mkdir -p $(@D)
-	cd $(@D) && PATH=$(CURDIR)/build/host/bin/:$(PATH) CROSS_COMPILE=$(CROSS_COMPILE) $(CURDIR)/platform/get_default_envs.sh > $@
-	echo attr_name=compatible >> $@
-	echo attr_val=ad9364 >> $@
-	sed -i 's,^\(maxcpus[ ]*=\).*,\1'2',g' $@
 
 ## Generate reference defconfig with missing options set to default as a base for comparison using diffconfig
 $(UBOOT_DIR)/.$(BR2_TARGET_UBOOT_BOARD_DEFCONFIG)_defconfig:

@@ -1,0 +1,6 @@
+config BR2_PACKAGE_AD936X_UBOOT_ENV
+	bool "ad936x-uboot-env"
+	select BR2_PACKAGE_HOST_DEVICE_TREE_XLNX 
+	select BR2_PACKAGE_AD936X_HDL
+	help
+	  uboot-env for AD936x
