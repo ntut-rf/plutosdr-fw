@@ -46,14 +46,14 @@ HDL_PROJECT := $(patsubst "%",%,$(HDL_PROJECT))
 
 all: xilinx_axidma-reinstall
 
-export UBOOT_DIR = $(strip $(O)/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION))
-
 ## Pass targets to buildroot
 %:
 	env - PATH=$(PATH) USER=$(USER) HOME=$(HOME) TERM=$(TERM) \
-    	$(MAKE) TARGET=$(TARGET) UBOOT_DIR=$(UBOOT_DIR) BR2_EXTERNAL=$(BR2_EXTERNAL) BR2_DEFCONFIG=$(BR2_DEFCONFIG) O=$(O) -C buildroot $*
+    	$(MAKE) TARGET=$(TARGET) BR2_EXTERNAL=$(BR2_EXTERNAL) BR2_DEFCONFIG=$(BR2_DEFCONFIG) O=$(O) -C buildroot $*
 
 ################################### U-Boot #####################################
+
+export UBOOT_DIR = $(strip $(O)/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION))
 
 ## Generate reference defconfig with missing options set to default as a base for comparison using diffconfig
 $(UBOOT_DIR)/.$(BR2_TARGET_UBOOT_BOARD_DEFCONFIG)_defconfig:
@@ -106,7 +106,7 @@ pl: $(O)/images/system_top.bit.bin
 
 clean-target:
 	rm -rf $(O)/target
-	find $(O) -name ".stamp_target_installed" |xargs rm -rf
+	find $(O) -name ".stamp_target_installed" | xargs rm -rf
 
 clean-images:
 	rm -f $(O)/images/*

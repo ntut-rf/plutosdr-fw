@@ -10,7 +10,7 @@ AD936X_BOOT_IMG_DEPENDENCIES = ad936x-fsbl uboot
 
 define AD936X_BOOT_IMG_BUILD_CMDS
 	echo img:{[bootloader] $(O)/images/system_top.bit $(O)/images/u-boot } > $(@D)/boot.bif
-	source $(VIVADO_SETTINGS) && bootgen -image $(@D)/boot.bif -w -o $(@D)/boot.bin
+	cd $(@D) && source $(VIVADO_SETTINGS) && bootgen -image $(@D)/boot.bif -w -o $(@D)/boot.bin
 endef
 
 define AD936X_BOOT_IMG_INSTALL_TARGET_CMDS
