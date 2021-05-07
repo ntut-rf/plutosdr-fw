@@ -6,10 +6,13 @@
 
 AD936X_UBOOT_ENV_SITE_METHOD = local
 AD936X_UBOOT_ENV_SITE := $(BR2_EXTERNAL)/package/ad936x-uboot-env
-AD936X_UBOOT_ENV_DEPENDENCIES = uboot
+AD936X_UBOOT_ENV_DEPENDENCIES = host-uboot-tools
 
 define AD936X_UBOOT_ENV_BUILD_CMDS
-	cd $(@D) && ./get_default_envs.sh > uboot-env.txt
+	PATH=$(O)/../host/bin:$(PATH) CROSS_COMPILE=arm-buildroot-linux-gnueabihf- \
+		$(O)/build/host-uboot-tools-$(UBOOT_TOOLS_VERSION)/scripts/get_default_envs.sh \
+		$(O)/build/uboot-$(UBOOT_VERSION) \
+		> $(@D)/uboot-env.txt
 
 	echo attr_name=compatible >> $(@D)/uboot-env.txt
 	echo attr_val=ad9364 >> $(@D)/uboot-env.txt
