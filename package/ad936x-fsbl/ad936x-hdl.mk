@@ -14,7 +14,7 @@ define AD936X_FSBL_BUILD_CMDS
 endef
 
 define AD936X_FSBL_INSTALL_TARGET_CMDS
-	cp $(@D)/fsbl/Release/fsbl.elf $(O)/images/
+	cp {$(@D)/fsbl/Release/fsbl.elf,$(@D)/system_top.bit} $(O)/images/
 endef
 
 $(eval $(generic-package))

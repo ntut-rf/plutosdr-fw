@@ -1,0 +1,7 @@
+config BR2_PACKAGE_AD936X_BOOT_IMG
+	bool "ad936x-boot-img"
+	select BR2_PACKAGE_AD936X_FSBL
+	help
+	  Boot image for AD936x
+
+      

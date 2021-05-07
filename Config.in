@@ -2,7 +2,7 @@ comment "HDL"
 
 config VIVADO_VERSION
     string "Vivado version"
-    default "2019.1"
+    default "2020.2
     help
       Vivado version
 
@@ -42,6 +42,7 @@ comment "AD936x System"
 source "../package/ad936x-hdl/Config.in"
 source "../package/ad936x-fsbl/Config.in"
 source "../package/ad936x-dts/Config.in"
+source "../package/ad936x-boot-img/Config.in"
 source "../package/libini/Config.in"
 source "../package/libad9361-iio/Config.in"
 source "../package/poll_sysfs/Config.in"

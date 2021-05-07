@@ -58,10 +58,6 @@ export UBOOT_DIR = $(strip $(O)/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSI
 
 ################################### U-Boot #####################################
 
-$(O)/images/u-boot.elf:
-	$(MAKE) uboot-reconfigure
-	mv $(O)/images/u-boot $@
-
 .PHONY: uboot-env.bin uboot-env.txt
 
 uboot-env.bin: $(O)/images/uboot-env.bin
@@ -105,23 +101,6 @@ export BUSYBOX_DIR = $(strip $(O)/build/busybox-$(BUSYBOX_VERSION))
 
 busybox-diffconfig: $(BR2_PACKAGE_BUSYBOX_CONFIG)
 	$(LINUX_DIR)/scripts/diffconfig -m $< $(BUSYBOX_DIR)/.config > $(BR2_PACKAGE_BUSYBOX_CONFIG_FRAGMENT_FILES)
-
-#################################### Images ####################################
-
-.PHONY: boot.bin
-boot.bin: $(O)/images/boot.bin
-
-all: $(O)/images/boot.bin
-
-ifdef FSBL_LOAD_BITSTREAM
-$(O)/images/boot.bif: $(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit $(O)/images/u-boot.elf
-else
-$(O)/images/boot.bif: $(O)/sdk/fsbl/Release/fsbl.elf $(O)/images/u-boot.elf
-endif
-	echo img:{[bootloader] $^ } > $@
-
-$(O)/images/boot.bin: $(O)/images/boot.bif
-	source $(VIVADO_SETTINGS) && bootgen -image $< -w -o $@
 
 ################################ Programming PL #################################
 
