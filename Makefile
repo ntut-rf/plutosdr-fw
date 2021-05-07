@@ -17,9 +17,6 @@ $(if $(filter $(TARGET),$(SUPPORTED_TARGETS)),,$(error Invalid TARGET variable; 
 .PHONY: default
 default: all
 
-# Include target specific settings
-include targets/$(TARGET)/$(TARGET).mk
-
 ################################### Patches ####################################
 
 .PHONY: patch

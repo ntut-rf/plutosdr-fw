@@ -8,10 +8,10 @@ AD936X_DTS_SITE_METHOD = local
 AD936X_DTS_SITE := $(BR2_EXTERNAL)/package/ad936x-dts
 AD936X_DTS_DEPENDENCIES = host-device-tree-xlnx ad936x-hdl
 
-export HW_DESIGN = $(O)/images/system_top.hdf
+export HW_DESIGN = $(O)/images/system_top.xsa
 
 define AD936X_DTS_BUILD_CMDS
-	source $(VIVADO_SETTINGS) && xsdk -batch -source $(@D)/generate_dts.tcl
+	source $(VIVADO_SETTINGS) && xsct $(@D)/generate_dts.tcl
 
 	# Delete nodes
 	sed -i '/axi_ad9361/,/}/d' $(@D)/dts/pl.dtsi

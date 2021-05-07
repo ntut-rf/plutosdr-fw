@@ -22,7 +22,7 @@ define AD936X_HDL_BUILD_CMDS
 endef
 
 define AD936X_HDL_INSTALL_TARGET_CMDS
-	cp $(HDL_PROJECT_DIR)/$(subst /,_,$(HDL_PROJECT)).sdk/system_top.hdf $(O)/images/
+	cp $(HDL_PROJECT_DIR)/$(subst /,_,$(HDL_PROJECT)).sdk/system_top.xsa $(O)/images/
 endef
 
 $(eval $(generic-package))
