@@ -16,8 +16,10 @@ export ADI_HDL_DIR = $(@D)
 
 export ADI_IGNORE_VERSION_CHECK = 1
 
+export LIB_DEPS += axi_gpreg util_fir_dec util_fir_int
+
 define AD936X_HDL_BUILD_CMDS
-	cp -v $(BR2_EXTERNAL)/targets/$(TARGET)/hdl/*.tcl $(HDL_PROJECT_DIR)
+	cp -v $(BR2_EXTERNAL)/targets/$(TARGET)/hdl/* $(HDL_PROJECT_DIR)
 	cd $(@D) && source $(VIVADO_SETTINGS) && $(MAKE) -j1 VPATH=$(HDL_PROJECT_DIR) -I $(HDL_PROJECT_DIR) -C $(HDL_PROJECT_DIR)
 endef
 
