@@ -11,7 +11,7 @@ SISO_INSTALL_TARGET := YES
 
 define SISO_BUILD_CMDS
 	$(MAKE) -C $(@D) clean
-	$(MAKE) WORKING_DIR=$(@D) CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" LD="$(TARGET_LD)" -C $(@D) apps
+	$(MAKE) WORKING_DIR=$(@D) CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" LD="$(TARGET_LD)" -C $(@D) rx-apps tx-apps iio-apps
 endef
 
 define SISO_INSTALL_TARGET_CMDS
