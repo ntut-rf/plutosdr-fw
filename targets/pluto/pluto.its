@@ -41,7 +41,7 @@
 
 		fpga@1 {
 			description = "FPGA";
-			data = /incbin/("../../build/pluto/sdk/hw_0/system_top.bit");
+			data = /incbin/("../../build/pluto/images/system_top.bit");
 			type = "fpga";
 			arch = "arm";
 			compression = "none";

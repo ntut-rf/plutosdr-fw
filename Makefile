@@ -46,11 +46,6 @@ HDL_PROJECT := $(patsubst "%",%,$(HDL_PROJECT))
 
 all: xilinx_axidma-reinstall
 
-## Pass targets to buildroot
-%:
-	env - PATH=$(PATH) USER=$(USER) HOME=$(HOME) TERM=$(TERM) \
-    	$(MAKE) TARGET=$(TARGET) BR2_EXTERNAL=$(BR2_EXTERNAL) BR2_DEFCONFIG=$(BR2_DEFCONFIG) O=$(O) -C buildroot $*
-
 ################################### U-Boot #####################################
 
 export UBOOT_DIR = $(strip $(O)/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION))
@@ -82,6 +77,15 @@ export BUSYBOX_DIR = $(strip $(O)/build/busybox-$(BUSYBOX_VERSION))
 
 busybox-diffconfig: $(BR2_PACKAGE_BUSYBOX_CONFIG)
 	$(LINUX_DIR)/scripts/diffconfig -m $< $(BUSYBOX_DIR)/.config > $(BR2_PACKAGE_BUSYBOX_CONFIG_FRAGMENT_FILES)
+
+#################################### Buildroot ##################################
+
+## Pass targets to buildroot
+%:
+	env - PATH=$(PATH) USER=$(USER) HOME=$(HOME) TERM=$(TERM) \
+    	$(MAKE) TARGET=$(TARGET) BR2_EXTERNAL=$(BR2_EXTERNAL) BR2_DEFCONFIG=$(BR2_DEFCONFIG) O=$(O) \
+		UBOOT_DIR=$(UBOOT_DIR) \
+		-C buildroot $*
 
 ################################ Programming PL #################################
 
