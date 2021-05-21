@@ -9,10 +9,10 @@
 &primary_flash {
 		partition@qspi-linux {
 			label = "qspi-linux";
-			reg = <0x200000 0x1800000>; /* 24M */
+			reg = <0x200000 0x1900000>; /* 25M */
 		};
         partition@qspi-user {
 			label = "qspi-user";
-			reg = <0x1a00000 0x600000>; /* 6M */
+			reg = <0x1b00000 0x500000>; /* 5M */
 		};
-	};
+	};														
