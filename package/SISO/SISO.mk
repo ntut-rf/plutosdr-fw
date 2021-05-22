@@ -15,6 +15,7 @@ define SISO_BUILD_CMDS
 endef
 
 define SISO_INSTALL_TARGET_CMDS
+	rm -f $(@D)/bin/*.d
 	$(INSTALL) -D -m 0755 $(@D)/bin/* $(TARGET_DIR)/usr/bin/
 endef
 
