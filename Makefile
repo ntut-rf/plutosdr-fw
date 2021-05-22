@@ -157,3 +157,7 @@ flash-%: $(O)/images/sdcard.img
 		sync; partprobe; \
 	else echo "Invalid device"; \
 	fi
+
+.PHONY: sync
+sync:
+	sshpass -p "analog" rsync -avz build/pluto/target/usr/bin root@pluto.local:/usr/
