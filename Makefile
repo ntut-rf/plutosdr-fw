@@ -251,7 +251,7 @@ upload:
 
 .PHONY: flash-%
 flash-%: $(O)/images/sdcard.img
-	@if lsblk -do name,tran | grep usb | grep $*; then \
+	@if lsblk -do name,tran | grep -E 'usb|mmcblk' | grep $*; then \
 		(umount /dev/$*1 || true) && \
 		(umount /dev/$*2 || true) && \
 		dd if=$< of=/dev/$* bs=4k status=progress && \
@@ -260,3 +260,7 @@ flash-%: $(O)/images/sdcard.img
 		sync; partprobe; \
 	else echo "Invalid device"; \
 	fi
+
+.PHONY: sync
+sync:
+	sshpass -p "analog" rsync -avz build/pluto/target/usr/bin root@pluto.local:/usr/
