@@ -148,7 +148,7 @@ upload:
 
 .PHONY: flash-%
 flash-%: $(O)/images/sdcard.img
-	@if lsblk -do name,tran | grep usb | grep $*; then \
+	@if lsblk -do name,tran | grep -E 'usb|mmcblk' | grep $*; then \
 		(umount /dev/$*1 || true) && \
 		(umount /dev/$*2 || true) && \
 		dd if=$< of=/dev/$* bs=4k status=progress && \
