@@ -9,6 +9,8 @@ SISO_SITE := $(BR2_EXTERNAL)/../SISO
 SISO_DEPENDENCIES += gnuradio sse2neon libiio xilinx_axidma
 SISO_INSTALL_TARGET := YES
 
+export GNURADIO_VERSION
+
 define SISO_BUILD_CMDS
 	$(MAKE) -C $(@D) clean
 	$(MAKE) WORKING_DIR=$(@D) CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" LD="$(TARGET_LD)" -C $(@D) iq-apps iio-apps
