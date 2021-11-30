@@ -2,7 +2,6 @@ config BR2_PACKAGE_SISO
 	bool "SISO"
 	select BR2_PACKAGE_XILINX_AXIDMA
 	select BR2_PACKAGE_SSE2NEON
-	select BR2_PACKAGE_GNURADIO
 	select BR2_PACKAGE_LIBIIO
 	help
       
