@@ -21,6 +21,12 @@ $ make
  ```bash
  $ ssh root@pluto.local
  ```
+ or
+ 
+  ```bash
+ $ ssh root@192.168.2.1
+ ```
+ 
  Password: `analog`
 
  * Updating your local repository 
