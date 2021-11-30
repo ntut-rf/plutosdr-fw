@@ -6,7 +6,7 @@
 
 SISO_SITE_METHOD := local
 SISO_SITE := $(BR2_EXTERNAL)/../SISO
-SISO_DEPENDENCIES += sse2neon libiio xilinx_axidma
+SISO_DEPENDENCIES += gnuradio sse2neon libiio xilinx_axidma
 SISO_INSTALL_TARGET := YES
 
 export GNURADIO_VERSION
