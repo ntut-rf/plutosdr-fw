@@ -45,7 +45,7 @@ export BR2_DEFCONFIG=$(CURDIR)/targets/$(TARGET)/defconfig
 export O=$(CURDIR)/build/$(TARGET)
 
 CROSS_COMPILE ?= arm-buildroot-linux-gnueabihf-
-export PATH := $(PATH):$(O)/host/bin/
+export PATH := $(PATH):$(O)/../host/bin/
 
 all menuconfig: $(O)/.config
 
