@@ -9,7 +9,7 @@ AD9361_DTS_SITE := $(BR2_EXTERNAL)/package/ad9361-dts
 AD9361_DTS_DEPENDENCIES = host-device-tree-xlnx
 
 define AD9361_DTS_BUILD_CMDS
-	HDL_PROJECT=$(HDL_PROJECT) source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(@D)/generate_dts.tcl
+	HDL_PROJECT=$(HDL_PROJECT) source $(VIVADO_SETTINGS) && cd $(O) && xsct $(@D)/generate_dts.tcl
 
 	# Delete nodes
 	sed -i '/axi_ad9361/,/}/d' $(O)/dts/pl.dtsi

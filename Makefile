@@ -119,22 +119,22 @@ busybox-diffconfig: $(BR2_PACKAGE_BUSYBOX_CONFIG)
 ###################################### HDL #####################################
 
 .PHONY: hdl
-hdl: $(O)/sdk/hw_0/system_top.bit
+hdl: $(O)/sdk/hw_0/hw/system_top.bit
 
 .PHONY: fsbl
 fsbl: $(O)/sdk/fsbl/Release/fsbl.elf
 
-$(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
+$(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/hw/system_top.bit: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.xsa
 	mkdir -p $(O)
-	source $(VIVADO_SETTINGS) && cd $(O) && xsdk -batch -source $(CURDIR)/platform/create_fsbl_project.tcl
+	source $(VIVADO_SETTINGS) && cd $(O) && xsct $(CURDIR)/platform/create_fsbl_project.tcl
 
-.PHONY: hdf
-hdf: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
+.PHONY: xsa
+xsa: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.xsa
 
 export ADI_HDL_DIR=$(CURDIR)/hdl
 export ADI_IGNORE_VERSION_CHECK=1
 
-$(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf: $(CURDIR)/targets/$(TARGET)/hdl/system_bd.tcl
+$(O)/hdl/$(HDL_PROJECT).sdk/system_top.xsa: $(CURDIR)/targets/$(TARGET)/hdl/system_bd.tcl
 	mkdir -p $(O)/hdl
 	cp $(CURDIR)/targets/$(TARGET)/hdl/*.tcl $(O)/hdl/
 	source $(VIVADO_SETTINGS) && \
@@ -154,7 +154,7 @@ export
 ##################################### DTS ######################################
 
 .PHONY: clean-dts
-#dts: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
+#dts: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.xsa
 
 #################################### Images ####################################
 
@@ -164,7 +164,7 @@ boot.bin: $(O)/images/boot.bin
 all: $(O)/images/boot.bin
 
 ifdef FSBL_LOAD_BITSTREAM
-$(O)/images/boot.bif: $(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit $(O)/images/u-boot.elf
+$(O)/images/boot.bif: $(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/hw/system_top.bit $(O)/images/u-boot.elf
 else
 $(O)/images/boot.bif: $(O)/sdk/fsbl/Release/fsbl.elf $(O)/images/u-boot.elf
 endif

@@ -1,7 +1,7 @@
 set hdl_project $::env(HDL_PROJECT)
 set host_dir $::env(HOST_DIR)
 
-hsi open_hw_design ./hdl/$hdl_project.sdk/system_top.hdf
+hsi open_hw_design ./hdl/$hdl_project.sdk/system_top.xsa
 #set cpu_name [lindex [hsi get_cells -filter {IP_TYPE==PROCESSOR}] 0]
 set cpu_name ps7_cortexa9_0
 
