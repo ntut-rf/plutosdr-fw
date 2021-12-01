@@ -132,6 +132,7 @@ $(O)/sdk/fsbl/Release/fsbl.elf $(O)/sdk/hw_0/system_top.bit: $(O)/hdl/$(HDL_PROJ
 hdf: $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf
 
 export ADI_HDL_DIR=$(CURDIR)/hdl
+export ADI_IGNORE_VERSION_CHECK=1
 
 $(O)/hdl/$(HDL_PROJECT).sdk/system_top.hdf: $(CURDIR)/targets/$(TARGET)/hdl/system_bd.tcl
 	mkdir -p $(O)/hdl
