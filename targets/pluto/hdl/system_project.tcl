@@ -14,7 +14,7 @@ adi_project pluto
 adi_project_files pluto [list \
   "$ad_hdl_dir/projects/pluto/system_top.v" \
   "$ad_hdl_dir/projects/pluto/system_constr.xdc" \
-  "$ad_hdl_dir/library/xilinx/common/ad_iobuf.v"]
+  "$ad_hdl_dir/library/common/ad_iobuf.v"]
 
 set_property is_enabled false [get_files  *system_sys_ps7_0.xdc]
 adi_project_run pluto
