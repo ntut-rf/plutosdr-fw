@@ -57,7 +57,7 @@ $(O)/.config:
 include $(BR2_DEFCONFIG)
 HDL_PROJECT := $(patsubst "%",%,$(HDL_PROJECT))
 
-all: xilinx_axidma-reinstall
+#all: xilinx_axidma-reinstall
 
 export UBOOT_DIR = $(strip $(O)/build/uboot-$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION))
 
