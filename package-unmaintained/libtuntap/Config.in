@@ -1,6 +1,0 @@
-config BR2_PACKAGE_LIBTUNTAP
-	bool "libtuntap"
-	help
-      The portable Tun/Tap devices configuration utility
-
-      https://github.com/LaKabane/libtuntap

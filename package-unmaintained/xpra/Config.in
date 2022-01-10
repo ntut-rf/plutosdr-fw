@@ -1,6 +1,0 @@
-config BR2_PACKAGE_XPRA
-	bool "xpra"
-	help
-	  Multi-platform screen and application forwarding system
-
-	  https://xpra.org

@@ -1,6 +1,0 @@
-config BR2_PACKAGE_SOAPY_SDR
-	bool "soapy-sdr"
-	help
-	  Vendor and platform neutral SDR support library
-
-	  https://github.com/pothosware/SoapySDR.git

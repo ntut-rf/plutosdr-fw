@@ -1,6 +1,0 @@
-config BR2_PACKAGE_LIBOSMOPLUTOSDR
-	bool "libosmoplutosdr"
-	help
-	  lib for the experimental plutosdr kernel module
-	  	
-	  https://github.com/Hoernchen/libosmoplutosdr

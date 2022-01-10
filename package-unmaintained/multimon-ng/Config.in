@@ -1,4 +1,0 @@
-config BR2_PACKAGE_MULTIMON_NG
-	bool "multimon-ng"
-	help
-      https://github.com/EliasOenal/multimon-ng.git
