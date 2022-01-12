@@ -263,4 +263,4 @@ flash-%: $(O)/images/sdcard.img
 
 .PHONY: sync
 sync:
-	sshpass -p "analog" rsync -avz build/pluto/target/usr/bin root@pluto.local:/usr/
+	scp build/adrv9364/target/usr/bin/siso-* root@adrv.local:/usr/bin/
