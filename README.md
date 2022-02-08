@@ -60,6 +60,19 @@ $ make
  # cat /sys/bus/iio/devices/iio\:device1/xo_correction
  ```
 
+## Build SDK in Ubuntu Docker
+
+Build Docker image:
+```console
+$ make docker
+```
+
+Log in Docker image and build SDK:
+```console
+$ make docker-run
+[docker] $ make sdk
+```
+
 ## To do
 
 * Time sync
