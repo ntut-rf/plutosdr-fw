@@ -264,3 +264,12 @@ flash-%: $(O)/images/sdcard.img
 .PHONY: sync
 sync:
 	scp build/adrv9364/build/SISO/bin/* adrv:/usr/bin/
+
+################################################################################
+
+.PHONY: docker docker-run
+docker:
+	docker build -t plutosdr-fw .
+
+docker-run:
+	docker run --hostname docker -v $(CURDIR):/home/user/plutosdr-fw -i -t plutosdr-fw
