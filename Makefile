@@ -269,7 +269,7 @@ sync:
 
 .PHONY: docker docker-run
 docker:
-	docker build -t plutosdr-fw .
+	docker build -t plutosdr-fw Docker
 
 docker-run:
 	docker run --hostname docker -v $(CURDIR):/home/user/plutosdr-fw -i -t plutosdr-fw

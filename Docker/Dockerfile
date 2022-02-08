@@ -11,3 +11,4 @@ RUN yes | sudo apt-get install build-essential
 RUN yes | sudo apt-get install libncurses-dev
 RUN yes | sudo apt-get install file
 RUN yes | sudo apt-get install wget cpio unzip rsync bc
+RUN yes | sudo apt-get install python3
