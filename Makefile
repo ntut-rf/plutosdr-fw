@@ -1,7 +1,7 @@
 export SHELL:=/bin/bash
 
-export VIVADO_VERSION ?= 2020.2
-export VIVADO_SETTINGS ?= /opt/Xilinx/Vivado/$(VIVADO_VERSION)/settings64.sh
+export VIVADO_VERSION ?= 2021.2
+export VIVADO_SETTINGS ?= /tools/Xilinx/Vivado/$(VIVADO_VERSION)/settings64.sh
 
 ifdef TARGET
 $(shell echo $(TARGET) > .target)
@@ -264,3 +264,12 @@ flash-%: $(O)/images/sdcard.img
 .PHONY: sync
 sync:
 	scp build/adrv9364/build/SISO/bin/* adrv:/usr/bin/
+
+################################################################################
+
+.PHONY: docker docker-run
+docker:
+	docker build -t plutosdr-fw Docker
+
+docker-run:
+	docker run --hostname docker -v $(CURDIR):/home/user/plutosdr-fw -v /tools/Xilinx:/tools/Xilinx -v $(CURDIR)/../SISO:/home/user/SISO -i -t plutosdr-fw

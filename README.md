@@ -60,6 +60,26 @@ $ make
  # cat /sys/bus/iio/devices/iio\:device1/xo_correction
  ```
 
+## Build SDK in Ubuntu Docker
+
+Build Docker image:
+```console
+$ make docker
+```
+
+Log in Docker image and build SDK:
+```console
+$ make docker-run
+[docker] $ make sdk
+```
+
+## Install Xilinx Vivado
+
+On ArchLinux,
+```
+$ sudo pacman -S ncurses5-compat-libs lib32-libpng12 xorg-xlsclients xorg-server-xvfb
+```
+
 ## To do
 
 * Time sync
