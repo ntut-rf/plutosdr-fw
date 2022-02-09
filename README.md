@@ -80,6 +80,14 @@ On ArchLinux,
 $ sudo pacman -S ncurses5-compat-libs lib32-libpng12 xorg-xlsclients xorg-server-xvfb
 ```
 
+## Set IP Address
+
+For example,
+```
+# fw_setenv ipaddr 192.168.3.1
+# fw_setenv ipaddr_host 192.168.3.10
+```
+
 ## To do
 
 * Time sync
