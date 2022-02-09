@@ -98,3 +98,5 @@ Power off completely then power on.
 * Package for Pluto specific stuff
 * Fix for TX buffer clean
 * Network / Mass storage settings
+* Customize MOTD
+* LED for ADRV9364
