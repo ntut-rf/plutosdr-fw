@@ -73,6 +73,13 @@ $ make docker-run
 [docker] $ make sdk
 ```
 
+## Install Xilinx Vivado
+
+On ArchLinux,
+```
+$ sudo pacman -S ncurses5-compat-libs lib32-libpng12 xorg-xlsclients xorg-server-xvfb
+```
+
 ## To do
 
 * Time sync
