@@ -1,0 +1,24 @@
+config BR2_PACKAGE_MOTD
+	bool "motd"
+	help
+	  Message of the day
+
+if BR2_PACKAGE_MOTD
+choice
+	prompt "motd message"
+	default BR2_PACKAGE_MOTD_PLUTOSDR
+	help
+	  Set the motd message
+
+config BR2_PACKAGE_MOTD_PLUTOSDR
+	bool "PlutoSDR"
+	help
+	  PlutoSDR
+
+config BR2_PACKAGE_MOTD_ADRV9364
+	bool "ADRV9364"
+	help
+	  ADRV9364
+
+endchoice
+endif
