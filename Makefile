@@ -272,4 +272,4 @@ docker:
 	docker build -t plutosdr-fw Docker
 
 docker-run:
-	docker run --hostname docker -v $(CURDIR):/home/user/plutosdr-fw -i -t plutosdr-fw
+	docker run --hostname docker -v $(CURDIR):/home/user/plutosdr-fw -v /tools/Xilinx:/tools/Xilinx -v $(CURDIR)/../SISO:/home/user/SISO -i -t plutosdr-fw
