@@ -5,6 +5,13 @@ cfg_ad9361_interface LVDS
 
 set_property CONFIG.ADC_INIT_DELAY 30 [get_bd_cells axi_ad9361]
 
+## AXI HP1, HP2
+
+ad_connect sys_ps7/FCLK_CLK0 axi_hp1_interconnect/S00_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_hp1_interconnect/M00_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_hp2_interconnect/S00_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_hp2_interconnect/M00_ACLK
+
 ## AXI DMA
 
 ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP0 1
@@ -31,11 +38,6 @@ ad_connect sys_cpu_resetn axi_hp0_interconnect/S02_ARESETN
 ad_cpu_interrupt ps-0 mb-0 axi_dma_0/mm2s_introut
 ad_cpu_interrupt ps-1 mb-1 axi_dma_0/s2mm_introut
 
-ad_connect sys_ps7/FCLK_CLK0 axi_hp1_interconnect/S00_ACLK
-ad_connect sys_ps7/FCLK_CLK0 axi_hp1_interconnect/M00_ACLK
-ad_connect sys_ps7/FCLK_CLK0 axi_hp2_interconnect/S00_ACLK
-ad_connect sys_ps7/FCLK_CLK0 axi_hp2_interconnect/M00_ACLK
-
 ## FFT
 
 ad_ip_parameter axi_dma_0 CONFIG.c_m_axis_mm2s_tdata_width 32
@@ -54,10 +56,10 @@ ad_connect sys_cpu_clk xfft_0/aclk
 ad_ip_instance xlconstant xlconstant_0
 ad_connect xlconstant_0/dout xfft_0/s_axis_config_tvalid
 
-ad_ip_instance axi_gpio axi_gpio_0
-ad_cpu_interconnect 0x41000000 axi_gpio_0
-ad_ip_parameter axi_gpio_0 CONFIG.C_GPIO_WIDTH 16
-ad_connect axi_gpio_0/gpio_io_o xfft_0/s_axis_config_tdata
+ad_ip_instance xlconstant xlconstant_1
+ad_ip_parameter xlconstant_1 CONFIG.CONST_WIDTH 16
+ad_ip_parameter xlconstant_1 CONFIG.CONST_VAL 1
+ad_connect xlconstant_1/dout xfft_0/s_axis_config_tdata
 
 ## AXI DMA 1
 
@@ -95,12 +97,14 @@ ad_ip_parameter xfft_1 CONFIG.complex_mult_type use_mults_performance
 #ad_ip_parameter xfft_1 CONFIG.butterfly_type use_xtremedsp_slices
 ad_connect sys_cpu_clk xfft_1/aclk
 
-ad_ip_instance xlconstant xlconstant_1
-ad_connect xlconstant_1/dout xfft_1/s_axis_config_tvalid
+ad_ip_instance xlconstant xlconstant_2
+ad_connect xlconstant_2/dout xfft_1/s_axis_config_tvalid
 
-ad_ip_instance axi_gpio axi_gpio_1
-ad_cpu_interconnect 0x43000000 axi_gpio_1
-ad_ip_parameter axi_gpio_1 CONFIG.C_GPIO_WIDTH 16
-ad_connect axi_gpio_1/gpio_io_o xfft_1/s_axis_config_tdata
+ad_ip_instance xlconstant xlconstant_3
+ad_ip_parameter xlconstant_3 CONFIG.CONST_WIDTH 16
+ad_ip_parameter xlconstant_3 CONFIG.CONST_VAL 1
+ad_connect xlconstant_3/dout xfft_1/s_axis_config_tdata
+
+## assign_bd_address
 
 assign_bd_address
