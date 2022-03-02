@@ -77,7 +77,7 @@ $ make docker-run
 
 On ArchLinux,
 ```
-$ sudo pacman -S ncurses5-compat-libs lib32-libpng12 xorg-xlsclients xorg-server-xvfb
+$ sudo pacman -S ncurses5-compat-libs lib32-libpng12 xorg-xlsclients xorg-server-xvfb libxcrypt-compat
 ```
 
 ## Set IP Address
