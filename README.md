@@ -93,6 +93,10 @@ Power off completely then power on.
 
 > out_voltage_sampling_frequency as well as in_voltage_sampling_frequency are not entirely independent, by default the both need to match unless adi,fdd-rx-rate-2tx-enable is set.
 
+## Troubleshooting
+
+* Make sure the daughterboard is tightly connected to the breakout board
+
 ## To do
 
 * Time sync
