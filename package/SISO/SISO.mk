@@ -13,7 +13,7 @@ export GNURADIO_VERSION
 
 define SISO_BUILD_CMDS
 	$(MAKE) -C $(@D) clean
-	$(MAKE) WORKING_DIR=$(@D) CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" LD="$(TARGET_LD)" -C $(@D) iq-apps iio-apps
+	$(MAKE) WORKING_DIR=$(@D) CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" LD="$(TARGET_LD)" -C $(@D) iio-apps
 endef
 
 define SISO_INSTALL_TARGET_CMDS
