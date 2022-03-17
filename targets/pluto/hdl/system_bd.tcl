@@ -42,12 +42,21 @@ ad_ip_parameter xfft_0 CONFIG.complex_mult_type use_mults_performance
 #ad_ip_parameter xfft_0 CONFIG.butterfly_type use_xtremedsp_slices
 ad_connect sys_cpu_clk xfft_0/aclk
 
-ad_ip_instance xlconstant xlconstant_0
-ad_connect xlconstant_0/dout xfft_0/s_axis_config_tvalid
+## AXI DMA 1
 
-ad_ip_instance axi_gpio axi_gpio_0
-ad_cpu_interconnect 0x41000000 axi_gpio_0
-ad_ip_parameter axi_gpio_0 CONFIG.C_GPIO_WIDTH 16
-ad_connect axi_gpio_0/gpio_io_o xfft_0/s_axis_config_tdata
+ad_ip_instance axi_dma axi_dma_1
+ad_ip_parameter axi_dma_1 CONFIG.c_include_sg 0
+ad_ip_parameter axi_dma_1 CONFIG.c_sg_include_stscntrl_strm 0
+ad_ip_parameter axi_dma_1 CONFIG.c_micro_dma 1
+ad_ip_parameter axi_dma_1 CONFIG.c_include_s2mm 0
+ad_cpu_interconnect 0x41000000 axi_dma_1
+ad_connect sys_cpu_clk axi_dma_1/m_axi_mm2s_aclk
+ad_mem_hp0_interconnect sys_cpu_clk axi_dma_1/M_AXI_MM2S
+ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/S03_ACLK
+ad_connect sys_cpu_resetn axi_hp0_interconnect/S03_ARESETN
+ad_cpu_interrupt ps-2 mb-2 axi_dma_1/mm2s_introut
+ad_connect axi_dma_1/M_AXIS_MM2S xfft_0/S_AXIS_CONFIG
+
+## assign_bd_address
 
 assign_bd_address
