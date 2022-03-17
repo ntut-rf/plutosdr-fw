@@ -102,7 +102,7 @@ ad_connect xlconstant_2/dout xfft_1/s_axis_config_tvalid
 
 ad_ip_instance xlconstant xlconstant_3
 ad_ip_parameter xlconstant_3 CONFIG.CONST_WIDTH 16
-ad_ip_parameter xlconstant_3 CONFIG.CONST_VAL 1
+ad_ip_parameter xlconstant_3 CONFIG.CONST_VAL 0
 ad_connect xlconstant_3/dout xfft_1/s_axis_config_tdata
 
 ## assign_bd_address
