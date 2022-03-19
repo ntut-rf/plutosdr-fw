@@ -1,13 +1,17 @@
 #include "add_one.h"
 
-void add_one (_Complex float* A, _Complex float* B)
+void add_one (axis_uint8_t* A, axis_uint8_t* B)
 {
 #pragma HLS INTERFACE axis port=A
 #pragma HLS INTERFACE axis port=B
-	for (int i = 0; i < 10; i++) {
-		_Complex float a = *A++; // each A only read once
-		a += 1;
-		*B++= a;
-		*B++= a;
+
+    while (1)
+    {
+		axis_uint8_t a = *A; // each A only read once
+		a.data += 1;
+		*B = a; // each B only written once
+		if (a.last) break;
+		A++;
+		B++;
 	}
 }
