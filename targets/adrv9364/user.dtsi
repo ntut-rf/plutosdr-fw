@@ -1,8 +1,8 @@
 / {
     axidma_chrdev: axidma_chrdev@0 {
         compatible = "xlnx,axidma-chrdev";
-        dmas = <&axi_dma_0 0 &axi_dma_0 1 &axi_dma_1 0 &axi_dma_1 1>;
-        dma-names = "tx_channel_0", "rx_channel_0", "tx_channel_1", "rx_channel_1";
+        dmas = <&axi_dma_0 0 &axi_dma_0 1 &axi_dma_1 0 &axi_dma_1 1 &axi_dma_2 0 &axi_dma_2 1>;
+        dma-names = "tx_channel_0", "rx_channel_0", "tx_channel_1", "rx_channel_1", "tx_channel_2", "rx_channel_2";
     };
 };
 

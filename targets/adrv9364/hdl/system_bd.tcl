@@ -105,6 +105,43 @@ ad_ip_parameter xlconstant_3 CONFIG.CONST_WIDTH 16
 ad_ip_parameter xlconstant_3 CONFIG.CONST_VAL 0
 ad_connect xlconstant_3/dout xfft_1/s_axis_config_tdata
 
+## AXI DMA 2
+
+ad_ip_instance axi_dma axi_dma_2
+ad_ip_parameter axi_dma_2 CONFIG.c_sg_include_stscntrl_strm 0
+ad_ip_parameter axi_dma_2 CONFIG.c_sg_length_width 23
+ad_cpu_interconnect 0x46000000 axi_dma_2
+ad_connect sys_cpu_clk axi_dma_2/m_axi_sg_aclk
+ad_connect sys_cpu_clk axi_dma_2/m_axi_mm2s_aclk
+ad_connect sys_cpu_clk axi_dma_2/m_axi_s2mm_aclk
+ad_mem_hp0_interconnect sys_cpu_clk axi_dma_2/M_AXI_SG
+ad_mem_hp0_interconnect sys_cpu_clk axi_dma_2/M_AXI_MM2S
+ad_mem_hp0_interconnect sys_cpu_clk axi_dma_2/M_AXI_S2MM
+ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/S06_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/S07_ACLK
+ad_connect sys_ps7/FCLK_CLK0 axi_hp0_interconnect/S08_ACLK
+ad_connect sys_cpu_resetn axi_hp0_interconnect/S06_ARESETN
+ad_connect sys_cpu_resetn axi_hp0_interconnect/S07_ARESETN
+ad_connect sys_cpu_resetn axi_hp0_interconnect/S08_ARESETN
+ad_cpu_interrupt ps-4 mb-4 axi_dma_2/mm2s_introut
+ad_cpu_interrupt ps-5 mb-5 axi_dma_2/s2mm_introut
+
+ad_ip_parameter axi_dma_2 CONFIG.c_s_axis_s2mm_tdata_width.VALUE_SRC USER
+ad_ip_parameter axi_dma_2 CONFIG.c_s_axis_s2mm_tdata_width 64
+ad_ip_parameter axi_dma_2 CONFIG.c_m_axi_s2mm_data_width.VALUE_SRC USER
+ad_ip_parameter axi_dma_2 CONFIG.c_m_axi_s2mm_data_width 64
+
+## ofdm_symb_acq
+
+set_property ip_repo_paths {../../../hdl/library ../../../../SISO/ip} [current_project]
+update_ip_catalog
+
+ad_ip_instance ofdm_symb_acq ofdm_symb_acq0
+ad_connect axi_dma_2/M_AXIS_MM2S ofdm_symb_acq0/in_r
+ad_connect axi_dma_2/S_AXIS_S2MM ofdm_symb_acq0/out_r
+ad_connect sys_ps7/FCLK_CLK0 ofdm_symb_acq0/ap_clk
+ad_connect sys_cpu_resetn ofdm_symb_acq0/ap_rst_n
+
 ## assign_bd_address
 
 assign_bd_address
