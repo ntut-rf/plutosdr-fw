@@ -138,19 +138,9 @@ update_ip_catalog
 
 ad_ip_instance ofdm_symb_acq ofdm_symb_acq0
 ad_connect axi_dma_2/M_AXIS_MM2S ofdm_symb_acq0/in_r
+ad_connect axi_dma_2/S_AXIS_S2MM ofdm_symb_acq0/out_r
 ad_connect sys_ps7/FCLK_CLK0 ofdm_symb_acq0/ap_clk
 ad_connect sys_cpu_resetn ofdm_symb_acq0/ap_rst_n
-
-## axis_data_fifo
-
-ad_ip_instance axis_data_fifo axis_data_fifo_0
-ad_ip_parameter axis_data_fifo_0 CONFIG.FIFO_MODE 2
-ad_ip_parameter axis_data_fifo_0 CONFIG.FIFO_DEPTH 16384
-ad_connect sys_ps7/FCLK_CLK0 axis_data_fifo_0/s_axis_aclk
-ad_connect sys_cpu_resetn axis_data_fifo_0/s_axis_aresetn
-
-ad_connect ofdm_symb_acq0/out_r axis_data_fifo_0/S_AXIS
-ad_connect axis_data_fifo_0/M_AXIS axi_dma_2/S_AXIS_S2MM
 
 ## assign_bd_address
 
