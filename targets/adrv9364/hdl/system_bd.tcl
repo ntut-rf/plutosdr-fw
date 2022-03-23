@@ -142,6 +142,10 @@ ad_connect axi_dma_2/S_AXIS_S2MM ofdm_symb_acq0/out_r
 ad_connect sys_ps7/FCLK_CLK0 ofdm_symb_acq0/ap_clk
 ad_connect sys_cpu_resetn ofdm_symb_acq0/ap_rst_n
 
+ad_ip_instance xlconstant xlconstant_4
+ad_ip_parameter xlconstant_4 CONFIG.CONST_VAL 1
+ad_connect xlconstant_4/dout ofdm_symb_acq0/ap_start
+
 ## assign_bd_address
 
 assign_bd_address
