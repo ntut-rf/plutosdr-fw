@@ -56,13 +56,13 @@ case "$1" in
 		echo $img > $file
 
 		start-stop-daemon -S -b -q -m -p /var/run/update.pid -x /bin/sh -- /sbin/update.sh
-		[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo "${HEADER}${FAIL}"
+		[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo -e "${HEADER}${FAIL}" > /dev/kmsg
 		;;
 
 	stop)
 		echo -ne "${HEADER}Stopping MSD Daemon..." > /dev/kmsg
 		start-stop-daemon -K -q -p /var/run/update.pid 2>/dev/null
-		[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo "${HEADER}${FAIL}"
+		[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo -e "${HEADER}${FAIL}" > /dev/kmsg
 		;;
 
 	restart)

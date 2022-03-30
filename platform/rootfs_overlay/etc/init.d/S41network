@@ -16,14 +16,14 @@ case "$1" in
 		echo -ne "${HEADER}Starting dhcpd Daemon & httpd Server..." > /dev/kmsg
 		start-stop-daemon -S -b -q -m -p /var/run/udhcpd.pid -x /usr/sbin/udhcpd -- $UDHCPD_CONF
 		httpd -h /www
-		[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo "${HEADER}${FAIL}"
+		[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo -e "${HEADER}${FAIL}" > /dev/kmsg
 		;;
 
 	stop)
 		echo -ne "${HEADER}Stopping dhcpd Daemon & httpd Server..." > /dev/kmsg
 		killall -7 httpd
 		start-stop-daemon -K -q -p /var/run/udhcpd.pid 2>/dev/null
-		[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo "${HEADER}${FAIL}"
+		[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo -e "${HEADER}${FAIL}" > /dev/kmsg
 		;;
 
 	restart)
