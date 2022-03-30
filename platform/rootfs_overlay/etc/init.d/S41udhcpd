@@ -13,15 +13,13 @@ source /etc/device_config
 
 case "$1" in
 	start)
-		echo -ne "${HEADER}Starting dhcpd Daemon & httpd Server..." > /dev/kmsg
+		echo -ne "${HEADER}Starting dhcpd Daemon..." > /dev/kmsg
 		start-stop-daemon -S -b -q -m -p /var/run/udhcpd.pid -x /usr/sbin/udhcpd -- $UDHCPD_CONF
-		httpd -h /www
 		[ $? = 0 ] && echo -e "${HEADER}started ${OK}" > /dev/kmsg || echo -e "${HEADER}start ${FAIL}" > /dev/kmsg
 		;;
 
 	stop)
-		echo -ne "${HEADER}Stopping dhcpd Daemon & httpd Server..." > /dev/kmsg
-		killall -7 httpd
+		echo -ne "${HEADER}Stopping dhcpd Daemon..." > /dev/kmsg
 		start-stop-daemon -K -q -p /var/run/udhcpd.pid 2>/dev/null
 		[ $? = 0 ] && echo -e "${HEADER}stopped ${OK}" > /dev/kmsg || echo -e "${HEADER}stop ${FAIL}" > /dev/kmsg
 		;;
