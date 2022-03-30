@@ -12,13 +12,13 @@ case "$1" in
 	start)
 		echo -ne "${HEADER}Loading axidma kernel module..." > /dev/kmsg
 		modprobe axidma
-		[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo -e "${HEADER}${FAIL}" > /dev/kmsg
+		[ $? = 0 ] && echo -e "${HEADER}started ${OK}" || echo -e "${HEADER}start ${FAIL}" > /dev/kmsg
 		;;
 
 	stop)
 		echo -ne "${HEADER}Unloading axidma kernel module..." > /dev/kmsg
 		rmmod axidma
-		[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo -e "${HEADER}${FAIL}" > /dev/kmsg
+		[ $? = 0 ] && echo -e "${HEADER}stopped ${OK}" || echo -e "${HEADER}stop ${FAIL}" > /dev/kmsg
 		;;
 
 	restart)

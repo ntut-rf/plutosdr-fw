@@ -15,7 +15,7 @@ case "$1" in
  start)
 	echo -ne "${HEADER}Starting watchdog..." > /dev/kmsg
 	watchdog -t 5 -T 10 /dev/watchdog
-	[ $? = 0 ] && echo -e "${HEADER}${OK}"  > /dev/kmsg || echo -e "${HEADER}${FAIL}" > /dev/kmsg
+	[ $? = 0 ] && echo -e "${HEADER}started ${OK}" || echo -e "${HEADER}start ${FAIL}" > /dev/kmsg
 	;;
   stop)
 	;;

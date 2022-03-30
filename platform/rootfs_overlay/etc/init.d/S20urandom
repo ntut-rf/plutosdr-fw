@@ -25,10 +25,9 @@ case "$1" in
 		# which is the size of the entropy pool
 
 		dmesg | sha512sum > /dev/urandom
-		[ $? = 0 ] && echo -e "${HEADER}${OK}" > /dev/kmsg || echo -e "${HEADER}${FAIL}" > /dev/kmsg
+		[ $? = 0 ] && echo -e "${HEADER}started ${OK}" || echo -e "${HEADER}start ${FAIL}" > /dev/kmsg
 		;;
 	stop)
-
 		;;
 	*)
 		echo "Usage: urandom {start|stop}" >&2

@@ -112,7 +112,7 @@ case "$1" in
 
 	echo ci_hdrc.0 > $GADGET/UDC
 
-	[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo "${HEADER}${FAIL}" > /dev/kmsg
+	[ $? = 0 ] && echo -e "${HEADER}started ${OK}" || echo -e "${HEADER}start ${FAIL}" > /dev/kmsg
 
 	if [ "$UDC_HANDLE_SUSPEND" == "1" ]; then
 		start-stop-daemon -S -b -q -m -p /var/run/udc_handle_suspend.pid -x  /sbin/udc_handle_suspend.sh
@@ -145,7 +145,7 @@ case "$1" in
 
 	rmdir $GADGET 2> /dev/null
 
-	[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo -e "${HEADER}${FAIL}" > /dev/kmsg
+	[ $? = 0 ] && echo -e "${HEADER}stopped ${OK}" || echo -e "${HEADER}stop ${FAIL}" > /dev/kmsg
 	;;
   restart|reload)
 	"$0" stop
