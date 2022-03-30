@@ -18,7 +18,7 @@ case "$1" in
 	/sbin/mdev -s
 	# coldplug modules
 	# find /sys/ -name modalias -print0 | xargs -0 sort -u -z | xargs -0 modprobe -abq
-	[ $? = 0 ] && echo -e "${HEADER}started ${OK}" || echo -e "${HEADER}start ${FAIL}" > /dev/kmsg
+	[ $? = 0 ] && echo -e "${HEADER}started ${OK}" > /dev/kmsg || echo -e "${HEADER}start ${FAIL}" > /dev/kmsg
 	;;
   stop)
 	;;

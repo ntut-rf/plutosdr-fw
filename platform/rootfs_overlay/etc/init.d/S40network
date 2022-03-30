@@ -98,12 +98,12 @@ case "$1" in
 	echo -e "${HEADER}Starting network..." > /dev/kmsg
 	/bin/hostname -F /etc/hostname
 	/sbin/ifup -a 2>&1 | logger
-	[ $? = 0 ] && echo -e "${HEADER}started ${OK}" || echo -e "${HEADER}start ${FAIL}" > /dev/kmsg
+	[ $? = 0 ] && echo -e "${HEADER}started ${OK}" > /dev/kmsg || echo -e "${HEADER}start ${FAIL}" > /dev/kmsg
 	;;
   stop)
 	echo -e "${HEADER}Stopping network..." > /dev/kmsg
 	/sbin/ifdown -a
-	[ $? = 0 ] && echo -e "${HEADER}stopped ${OK}" || echo -e "${HEADER}stop ${FAIL}" > /dev/kmsg
+	[ $? = 0 ] && echo -e "${HEADER}stopped ${OK}" > /dev/kmsg || echo -e "${HEADER}stop ${FAIL}" > /dev/kmsg
 	;;
   restart|reload)
 	"$0" stop

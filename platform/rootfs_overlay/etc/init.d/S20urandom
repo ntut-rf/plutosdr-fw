@@ -19,13 +19,13 @@ HEADER="${LIGHTBLUE}[S20 urandom]${NORMAL}\t"
 
 case "$1" in
 	start|"")
-		echo -ne "${HEADER}Starting initializing random number generator..."  > /dev/kmsg
+		echo -ne "${HEADER}Starting initializing random number generator..." > /dev/kmsg
 
 		# Load and then save 512 bytes,
 		# which is the size of the entropy pool
 
 		dmesg | sha512sum > /dev/urandom
-		[ $? = 0 ] && echo -e "${HEADER}started ${OK}" || echo -e "${HEADER}start ${FAIL}" > /dev/kmsg
+		[ $? = 0 ] && echo -e "${HEADER}started ${OK}" > /dev/kmsg || echo -e "${HEADER}start ${FAIL}" > /dev/kmsg
 		;;
 	stop)
 		;;
