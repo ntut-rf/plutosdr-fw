@@ -3,14 +3,22 @@
 # Start mdev....
 #
 
+LIGHTBLUE="\e[38;5;87m"
+LIGHTGREEN="\e[38;5;46m"
+LIGHTRED="\e[38;5;196m"
+NORMAL="\e[0m"
+OK="${LIGHTGREEN}OK${NORMAL}"
+FAIL="${LIGHTRED}FAIL${NORMAL}"
+HEADER="${LIGHTBLUE}[S10 mdev]${NORMAL}\t"
+
 case "$1" in
   start)
-	echo -n "Starting mdev: "
+	echo -ne "${HEADER}Starting mdev..." > /dev/kmsg
 	echo /sbin/mdev >/proc/sys/kernel/hotplug
 	/sbin/mdev -s
 	# coldplug modules
 	# find /sys/ -name modalias -print0 | xargs -0 sort -u -z | xargs -0 modprobe -abq
-	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	[ $? = 0 ] && echo -e "${HEADER}${OK}" > /dev/kmsg || echo "${HEADER}${FAIL}" > /dev/kmsg
 	;;
   stop)
 	;;

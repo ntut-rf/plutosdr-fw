@@ -3,11 +3,19 @@
 # Start watchdog
 #
 
+LIGHTBLUE="\e[38;5;87m"
+LIGHTGREEN="\e[38;5;46m"
+LIGHTRED="\e[38;5;196m"
+NORMAL="\e[0m"
+OK="${LIGHTGREEN}OK${NORMAL}"
+FAIL="${LIGHTRED}FAIL${NORMAL}"
+HEADER="${LIGHTBLUE}[S15 watchdog]${NORMAL}\t"
+
 case "$1" in
  start)
-	echo -n "Starting watchdog: "
+	echo -ne "${HEADER}Starting watchdog..." > /dev/kmsg
 	watchdog -t 5 -T 10 /dev/watchdog
-	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	[ $? = 0 ] && echo -e "${HEADER}${OK}"  > /dev/kmsg || echo "${HEADER}${FAIL}" > /dev/kmsg
 	;;
   stop)
 	;;

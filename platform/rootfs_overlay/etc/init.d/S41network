@@ -1,21 +1,29 @@
 #!/bin/sh
 # Server-side demuxing by default
 
+LIGHTBLUE="\e[38;5;87m"
+LIGHTGREEN="\e[38;5;46m"
+LIGHTRED="\e[38;5;196m"
+NORMAL="\e[0m"
+OK="${LIGHTGREEN}OK${NORMAL}"
+FAIL="${LIGHTRED}FAIL${NORMAL}"
+HEADER="${LIGHTBLUE}[S41 udhcpd]${NORMAL}\t"
+
 source /etc/device_config
 
 case "$1" in
 	start)
-		echo -n "Starting dhcpd Daemon & httpd Server: "
+		echo -ne "${HEADER}Starting dhcpd Daemon & httpd Server..." > /dev/kmsg
 		start-stop-daemon -S -b -q -m -p /var/run/udhcpd.pid -x /usr/sbin/udhcpd -- $UDHCPD_CONF
 		httpd -h /www
-		[ $? = 0 ] && echo "OK" || echo "FAIL"
+		[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo "${HEADER}${FAIL}"
 		;;
 
 	stop)
-		echo -n "Stopping dhcpd Daemon & httpd Server: "
+		echo -ne "${HEADER}Stopping dhcpd Daemon & httpd Server..." > /dev/kmsg
 		killall -7 httpd
 		start-stop-daemon -K -q -p /var/run/udhcpd.pid 2>/dev/null
-		[ $? = 0 ] && echo "OK" || echo "FAIL"
+		[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo "${HEADER}${FAIL}"
 		;;
 
 	restart)

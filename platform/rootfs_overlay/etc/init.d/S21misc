@@ -1,4 +1,12 @@
-#! /bin/sh
+#!/bin/sh
+
+LIGHTBLUE="\e[38;5;87m"
+LIGHTGREEN="\e[38;5;46m"
+LIGHTRED="\e[38;5;196m"
+NORMAL="\e[0m"
+OK="${LIGHTGREEN}OK${NORMAL}"
+FAIL="${LIGHTRED}FAIL${NORMAL}"
+HEADER="${LIGHTBLUE}[S21 misc]${NORMAL}\t"
 
 xo_correction() {
 
@@ -16,11 +24,11 @@ xo_correction() {
 
 case "$1" in
 	start|"")
-		echo -n "Starting miscellaneous setup: "
+		echo -ne "${HEADER}Starting miscellaneous setup..." > /dev/kmsg
 		xo_correction
 		MAX_BS=`fw_printenv -n iio_max_block_size 2> /dev/null || echo 67108864`
 		echo ${MAX_BS} > /sys/module/industrialio_buffer_dma/parameters/max_block_size
-		[ $? = 0 ] && echo "OK" || echo "FAIL"
+		[ $? = 0 ] && echo -e "${HEADER}${OK}" > /dev/kmsg || echo "${HEADER}${FAIL}" > /dev/kmsg
 		;;
 	stop)
 

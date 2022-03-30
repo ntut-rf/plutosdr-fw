@@ -1,12 +1,24 @@
 #!/bin/sh
 
+LIGHTBLUE="\e[38;5;87m"
+LIGHTGREEN="\e[38;5;46m"
+LIGHTRED="\e[38;5;196m"
+NORMAL="\e[0m"
+OK="${LIGHTGREEN}OK${NORMAL}"
+FAIL="${LIGHTRED}FAIL${NORMAL}"
+HEADER="${LIGHTBLUE}[S46 axidma]${NORMAL}\t"
+
 case "$1" in
 	start)
+		echo -ne "${HEADER}Loading axidma kernel module..." > /dev/kmsg
 		modprobe axidma
+		[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo "${HEADER}${FAIL}"
 		;;
 
 	stop)
+		echo -ne "${HEADER}Unloading axidma kernel module..." > /dev/kmsg
 		rmmod axidma
+		[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo "${HEADER}${FAIL}"
 		;;
 
 	restart)

@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 #
 # urandom	This script saves the random seed between reboots.
 #		It is called from the boot, halt and reboot scripts.
@@ -6,18 +6,26 @@
 # Version:	@(#)urandom  1.33  22-Jun-1998  miquels@cistron.nl
 #
 
+LIGHTBLUE="\e[38;5;87m"
+LIGHTGREEN="\e[38;5;46m"
+LIGHTRED="\e[38;5;196m"
+NORMAL="\e[0m"
+OK="${LIGHTGREEN}OK${NORMAL}"
+FAIL="${LIGHTRED}FAIL${NORMAL}"
+HEADER="${LIGHTBLUE}[S20 urandom]${NORMAL}\t"
+
 [ -c /dev/urandom ] || exit 0
 #. /etc/default/rcS
 
 case "$1" in
 	start|"")
-		echo -n "Starting initializing random number generator: "
+		echo -ne "${HEADER}Starting initializing random number generator..."  > /dev/kmsg
 
 		# Load and then save 512 bytes,
 		# which is the size of the entropy pool
 
 		dmesg | sha512sum > /dev/urandom
-		[ $? = 0 ] && echo "OK" || echo "FAIL"
+		[ $? = 0 ] && echo -e "${HEADER}${OK}" > /dev/kmsg || echo "${HEADER}${FAIL}" > /dev/kmsg
 		;;
 	stop)
 

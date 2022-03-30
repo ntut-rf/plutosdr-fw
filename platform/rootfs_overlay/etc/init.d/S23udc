@@ -1,5 +1,13 @@
 #!/bin/sh
 
+LIGHTBLUE="\e[38;5;87m"
+LIGHTGREEN="\e[38;5;46m"
+LIGHTRED="\e[38;5;196m"
+NORMAL="\e[0m"
+OK="${LIGHTGREEN}OK${NORMAL}"
+FAIL="${LIGHTRED}FAIL${NORMAL}"
+HEADER="${LIGHTBLUE}[S23 udc]${NORMAL}\t"
+
 source /etc/device_config
 
 CONFIGFS=/sys/kernel/config/usb_gadget
@@ -48,7 +56,7 @@ create_iiod_context_attributes() {
 
 case "$1" in
   start)
-	echo -n "Starting UDC Gadgets: "
+	echo -ne "${HEADER}Starting UDC Gadgets..." > /dev/kmsg
 	mount configfs -t configfs /sys/kernel/config 2> /dev/null
 
 	mkdir -p $GADGET
@@ -104,7 +112,7 @@ case "$1" in
 
 	echo ci_hdrc.0 > $GADGET/UDC
 
-	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo "${HEADER}${FAIL}"
 
 	if [ "$UDC_HANDLE_SUSPEND" == "1" ]; then
 		start-stop-daemon -S -b -q -m -p /var/run/udc_handle_suspend.pid -x  /sbin/udc_handle_suspend.sh
@@ -112,7 +120,7 @@ case "$1" in
 
 	;;
   stop)
-	echo "Stopping UDC Gadgets"
+	echo -ne "${HEADER}Stopping UDC Gadgets" > /dev/kmsg
 
 	if [ "$UDC_HANDLE_SUSPEND" == "1" ]; then
 		start-stop-daemon -K -q -p /var/run/udc_handle_suspend.pid 2>/dev/null

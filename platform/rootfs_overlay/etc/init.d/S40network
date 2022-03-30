@@ -5,6 +5,14 @@
 
 # Debian ifupdown needs the /run/network lock directory
 
+LIGHTBLUE="\e[38;5;87m"
+LIGHTGREEN="\e[38;5;46m"
+LIGHTRED="\e[38;5;196m"
+NORMAL="\e[0m"
+OK="${LIGHTGREEN}OK${NORMAL}"
+FAIL="${LIGHTRED}FAIL${NORMAL}"
+HEADER="${LIGHTBLUE}[S40 network]${NORMAL}\t"
+
 source /etc/device_config
 
 create_system_files () {
@@ -121,15 +129,15 @@ mkdir -p /run/network
 case "$1" in
   start)
 	create_system_files
-	printf "Starting network: "
+	echo -ne "${HEADER}Starting network..." > /dev/kmsg
 	/bin/hostname -F /etc/hostname
 	/sbin/ifup -a 2>&1 | logger
-	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo "${HEADER}${FAIL}"
 	;;
   stop)
-	printf "Stopping network: "
+	echo -ne "${HEADER}Stopping network..." > /dev/kmsg
 	/sbin/ifdown -a
-	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo "${HEADER}${FAIL}"
 	;;
   restart|reload)
 	"$0" stop
