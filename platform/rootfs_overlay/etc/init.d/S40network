@@ -31,10 +31,6 @@ create_system_files () {
 	ETH_IPADDR=`fw_printenv -n ipaddr_eth 2> /dev/null || echo 192.168.1.50`
 	ETH_NETMASK=`fw_printenv -n netmask_eth 2> /dev/null || echo 255.255.255.0`
 
-	WLAN_SSID=`fw_printenv -n ssid_wlan 2> /dev/null`
-	WLAN_PWD=`fw_printenv -n pwd_wlan 2> /dev/null`
-	WLAN_IPADDR=`fw_printenv -n ipaddr_wlan 2> /dev/null`
-
 	XO_CORRECTION=`fw_printenv -n xo_correction 2> /dev/null`
 	UDC_HANDLE_SUSPEND=`fw_printenv -n udc_handle_suspend 2> /dev/null || echo 0`
 
@@ -58,31 +54,6 @@ create_system_files () {
 		echo -e "iface eth0 inet dhcp\n" >> $IFAC
 	fi
 
-	### /etc/wpa.conf ###
-	if [ -n "$WLAN_SSID" ]
-	then
-		if [ -n "$WLAN_PWD" ]
-		then
-			wpa_passphrase $WLAN_SSID $WLAN_PWD > /etc/wpa.conf
-		else
-			echo "network={" > /etc/wpa.conf
-			echo "    ssid=\"$WLAN_SSID\"" >> /etc/wpa.conf
-			echo "    key_mgmt=NONE" >> /etc/wpa.conf
-			echo "}" >> /etc/wpa.conf
-		fi
-
-		echo -e "auto wlan0" >> $IFAC
-
-		if [ -n "$WLAN_IPADDR" ]
-		then
-			echo -e "iface wlan0 inet static" >> $IFAC
-			echo -e "\taddress $WLAN_IPADDR\n""\tnetmask 255.255.255.0" >> $IFAC
-		else
-			echo -e "iface wlan0 inet dhcp" >> $IFAC
-		fi
-		echo -e "\twpa-conf /etc/wpa.conf\n" >> $IFAC
-	fi
-
 	### /opt/config.txt ###
 	echo "# $(cat /sys/firmware/devicetree/base/model | tr / -)"$'\r' > $CONF
 	echo "# Device Configuration File"$'\r' >> $CONF
@@ -97,11 +68,6 @@ create_system_files () {
 	echo "ipaddr = $IPADDR"$'\r' >> $CONF
 	echo "ipaddr_host = $IPADDR_HOST"$'\r' >> $CONF
 	echo "netmask = $NETMASK"$'\r' >> $CONF
-	echo ""$'\r'>> $CONF
-	echo "[WLAN]"$'\r' >> $CONF
-	echo "ssid_wlan = $WLAN_SSID"$'\r' >> $CONF
-	echo "pwd_wlan = $WLAN_PWD"$'\r' >> $CONF
-	echo "ipaddr_wlan = $WLAN_IPADDR"$'\r' >> $CONF
 	echo ""$'\r'>> $CONF
 	echo "[ETHERNET]"$'\r' >> $CONF
 	echo "ipaddr_eth = $ETH_IPADDR"$'\r' >> $CONF
@@ -122,22 +88,22 @@ create_system_files () {
 
 	sed -i -e "s/#IP#/$IPADDR/g" -e "s/#HOSTIP#/$IPADDR_HOST/g" -e "s/#NETMASK#/$NETMASK/g" -e "s/#HOSTNAME#/$HOSTNAME/g" -e "s/#SSID_WLAN#/$WLAN_SSID/g" -e "s/#IPADDR_WLAN#/$WLAN_IPADDR/g" -e "s/#IPADDR_ETH#/$ETH_IPADDR/g" -e "s/#NETMASK_ETH#/$ETH_NETMASK/g" /www/index.html /www/img/index_*.html
 
-	}
+}
 
 mkdir -p /run/network
 
 case "$1" in
   start)
 	create_system_files
-	echo -ne "${HEADER}Starting network..." > /dev/kmsg
+	echo -e "${HEADER}Starting network..." > /dev/kmsg
 	/bin/hostname -F /etc/hostname
 	/sbin/ifup -a 2>&1 | logger
-	[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo -e "${HEADER}${FAIL}" > /dev/kmsg
+	[ $? = 0 ] && echo -e "${HEADER}started ${OK}" || echo -e "${HEADER}start ${FAIL}" > /dev/kmsg
 	;;
   stop)
-	echo -ne "${HEADER}Stopping network..." > /dev/kmsg
+	echo -e "${HEADER}Stopping network..." > /dev/kmsg
 	/sbin/ifdown -a
-	[ $? = 0 ] && echo -e "${HEADER}${OK}" || echo -e "${HEADER}${FAIL}" > /dev/kmsg
+	[ $? = 0 ] && echo -e "${HEADER}stopped ${OK}" || echo -e "${HEADER}stop ${FAIL}" > /dev/kmsg
 	;;
   restart|reload)
 	"$0" stop
