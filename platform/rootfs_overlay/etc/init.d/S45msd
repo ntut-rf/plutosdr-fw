@@ -38,7 +38,7 @@ case "$1" in
 		echo -ne "${HEADER}Starting MSD Daemon..." > /dev/kmsg
 		patch_html_page "/www/index.html /www/img/index_*.html" /www/img/version.js
         dd if=/dev/zero of=$img bs=1M seek=30 count=0
-        mkfs.vfat -n PlutoSDR $img
+        mkfs.vfat -n "${MODEL}" $img
 		mount $img /mnt
 
 		if [ "$TARGET" == "m2k" ]; then
